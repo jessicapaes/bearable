@@ -1,0 +1,63 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Local/Anaconda files
+anaconda_projects/
+notebooks/.ipynb_checkpoints/
+
+# Streamlit local
+app/.streamlit/
+.streamlit/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Large raw data files (AACT flat files - too large for GitHub)
+data/raw/*.txt
+data/raw/*.csv
+data/raw/*.tsv
+data/raw/*.zip
+data/raw/*.gz
+data/raw/*.json
+
+# Large processed files
+data/processed/*.xlsx
+data/processed/*.csv
+
+# Keep only the essential evidence counts file
+!data/evidence_counts_with_direction.csv
+!data/evidence_counts.csv
+
+# Keep template files
+!data/templates/*.csv
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
