@@ -296,12 +296,12 @@ if AUTH_ENABLED and not demo_mode:
             st.session_state.is_first_time_user = user_df.empty
 
 # -----------------------------------------------------------------------------
-# Tabs
+# Tabs (Daily Log first for quick access)
 # -----------------------------------------------------------------------------
-tab_dashboard, tab_evidence, tab_analysis, tab_settings = st.tabs([
+tab_analysis, tab_dashboard, tab_evidence, tab_settings = st.tabs([
+    "🌱 Daily Log",
     "🏠 Dashboard",
     "🔬 Evidence Explorer",
-    "🌱 Daily Log",
     "⚙️ Settings"
 ])
 
@@ -457,16 +457,16 @@ with tab_dashboard:
     # Show onboarding for first-time users
     # show_onboarding_modal()  # Temporarily disabled - was blocking other tabs
     
-    # Redirect message for returning users
+    # Reminder for returning users (Daily Log is now first tab, so less urgent)
     if not st.session_state.get("is_first_time_user", True) and AUTH_ENABLED and not demo_mode:
-        st.warning("👉 **Quick tip:** Click the **🌱 Daily Log** tab above to log today's wellness data!")
+        st.info("💡 **Quick reminder:** Check the **🌱 Daily Log** tab (first tab) to log today's data if you haven't yet!")
         st.markdown("---")
     
     st.subheader("🏠 Your Personal Health Dashboard")
     
     # Welcome message for first-time users
     if st.session_state.get("is_first_time_user", False):
-        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs above:\n- **🔬 Evidence Explorer** - Browse clinical trials\n- **🌱 Daily Log** - Start tracking your symptoms")
+        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs:\n- **🌱 Daily Log** (first tab) - Start tracking your symptoms\n- **🔬 Evidence Explorer** - Browse clinical trials")
     
     # Check if user has any data
     has_data = not st.session_state.n1_df.empty if "n1_df" in st.session_state else False
