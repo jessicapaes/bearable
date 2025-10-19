@@ -261,9 +261,9 @@ with st.sidebar:
     Welcome to Pain Relief Map! 
     
     Use the tabs above to:
+    - **🌱 Daily Log**: Track your health
     - **📊 Dashboard**: View your health trends
     - **🔬 Evidence Explorer**: Find therapies  
-    - **🌱 Daily Log**: Track your health
     - **⚙️ Settings**: Manage your data
     """)
 
@@ -1772,14 +1772,7 @@ with tab_analysis:
         with c1a:
             f_date = st.date_input("Today's date:", value=dt.date.today(), format="DD/MM/YYYY")
 
-        # Progressive disclosure for first-time users
-        is_first_time = st.session_state.get("is_first_time_user", False) and AUTH_ENABLED and not demo_mode
-        if is_first_time:
-            show_advanced = st.checkbox("🔧 Show advanced fields", help="Add more detailed tracking (optional for beginners)")
-        else:
-            show_advanced = True
-
-        # Core Metrics Section (always visible)
+        # Core Metrics Section
         st.markdown("#### 💚 Core Metrics")
         c5, c6 = st.columns(2)
         with c5:
@@ -1793,7 +1786,7 @@ with tab_analysis:
         with c8:
             f_stress = st.slider("Stress (0–10)", 0, 10, int(round(defs["stress_score"])))
 
-        # Therapies Section (always visible)
+        # Therapies Section
         st.markdown("#### 🌟 Therapy Tracking")
         st.caption("💡 **Tip:** You can track multiple therapies simultaneously. Use the checkbox below only when starting a NEW therapy for before/after analysis.")
         
@@ -1828,79 +1821,63 @@ with tab_analysis:
             else:
                 f_therapy_name = ""
 
-        if show_advanced:
-            # ---- Conditional Menstrual Tracking (only if Female) ----
-            if is_female:
-                st.markdown("### 🩸 Hormonal Cycle")
-                hc1, hc2, hc3, hc4 = st.columns(4)
-                with hc1:
-                    f_menstruating = st.radio("Menstruating today?", ["No", "Yes"], index=0)
-                with hc2:
-                    f_cycle_day = st.number_input("Cycle day", min_value=1, max_value=40, value=1, step=1)
-                with hc3:
-                    f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
-                with hc4:
-                    f_pms = st.multiselect(
-                        "PMS symptoms",
-                        ["None", "Cramps", "Bloating", "Breast tenderness", "Headache", "Irritability", "Low mood", "Anxiety", "Fatigue", "Food cravings"],
-                        default=["None"]
-                    )
-            else:
-                f_menstruating = "No"
-                f_cycle_day = 0
-                f_flow = "None"
-                f_pms = ["None"]
-
-            # ---- Core Symptoms ----
-            st.markdown("### ❤️ Core Symptoms")
-            c9, c10 = st.columns(2)
-            with c9:
-                f_anxiety = st.slider("Anxiety (0–10)", 0, 10, 5)
-            with c10:
-                f_patience = st.slider("Patience (0–10)", 0, 10, 5)
-
-            # ---- Emotional & Physical Symptoms + Cravings ----
-            st.markdown("### 💭 Emotional and Physical Symptoms")
-            c11, c12 = st.columns(2)
-            with c11:
-                f_emotional = st.multiselect("Emotional symptoms:", emotional_options)
-            with c12:
-                f_physical = st.multiselect("Physical symptoms:", physical_options)
-
-            f_cravings = st.multiselect(
-                "Cravings today:",
-                craving_options,
-                default=["None"]
-            )
-
-            # ---- Physical State ----
-            st.markdown("### 🏃‍♀️ Physical State")
-            c13, c14 = st.columns(2)
-            with c13:
-                f_movement = st.multiselect("Movement today:", movement_options)
-            with c14:
-                f_bowel = st.slider("Bowel movements (0–10)", 0, 10, 1)
-
-            c15, c16 = st.columns(2)
-            with c15:
-                f_digestive = st.selectbox("Digestive sounds:", digestive_options, index=0)
-            with c16:
-                f_stool = st.selectbox("Stool consistency:", stool_options, index=0)
+        # ---- Conditional Menstrual Tracking (only if Female) ----
+        if is_female:
+            st.markdown("### 🩸 Hormonal Cycle")
+            hc1, hc2, hc3, hc4 = st.columns(4)
+            with hc1:
+                f_menstruating = st.radio("Menstruating today?", ["No", "Yes"], index=0)
+            with hc2:
+                f_cycle_day = st.number_input("Cycle day", min_value=1, max_value=40, value=1, step=1)
+            with hc3:
+                f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
+            with hc4:
+                f_pms = st.multiselect(
+                    "PMS symptoms",
+                    ["None", "Cramps", "Bloating", "Breast tenderness", "Headache", "Irritability", "Low mood", "Anxiety", "Fatigue", "Food cravings"],
+                    default=["None"]
+                )
         else:
-            # Set defaults for hidden fields when advanced is not shown
             f_menstruating = "No"
             f_cycle_day = 0
             f_flow = "None"
             f_pms = ["None"]
-            f_anxiety = 5
-            f_patience = 5
-            f_emotional = []
-            f_physical = []
-            f_cravings = ["None"]
-            f_movement = []
-            f_bowel = 1
-            f_digestive = "None"
-            f_stool = "None"
+
+        # ---- Core Symptoms ----
+        st.markdown("### ❤️ Core Symptoms")
+        c9, c10 = st.columns(2)
+        with c9:
+            f_anxiety = st.slider("Anxiety (0–10)", 0, 10, 5)
+        with c10:
+            f_patience = st.slider("Patience (0–10)", 0, 10, 5)
+
+        # ---- Emotional & Physical Symptoms + Cravings ----
+        st.markdown("### 💭 Emotional and Physical Symptoms")
+        c11, c12 = st.columns(2)
+        with c11:
+            f_emotional = st.multiselect("Emotional symptoms:", emotional_options)
+        with c12:
+            f_physical = st.multiselect("Physical symptoms:", physical_options)
+
+        f_cravings = st.multiselect(
+            "Cravings today:",
+            craving_options,
+            default=["None"]
+        )
+
+        # ---- Physical State ----
+        st.markdown("### 🏃‍♀️ Physical State")
+        c13, c14 = st.columns(2)
+        with c13:
+            f_movement = st.multiselect("Movement today:", movement_options)
+        with c14:
+            f_bowel = st.slider("Bowel movements (0–10)", 0, 10, 1)
+
+        c15, c16 = st.columns(2)
+        with c15:
+            f_digestive = st.selectbox("Digestive sounds:", digestive_options, index=0)
+        with c16:
+            f_stool = st.selectbox("Stool consistency:", stool_options, index=0)
 
         # ---- Submit ----
         add_clicked = st.form_submit_button("Submit", type="primary")
