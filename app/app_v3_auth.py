@@ -1515,7 +1515,7 @@ with tab_analysis:
     
     # Welcome message for first-time users
     if st.session_state.get("is_first_time_user", False):
-        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs:\n- **🌱 Daily Log** (first tab) - Start tracking your symptoms\n- **🔬 Evidence Explorer** - Browse clinical trials")
+        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs:\n- **🌱 Daily Log** (this tab) - Start tracking your symptoms\n- **🏠 Dashboard** - View your trends and analysis\n- **🔬 Evidence Explorer** - Browse clinical trials")
 
     # First-time user onboarding
     if st.session_state.get("is_first_time_user", False) and AUTH_ENABLED and not demo_mode:
