@@ -464,9 +464,21 @@ with tab_dashboard:
     
     st.subheader("🏠 Your Personal Health Dashboard")
     
-    # Welcome message for first-time users
-    if st.session_state.get("is_first_time_user", False):
-        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs:\n- **🌱 Daily Log** (first tab) - Start tracking your symptoms\n- **🔬 Evidence Explorer** - Browse clinical trials")
+    # Dashboard explanation
+    st.markdown("""
+    **📊 What you'll see here:**
+    - **Trend Charts**: Track your pain, sleep, mood, and stress over time
+    - **Therapy Analysis**: See if treatments are working with statistical confidence
+    - **Pattern Recognition**: Discover what helps you most
+    - **Research Comparison**: Compare your results with published studies
+    
+    **💡 How to use:**
+    1. **Log daily data** in the 🌱 Daily Log tab (first tab)
+    2. **Add 7+ days** to see meaningful trends
+    3. **Mark therapy start dates** for before/after analysis
+    4. **Check back here** to see your progress and insights
+    """)
+    st.markdown("---")
     
     # Check if user has any data
     has_data = not st.session_state.n1_df.empty if "n1_df" in st.session_state else False
@@ -1501,6 +1513,10 @@ with tab_analysis:
     # Daily Wellness Log section
     st.subheader("🌱 Daily Wellness Log")
     
+    # Welcome message for first-time users
+    if st.session_state.get("is_first_time_user", False):
+        st.success("👋 **Welcome to Pain Relief Map!** Explore the tabs:\n- **🌱 Daily Log** (first tab) - Start tracking your symptoms\n- **🔬 Evidence Explorer** - Browse clinical trials")
+
     # First-time user onboarding
     if st.session_state.get("is_first_time_user", False) and AUTH_ENABLED and not demo_mode:
         st.success("🎯 **Your First Entry** (takes 30 seconds)")
@@ -1803,12 +1819,14 @@ with tab_analysis:
                 help="Check this box on the first day you begin a new PRIMARY therapy for before/after analysis."
             )
         with t2:
-            f_therapy_name = st.text_input(
-                "Which therapy?",
-                placeholder="e.g., Acupuncture or Acupuncture + Yoga",
-                disabled=not f_started_therapy,
-                help="Name the primary therapy you're analyzing (can include multiple: 'Acupuncture + Yoga')"
-            ) if f_started_therapy else ""
+            if f_started_therapy:
+                f_therapy_name = st.text_input(
+                    "Which therapy?",
+                    placeholder="e.g., Acupuncture or Acupuncture + Yoga",
+                    help="Name the primary therapy you're analyzing (can include multiple: 'Acupuncture + Yoga')"
+                )
+            else:
+                f_therapy_name = ""
 
         if show_advanced:
             # ---- Conditional Menstrual Tracking (only if Female) ----
