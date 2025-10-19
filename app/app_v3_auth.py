@@ -1500,6 +1500,21 @@ with tab_analysis:
     
     # Daily Wellness Log section
     st.subheader("🌱 Daily Wellness Log")
+    
+    # First-time user onboarding
+    if st.session_state.get("is_first_time_user", False) and AUTH_ENABLED and not demo_mode:
+        st.success("🎯 **Your First Entry** (takes 30 seconds)")
+        st.markdown("""
+        **Start simple!** Just track these essentials:
+        1. **Rate your pain today** (0-10)
+        2. **How many hours did you sleep?**
+        3. **How's your mood?** (0-10)
+        4. **Any therapy you tried?**
+        
+        💡 **Don't worry about getting everything perfect - just start!**
+        """)
+        st.markdown("---")
+    
     st.markdown("""
     Record how you feel each day — pain, sleep, stress, movement, digestion, and therapy use — to discover what helps you most.
     """)
@@ -1741,7 +1756,31 @@ with tab_analysis:
         with c1a:
             f_date = st.date_input("Today's date:", value=dt.date.today(), format="DD/MM/YYYY")
 
-        # Row 2: Conditions today + Therapies used
+        # Progressive disclosure for first-time users
+        is_first_time = st.session_state.get("is_first_time_user", False) and AUTH_ENABLED and not demo_mode
+        if is_first_time:
+            show_advanced = st.checkbox("🔧 Show advanced fields", help="Add more detailed tracking (optional for beginners)")
+        else:
+            show_advanced = True
+
+        # Core Metrics Section (always visible)
+        st.markdown("#### 💚 Core Metrics")
+        c5, c6 = st.columns(2)
+        with c5:
+            f_sleep = st.slider("Sleep hours last night", 0, 14, int(round(defs["sleep_hours"])))
+        with c6:
+            f_mood = st.slider("Overall mood (0–10)", 0, 10, int(round(defs["mood_score"])))
+        
+        c7, c8 = st.columns(2)
+        with c7:
+            f_pain = st.slider("Pain (0–10)", 0, 10, int(round(defs["pain_score"])))
+        with c8:
+            f_stress = st.slider("Stress (0–10)", 0, 10, int(round(defs["stress_score"])))
+
+        # Therapies Section (always visible)
+        st.markdown("#### 🌟 Therapy Tracking")
+        st.caption("💡 **Tip:** You can track multiple therapies simultaneously. Use the checkbox below only when starting a NEW therapy for before/after analysis.")
+        
         c3, c4 = st.columns(2)
         with c3:
             f_condition_today = st.multiselect(
@@ -1757,11 +1796,6 @@ with tab_analysis:
                 help="Select all therapies you used today."
             )
         
-        # Therapy tracking: started new therapy today?
-        st.markdown("---")
-        st.markdown("#### 🌟 Therapy Tracking")
-        st.caption("💡 **Tip:** You can track multiple therapies simultaneously in 'Therapy used today' above. Use the checkbox below only when starting a NEW therapy for before/after analysis.")
-        
         t1, t2 = st.columns(2)
         with t1:
             f_started_therapy = st.checkbox(
@@ -1776,76 +1810,79 @@ with tab_analysis:
                 help="Name the primary therapy you're analyzing (can include multiple: 'Acupuncture + Yoga')"
             ) if f_started_therapy else ""
 
-        # Row 3: Sleep + Mood
-        c5, c6 = st.columns(2)
-        with c5:
-            f_sleep = st.slider("Sleep hours last night", 0, 14, int(round(defs["sleep_hours"])))
-        with c6:
-            f_mood = st.slider("Overall mood (0–10)", 0, 10, int(round(defs["mood_score"])))
+        if show_advanced:
+            # ---- Conditional Menstrual Tracking (only if Female) ----
+            if is_female:
+                st.markdown("### 🩸 Hormonal Cycle")
+                hc1, hc2, hc3, hc4 = st.columns(4)
+                with hc1:
+                    f_menstruating = st.radio("Menstruating today?", ["No", "Yes"], index=0)
+                with hc2:
+                    f_cycle_day = st.number_input("Cycle day", min_value=1, max_value=40, value=1, step=1)
+                with hc3:
+                    f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
+                with hc4:
+                    f_pms = st.multiselect(
+                        "PMS symptoms",
+                        ["None", "Cramps", "Bloating", "Breast tenderness", "Headache", "Irritability", "Low mood", "Anxiety", "Fatigue", "Food cravings"],
+                        default=["None"]
+                    )
+            else:
+                f_menstruating = "No"
+                f_cycle_day = 0
+                f_flow = "None"
+                f_pms = ["None"]
 
-        # ---- Conditional Menstrual Tracking (only if Female) ----
-        if is_female:
-            st.markdown("### 🩸 Hormonal Cycle")
-            hc1, hc2, hc3, hc4 = st.columns(4)
-            with hc1:
-                f_menstruating = st.radio("Menstruating today?", ["No", "Yes"], index=0)
-            with hc2:
-                f_cycle_day = st.number_input("Cycle day", min_value=1, max_value=40, value=1, step=1)
-            with hc3:
-                f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
-            with hc4:
-                f_pms = st.multiselect(
-                    "PMS symptoms",
-                    ["None", "Cramps", "Bloating", "Breast tenderness", "Headache", "Irritability", "Low mood", "Anxiety", "Fatigue", "Food cravings"],
-                    default=["None"]
-                )
+            # ---- Core Symptoms ----
+            st.markdown("### ❤️ Core Symptoms")
+            c9, c10 = st.columns(2)
+            with c9:
+                f_anxiety = st.slider("Anxiety (0–10)", 0, 10, 5)
+            with c10:
+                f_patience = st.slider("Patience (0–10)", 0, 10, 5)
+
+            # ---- Emotional & Physical Symptoms + Cravings ----
+            st.markdown("### 💭 Emotional and Physical Symptoms")
+            c11, c12 = st.columns(2)
+            with c11:
+                f_emotional = st.multiselect("Emotional symptoms:", emotional_options)
+            with c12:
+                f_physical = st.multiselect("Physical symptoms:", physical_options)
+
+            f_cravings = st.multiselect(
+                "Cravings today:",
+                craving_options,
+                default=["None"]
+            )
+
+            # ---- Physical State ----
+            st.markdown("### 🏃‍♀️ Physical State")
+            c13, c14 = st.columns(2)
+            with c13:
+                f_movement = st.multiselect("Movement today:", movement_options)
+            with c14:
+                f_bowel = st.slider("Bowel movements (0–10)", 0, 10, 1)
+
+            c15, c16 = st.columns(2)
+            with c15:
+                f_digestive = st.selectbox("Digestive sounds:", digestive_options, index=0)
+            with c16:
+                f_stool = st.selectbox("Stool consistency:", stool_options, index=0)
         else:
+            # Set defaults for hidden fields when advanced is not shown
             f_menstruating = "No"
             f_cycle_day = 0
             f_flow = "None"
             f_pms = ["None"]
-
-        # ---- Core Symptoms ----
-        st.markdown("### ❤️ Core Symptoms")
-        c7, c8 = st.columns(2)
-        with c7:
-            f_pain = st.slider("Pain (0–10)", 0, 10, int(round(defs["pain_score"])))
-        with c8:
-            f_stress = st.slider("Stress (0–10)", 0, 10, int(round(defs["stress_score"])))
-
-        c9, c10 = st.columns(2)
-        with c9:
-            f_anxiety = st.slider("Anxiety (0–10)", 0, 10, 5)
-        with c10:
-            f_patience = st.slider("Patience (0–10)", 0, 10, 5)
-
-        # ---- Emotional & Physical Symptoms + Cravings ----
-        st.markdown("### 💭 Emotional and Physical Symptoms")
-        c11, c12 = st.columns(2)
-        with c11:
-            f_emotional = st.multiselect("Emotional symptoms:", emotional_options)
-        with c12:
-            f_physical = st.multiselect("Physical symptoms:", physical_options)
-
-        f_cravings = st.multiselect(
-            "Cravings today:",
-            craving_options,
-            default=["None"]
-        )
-
-        # ---- Physical State ----
-        st.markdown("### 🏃‍♀️ Physical State")
-        c13, c14 = st.columns(2)
-        with c13:
-            f_movement = st.multiselect("Movement today:", movement_options)
-        with c14:
-            f_bowel = st.slider("Bowel movements (0–10)", 0, 10, 1)
-
-        c15, c16 = st.columns(2)
-        with c15:
-            f_digestive = st.selectbox("Digestive sounds:", digestive_options, index=0)
-        with c16:
-            f_stool = st.selectbox("Stool consistency:", stool_options, index=0)
+            f_anxiety = 5
+            f_patience = 5
+            f_emotional = []
+            f_physical = []
+            f_cravings = ["None"]
+            f_movement = []
+            f_bowel = 1
+            f_digestive = "None"
+            f_stool = "None"
 
         # ---- Submit ----
         add_clicked = st.form_submit_button("Submit", type="primary")
