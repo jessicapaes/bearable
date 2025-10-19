@@ -49,19 +49,10 @@ class AuthManager:
             })
             
             if response.user:
-                # Create user profile in database
-                profile_data = {
-                    "user_id": response.user.id,
-                    "email": email,
-                    "display_name": display_name or email.split("@")[0],
-                    "created_at": datetime.utcnow().isoformat(),
-                }
-                
-                self.supabase.table("user_profiles").insert(profile_data).execute()
-                
+                # Profile will be created on first login to avoid RLS issues
                 return {
                     "success": True,
-                    "message": "Account created! Please check your email to verify your account.",
+                    "message": "Account created! Please check your email to verify, then login.",
                     "user": response.user
                 }
             else:
@@ -106,18 +97,36 @@ class AuthManager:
             })
             
             if response.user:
-                # Get user profile
-                profile = self.supabase.table("user_profiles")\
-                    .select("*")\
-                    .eq("user_id", response.user.id)\
-                    .single()\
-                    .execute()
+                # Get user profile, create if doesn't exist
+                try:
+                    profile = self.supabase.table("user_profiles")\
+                        .select("*")\
+                        .eq("user_id", response.user.id)\
+                        .single()\
+                        .execute()
+                    
+                    profile_data = profile.data if profile else None
+                    
+                except Exception:
+                    # Profile doesn't exist, create it
+                    profile_data = {
+                        "user_id": response.user.id,
+                        "email": email,
+                        "display_name": email.split("@")[0],
+                        "created_at": datetime.utcnow().isoformat(),
+                    }
+                    
+                    try:
+                        self.supabase.table("user_profiles").insert(profile_data).execute()
+                    except Exception:
+                        # If creation fails, continue without profile
+                        profile_data = None
                 
                 return {
                     "success": True,
                     "message": "Login successful!",
                     "user": response.user,
-                    "profile": profile.data if profile else None
+                    "profile": profile_data
                 }
             else:
                 return {

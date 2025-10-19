@@ -85,10 +85,14 @@ def load_user_data():
         return st.session_state.n1_df
     else:
         # Database mode: load from Supabase
-        user_id = st.session_state.user.get("id")
-        df = db_manager.get_user_logs(user_id)
-        st.session_state.n1_df = df
-        return df
+        user = st.session_state.get("user")
+        if user and hasattr(user, 'id'):
+            user_id = user.id
+            df = db_manager.get_user_logs(user_id)
+            st.session_state.n1_df = df
+            return df
+        else:
+            return pd.DataFrame()
 
 def save_user_log(log_data):
     """Save a log entry to database or session state"""
@@ -102,14 +106,18 @@ def save_user_log(log_data):
         return {"success": True, "message": "Saved to session"}
     else:
         # Database mode: save to Supabase
-        user_id = st.session_state.user.get("id")
-        result = db_manager.save_log(user_id, log_data)
-        
-        if result["success"]:
-            # Reload data
-            st.session_state.n1_df = db_manager.get_user_logs(user_id)
-        
-        return result
+        user = st.session_state.get("user")
+        if user and hasattr(user, 'id'):
+            user_id = user.id
+            result = db_manager.save_log(user_id, log_data)
+            
+            if result["success"]:
+                # Reload data
+                st.session_state.n1_df = db_manager.get_user_logs(user_id)
+            
+            return result
+        else:
+            return {"success": False, "message": "Please log in to save data"}
 
 # Load user's data
 user_data = load_user_data()
@@ -244,13 +252,16 @@ with tab_settings:
     if not demo_mode:
         st.markdown("### 👤 Your Profile")
         profile = st.session_state.get("user_profile", {})
-        user = st.session_state.user
+        user = st.session_state.get("user")
         
-        st.text_input("Email", value=user.get("email", ""), disabled=True)
-        st.text_input("Display Name", value=profile.get("display_name", ""), key="profile_name")
-        
-        if st.button("Update Profile"):
-            st.info("Profile update coming soon!")
+        if user and hasattr(user, 'email'):
+            st.text_input("Email", value=user.email, disabled=True)
+            st.text_input("Display Name", value=profile.get("display_name", "") if profile else "", key="profile_name")
+            
+            if st.button("Update Profile"):
+                st.info("Profile update coming soon!")
+        else:
+            st.warning("Please log in to view your profile")
     
     # Export data
     st.markdown("### 💾 Export Your Data")
@@ -281,9 +292,13 @@ with tab_settings:
             st.error("**Delete All Data**: This cannot be undone!")
             confirm = st.text_input("Type 'DELETE' to confirm")
             if st.button("Delete All My Data") and confirm == "DELETE":
-                user_id = st.session_state.user.get("id")
-                # Would implement deletion here
-                st.warning("Deletion not yet implemented")
+                user = st.session_state.get("user")
+                if user and hasattr(user, 'id'):
+                    user_id = user.id
+                    # Would implement deletion here
+                    st.warning("Deletion not yet implemented")
+                else:
+                    st.error("Not authenticated")
 
 # -----------------------------------------------------------------------------
 # Footer

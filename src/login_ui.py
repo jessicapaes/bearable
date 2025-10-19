@@ -162,9 +162,11 @@ def show_user_menu(auth_manager: AuthManager):
                 st.session_state.demo_mode = False
                 st.rerun()
         else:
-            display_name = profile.get("display_name") if profile else user.get("email", "User")
+            # User is a Pydantic model, access attributes directly
+            user_email = getattr(user, 'email', '')
+            display_name = profile.get("display_name") if profile else (user_email.split("@")[0] if user_email else "User")
             st.markdown(f"### 👤 {display_name}")
-            st.caption(user.get("email", ""))
+            st.caption(user_email)
             
             # Stats
             if hasattr(st.session_state, 'user_stats'):
