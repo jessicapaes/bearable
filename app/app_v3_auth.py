@@ -296,14 +296,26 @@ if AUTH_ENABLED and not demo_mode:
             st.session_state.is_first_time_user = user_df.empty
 
 # -----------------------------------------------------------------------------
-# Tabs (Daily Log first for quick access)
+# Tabs (Dashboard first in demo mode, Daily Log first for authenticated users)
 # -----------------------------------------------------------------------------
-tab_analysis, tab_dashboard, tab_evidence, tab_settings = st.tabs([
-    "🌱 Daily Log",
-    "🏠 Dashboard",
-    "🔬 Evidence Explorer",
-    "⚙️ Settings"
-])
+if demo_mode:
+    # Demo mode: Dashboard first to showcase the app
+    tab_dashboard, tab_analysis, tab_calendar, tab_evidence, tab_settings = st.tabs([
+        "🏠 Dashboard",
+        "🌱 Daily Log",
+        "📅 Calendar",
+        "🔬 Evidence Explorer",
+        "⚙️ Settings"
+    ])
+else:
+    # Authenticated: Daily Log first for quick access
+    tab_analysis, tab_dashboard, tab_calendar, tab_evidence, tab_settings = st.tabs([
+        "🌱 Daily Log",
+        "🏠 Dashboard",
+        "📅 Calendar",
+        "🔬 Evidence Explorer",
+        "⚙️ Settings"
+    ])
 
 
 # -----------------------------------------------------------------------------
@@ -464,24 +476,33 @@ with tab_dashboard:
     
     st.subheader("🏠 Your Personal Health Dashboard")
     
-    # Dashboard explanation
-    st.markdown("""
-    **📊 What you'll see here:**
-    - **Trend Charts**: Track your pain, sleep, mood, and stress over time
-    - **Therapy Analysis**: See if treatments are working with statistical confidence
-    - **Pattern Recognition**: Discover what helps you most
-    - **Research Comparison**: Compare your results with published studies
+    # Dashboard explanation in two columns
+    col_dash1, col_dash2 = st.columns(2)
     
-    **💡 How to use:**
-    1. **Log daily data** in the 🌱 Daily Log tab (first tab)
-    2. **Add 7+ days** to see meaningful trends
-    3. **Mark therapy start dates** for before/after analysis
-    4. **Check back here** to see your progress and insights
-    """)
+    with col_dash1:
+        st.markdown("""
+        **📊 What you'll see here:**
+        - **Trend Charts**: Track your pain, sleep, mood, and stress over time
+        - **Therapy Analysis**: See if treatments are working with statistical confidence
+        - **Pattern Recognition**: Discover what helps you most
+        - **Research Comparison**: Compare your results with published studies
+        """)
+    
+    with col_dash2:
+        st.markdown("""
+        **💡 How to use:**
+        1. **Log daily data** in the 🌱 Daily Log tab (first tab)
+        2. **Add 7+ days** to see meaningful trends
+        3. **Mark therapy start dates** for before/after analysis
+        4. **Check back here** to see your progress and insights
+        """)
     st.markdown("---")
     
     # Check if user has any data
     has_data = not st.session_state.n1_df.empty if "n1_df" in st.session_state else False
+    
+    # Check if user is female (for menstrual calendar display)
+    is_female = st.session_state.get("sex_at_birth", "Female") == "Female"
     
     # Demo data toggle and date filter
     col_demo, col_date_filter, col_space = st.columns([1, 2, 1])
@@ -560,9 +581,9 @@ with tab_dashboard:
         
         st.markdown(f"### 📸 Latest Entry ({latest_date})")
         kpi1, kpi2, kpi3 = st.columns(3)
-        kpi1.metric("Pain", f"{int(latest_row.get('pain_score', 0))}/10")
-        kpi2.metric("Sleep", f"{latest_row.get('sleep_hours', 0):.1f}h")
-        kpi3.metric("Mood", f"{int(latest_row.get('mood_score', 0))}/10")
+        kpi1.metric("😣 Pain", f"{int(latest_row.get('pain_score', 0))}/10")
+        kpi2.metric("😴 Sleep", f"{latest_row.get('sleep_hours', 0):.1f}h")
+        kpi3.metric("😊 Mood", f"{int(latest_row.get('mood_score', 0))}/10")
         
         # Show therapy if tracked
         if "therapy_name" in latest_row and pd.notna(latest_row["therapy_name"]) and str(latest_row["therapy_name"]).strip():
@@ -711,9 +732,9 @@ with tab_dashboard:
                 
                 st.markdown("### 📊 Overall Averages")
                 col1, col2, col3 = st.columns(3)
-                col1.metric("Avg Pain", f"{avg_pain:.1f}/10")
-                col2.metric("Avg Sleep", f"{avg_sleep:.1f}h")
-                col3.metric("Avg Mood", f"{avg_mood:.1f}/10")
+                col1.metric("😣 Avg Pain", f"{avg_pain:.1f}/10")
+                col2.metric("😴 Avg Sleep", f"{avg_sleep:.1f}h")
+                col3.metric("😊 Avg Mood", f"{avg_mood:.1f}/10")
                 st.markdown("")  # Spacing
         
         # 14-day trend chart with therapy start line
@@ -810,6 +831,338 @@ with tab_dashboard:
         """)
     
     # Daily log reminder
+        st.markdown("""
+        <div style="border-top: 2px solid #e0e0e0; border-left: 2px solid #e0e0e0; border-right: 2px solid #e0e0e0; border-radius: 10px 10px 0 0; padding: 20px 20px 10px 20px; margin: 10px 0 0 0; background-color: #fafafa;">
+        """, unsafe_allow_html=True)
+        
+        st.markdown("### 🗓️ Menstrual Cycle Calendar")
+        st.caption("Visualize your cycle patterns and track menstrual days, PMS symptoms, and cycle phases")
+        
+        # Get current month/year for navigation
+        current_date = dt.date.today()
+        if 'calendar_month' not in st.session_state:
+            st.session_state.calendar_month = current_date.month
+        if 'calendar_year' not in st.session_state:
+            st.session_state.calendar_year = current_date.year
+        
+        # Calendar navigation - centered month with arrows on far sides
+        col_nav1, col_nav2, col_nav3 = st.columns([1, 2, 1])
+        
+        with col_nav1:
+            if st.button("◀️ Previous", key="cal_prev"):
+                if st.session_state.calendar_month == 1:
+                    st.session_state.calendar_month = 12
+                    st.session_state.calendar_year -= 1
+                else:
+                    st.session_state.calendar_month -= 1
+                st.rerun()
+        
+        with col_nav2:
+            month_names = ["", "January", "February", "March", "April", "May", "June",
+                          "July", "August", "September", "October", "November", "December"]
+            st.markdown(f"<h3 style='text-align: center; margin: 0;'>{month_names[st.session_state.calendar_month]} {st.session_state.calendar_year}</h3>", unsafe_allow_html=True)
+        
+        with col_nav3:
+            if st.button("Next ▶️", key="cal_next"):
+                if st.session_state.calendar_month == 12:
+                    st.session_state.calendar_month = 1
+                    st.session_state.calendar_year += 1
+                else:
+                    st.session_state.calendar_month += 1
+                st.rerun()
+        
+        # Middle section with left and right borders
+        st.markdown("""
+        <div style="border-left: 2px solid #e0e0e0; border-right: 2px solid #e0e0e0; padding: 0 20px; background-color: #fafafa;">
+        """, unsafe_allow_html=True)
+        
+        # Create calendar data
+        import calendar
+        
+        # Get calendar for the selected month/year
+        cal = calendar.monthcalendar(st.session_state.calendar_year, st.session_state.calendar_month)
+        
+        # Get data for the month
+        month_start = dt.date(st.session_state.calendar_year, st.session_state.calendar_month, 1)
+        if st.session_state.calendar_month == 12:
+            month_end = dt.date(st.session_state.calendar_year + 1, 1, 1) - dt.timedelta(days=1)
+        else:
+            month_end = dt.date(st.session_state.calendar_year, st.session_state.calendar_month + 1, 1) - dt.timedelta(days=1)
+        
+        # Filter data for this month
+        if has_data:
+            df_cal = display_df.copy()
+            df_cal["date"] = pd.to_datetime(df_cal["date"])
+            month_data = df_cal[
+                (df_cal["date"].dt.date >= month_start) & 
+                (df_cal["date"].dt.date <= month_end)
+            ]
+        else:
+            month_data = pd.DataFrame()
+        
+        # Create calendar display
+        st.markdown("#### Calendar Legend:")
+        legend_col1, legend_col2, legend_col3, legend_col4, legend_col5 = st.columns(5)
+        with legend_col1:
+            st.markdown("🩸 **Menstruating**")
+        with legend_col2:
+            st.markdown("🥚 **Ovulation Days**")
+        with legend_col3:
+            st.markdown("🟡 **PMS Symptoms**")
+        with legend_col4:
+            st.markdown("🟢 **Normal Days**")
+        with legend_col5:
+            st.markdown("📅 **Click to Track/Untrack**")
+        
+        st.caption("💡 **Tip:** Click any day to mark/unmark as period day. Click again to unmark. Use buttons below to manage tracked periods.")
+        
+        # Calendar grid
+        st.markdown("#### Calendar View:")
+        
+        # Add CSS for consistent calendar styling
+        st.markdown("""
+        <style>
+        .calendar-day {
+            height: 60px !important;
+            margin: 2px !important;
+            border-radius: 8px !important;
+            text-align: center !important;
+            font-size: 12px !important;
+            line-height: 1.2 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+        .calendar-week {
+            margin-bottom: 4px !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Weekday headers
+        weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        header_cols = st.columns(7)
+        for i, day in enumerate(weekdays):
+            with header_cols[i]:
+                st.markdown(f"**{day}**")
+        
+        # Calendar days
+        for week in cal:
+            week_cols = st.columns(7)
+            for i, day in enumerate(week):
+                with week_cols[i]:
+                    if day == 0:
+                        st.markdown('<div style="height: 60px; margin: 2px;"></div>', unsafe_allow_html=True)
+                    else:
+                        day_date = dt.date(st.session_state.calendar_year, st.session_state.calendar_month, day)
+                        
+                        # Check if we have data for this day
+                        day_data = None
+                        if not month_data.empty:
+                            day_data = month_data[month_data["date"].dt.date == day_date]
+                        
+                        # Calculate ovulation day (typically day 14 of cycle, but can vary)
+                        is_ovulation_day = False
+                        cycle_day = 0
+                        if day_data is not None and not day_data.empty:
+                            cycle_day = day_data.iloc[0].get("cycle_day", 0)
+                            is_ovulation_day = (cycle_day >= 12 and cycle_day <= 16)  # Fertile window
+                        
+                        # Determine display style
+                        if day_data is not None and not day_data.empty:
+                            day_row = day_data.iloc[0]
+                            is_menstruating = day_row.get("menstruating_today") in [True, "Yes", "yes"]
+                            has_pms = day_row.get("pms_symptoms") and day_row.get("pms_symptoms") != ["None"]
+                            
+                            # Create clickable day with consistent sizing
+                            if is_menstruating:
+                                day_style = 'background-color: #ffebee; border: 2px solid #f44336;'
+                                text_color = '#d32f2f'
+                                icon = '🩸'
+                            elif is_ovulation_day:
+                                day_style = 'background-color: #e1f5fe; border: 2px solid #03a9f4;'
+                                text_color = '#0277bd'
+                                icon = '🥚'
+                            elif has_pms:
+                                day_style = 'background-color: #fff3e0; border: 2px solid #ff9800;'
+                                text_color = '#f57c00'
+                                icon = '🟡'
+                            else:
+                                day_style = 'background-color: #e8f5e8; border: 2px solid #4caf50;'
+                                text_color = '#2e7d32'
+                                icon = '🟢'
+                            
+                            # Make day clickable with consistent styling
+                            day_key = f"cal_day_{day_date.isoformat()}"
+                            is_tracked = st.session_state.get(f"track_period_{day_date.isoformat()}", False)
+                            
+                            if is_tracked:
+                                button_text = f"{icon}\n{day}\nDay {cycle_day}\n✓"
+                                button_help = f"Click to unmark period for {day_date.strftime('%B %d, %Y')}"
+                            else:
+                                button_text = f"{icon}\n{day}\nDay {cycle_day}"
+                                button_help = f"Click to track period for {day_date.strftime('%B %d, %Y')}"
+                            
+                            if st.button(button_text, key=day_key, help=button_help, use_container_width=True):
+                                if is_tracked:
+                                    # Confirmation for untracking
+                                    st.session_state[f"track_period_{day_date.isoformat()}"] = False
+                                    st.success(f"✅ Unmarked {day_date.strftime('%B %d')} as period day")
+                                    st.rerun()
+                                else:
+                                    # Confirmation for tracking
+                                    st.session_state[f"track_period_{day_date.isoformat()}"] = True
+                                    st.success(f"✅ Marked {day_date.strftime('%B %d')} as period day")
+                                    st.rerun()
+                        else:
+                            # No data for this day - still make it clickable
+                            if day_date == current_date:
+                                day_style = 'background-color: #f5f5f5; border: 2px solid #9e9e9e;'
+                                text_color = '#424242'
+                                icon = '📅'
+                            else:
+                                day_style = 'background-color: #fafafa; border: 1px solid #e0e0e0;'
+                                text_color = '#9e9e9e'
+                                icon = '📅'
+                            
+                            # Make day clickable even without data
+                            day_key = f"cal_day_{day_date.isoformat()}"
+                            is_tracked = st.session_state.get(f"track_period_{day_date.isoformat()}", False)
+                            
+                            if is_tracked:
+                                button_text = f"{icon}\n{day}\n-\n✓"
+                                button_help = f"Click to unmark period for {day_date.strftime('%B %d, %Y')}"
+                            else:
+                                button_text = f"{icon}\n{day}\n-"
+                                button_help = f"Click to track period for {day_date.strftime('%B %d, %Y')}"
+                            
+                            if st.button(button_text, key=day_key, help=button_help, use_container_width=True):
+                                if is_tracked:
+                                    # Confirmation for untracking
+                                    st.session_state[f"track_period_{day_date.isoformat()}"] = False
+                                    st.success(f"✅ Unmarked {day_date.strftime('%B %d')} as period day")
+                                    st.rerun()
+                                else:
+                                    # Confirmation for tracking
+                                    st.session_state[f"track_period_{day_date.isoformat()}"] = True
+                                    st.success(f"✅ Marked {day_date.strftime('%B %d')} as period day")
+                                    st.rerun()
+        
+        # Show tracked periods from calendar clicks
+        tracked_periods = [key for key in st.session_state.keys() if key.startswith("track_period_") and st.session_state[key]]
+        if tracked_periods:
+            st.markdown("#### 📝 Period Tracking from Calendar:")
+            st.caption("Days you've marked as menstruating in the calendar above")
+            
+            period_dates = []
+            for period_key in tracked_periods:
+                date_str = period_key.replace("track_period_", "")
+                period_dates.append(date_str)
+            
+            if period_dates:
+                period_dates.sort()
+                col_period1, col_period2 = st.columns(2)
+                with col_period1:
+                    st.markdown("**Tracked Period Days:**")
+                    for date_str in period_dates[:len(period_dates)//2 + 1]:
+                        date_obj = dt.datetime.fromisoformat(date_str).date()
+                        st.markdown(f"• {date_obj.strftime('%B %d, %Y')}")
+                
+                with col_period2:
+                    if len(period_dates) > len(period_dates)//2 + 1:
+                        st.markdown("**Continued:**")
+                        for date_str in period_dates[len(period_dates)//2 + 1:]:
+                            date_obj = dt.datetime.fromisoformat(date_str).date()
+                            st.markdown(f"• {date_obj.strftime('%B %d, %Y')}")
+                
+                # Buttons for period management
+                col_add, col_remove = st.columns(2)
+                
+                with col_add:
+                    if st.button("➕ Add Tracked Periods to Daily Log", help="Add the periods you've marked in the calendar to your daily log entries"):
+                        for date_str in period_dates:
+                            date_obj = dt.datetime.fromisoformat(date_str).date()
+                            # Check if entry already exists for this date
+                            existing_entry = st.session_state.n1_df[
+                                pd.to_datetime(st.session_state.n1_df["date"]).dt.date == date_obj
+                            ]
+                            
+                            if existing_entry.empty:
+                                # Add new entry for this period day
+                                new_entry = {
+                                    "date": date_obj,
+                                    "sex_at_birth": "Female",
+                                    "condition_today": ["None"],
+                                    "therapy_used": [],
+                                    "pain_score": 5,  # Default values
+                                    "sleep_hours": 8,
+                                    "stress_score": 5,
+                                    "mood_score": 5,
+                                    "wake_ups_n": 0,
+                                    "movement": "None",
+                                    "digestive_sounds": "None",
+                                    "bowel_movements_n": 1,
+                                    "stool_consistency": "Normal",
+                                    "physical_symptoms": [],
+                                    "emotional_symptoms": [],
+                                    "patience_score": 5,
+                                    "anxiety_score": 5,
+                                    "cravings": ["None"],
+                                    "menstruating_today": "Yes",
+                                    "cycle_day": calculate_cycle_day(date_obj, st.session_state.n1_df),
+                                    "flow": "Medium",
+                                    "pms_symptoms": ["None"],
+                                    "good_day": False,
+                                    "therapy_on": 0,
+                                    "therapy_name": "",
+                                }
+                                st.session_state.n1_df = pd.concat([st.session_state.n1_df, pd.DataFrame([new_entry])], ignore_index=True)
+                        
+                        st.success(f"✅ Added {len(period_dates)} period days to your daily log!")
+                        st.rerun()
+                
+                with col_remove:
+                    if st.button("🗑️ Clear All Tracked Periods", help="Remove all period tracking from the calendar", type="secondary"):
+                        # Clear all tracked periods
+                        for period_key in tracked_periods:
+                            st.session_state[period_key] = False
+                        st.success(f"✅ Cleared {len(tracked_periods)} tracked period days!")
+                        st.rerun()
+        
+        # Close middle section
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Bottom section with bottom border
+        st.markdown("""
+        <div style="border-bottom: 2px solid #e0e0e0; border-left: 2px solid #e0e0e0; border-right: 2px solid #e0e0e0; border-radius: 0 0 10px 10px; padding: 10px 20px 20px 20px; margin: 0 0 10px 0; background-color: #fafafa;">
+        """, unsafe_allow_html=True)
+        
+        # Summary statistics for the month
+        if not month_data.empty:
+            st.markdown("#### 📊 Monthly Summary:")
+            sum_col1, sum_col2, sum_col3, sum_col4 = st.columns(4)
+            
+            with sum_col1:
+                menstrual_days = len(month_data[month_data["menstruating_today"].isin([True, "Yes", "yes"])])
+                st.metric("🩸 Menstrual Days", menstrual_days)
+            
+            with sum_col2:
+                pms_days = len(month_data[month_data["pms_symptoms"].apply(lambda x: x and x != ["None"] if isinstance(x, list) else False)])
+                st.metric("🟡 PMS Days", pms_days)
+            
+            with sum_col3:
+                avg_pain = month_data["pain_score"].mean()
+                st.metric("😣 Avg Pain", f"{avg_pain:.1f}/10")
+            
+            with sum_col4:
+                avg_mood = month_data["mood_score"].mean()
+                st.metric("😊 Avg Mood", f"{avg_mood:.1f}/10")
+        
+        # Close the calendar border div
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Daily log reminder
     st.divider()
     if has_data and not show_demo:
         # Check if today's date already logged
@@ -818,6 +1171,251 @@ with tab_dashboard:
         if today not in dates_logged.values:
             st.info("📅 You haven't logged today's data yet. Scroll down to the Daily Wellness Log tab!", icon="💡")
     
+
+# -----------------------------------------------------------------------------
+# Calendar tab - Harmony-style design
+# -----------------------------------------------------------------------------
+
+with tab_calendar:
+    st.markdown("## 📅 Calendar")
+    st.caption("Track your wellness journey with a clean, intuitive calendar view")
+    
+    # Check if user is female (for menstrual calendar display)
+    is_female = st.session_state.get("sex_at_birth", "Female") == "Female"
+    
+    if (has_data or show_demo) and is_female:
+        # Add CSS for Outlook-style calendar
+        st.markdown("""
+        <style>
+        .outlook-calendar {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .month-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #323130;
+            margin: 16px 0 8px 0;
+            text-align: center;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        .calendar-table th {
+            background-color: #f3f2f1;
+            color: #605e5c;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            height: 32px;
+        }
+        .calendar-table td {
+            border: 1px solid #d1d5db;
+            padding: 0;
+            height: 32px;
+            width: 14.28%;
+            text-align: center;
+            vertical-align: middle;
+            background-color: white;
+        }
+        .calendar-day {
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: 30px;
+            font-size: 14px;
+            color: #323130;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+        .calendar-day:hover {
+            background-color: #f3f2f1;
+        }
+        .calendar-day.today {
+            background-color: #0078d4;
+            color: white;
+            font-weight: 600;
+        }
+        .calendar-day.today:hover {
+            background-color: #106ebe;
+        }
+        .calendar-day.other-month {
+            color: #a19f9d;
+        }
+        .calendar-day.selected {
+            background-color: #deecf9;
+            color: #0078d4;
+            font-weight: 600;
+        }
+        .calendar-day.menstrual {
+            background-color: #fce4ec;
+            color: #c2185b;
+            font-weight: 600;
+        }
+        .calendar-day.ovulation {
+            background-color: #fff3e0;
+            color: #f57c00;
+            font-weight: 600;
+        }
+        .calendar-day.pms {
+            background-color: #fffde7;
+            color: #f9a825;
+            font-weight: 600;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Get current date for navigation
+        current_date = dt.date.today()
+        if 'calendar_view_month' not in st.session_state:
+            st.session_state.calendar_view_month = current_date.month
+        if 'calendar_view_year' not in st.session_state:
+            st.session_state.calendar_view_year = current_date.year
+        
+        # Calendar navigation
+        col_nav1, col_nav2, col_nav3 = st.columns([1, 2, 1])
+        
+        with col_nav1:
+            if st.button("◀️", key="cal_view_prev"):
+                if st.session_state.calendar_view_month == 1:
+                    st.session_state.calendar_view_month = 12
+                    st.session_state.calendar_view_year -= 1
+                else:
+                    st.session_state.calendar_view_month -= 1
+                st.rerun()
+        
+        with col_nav2:
+            month_names = ["", "January", "February", "March", "April", "May", "June",
+                          "July", "August", "September", "October", "November", "December"]
+            st.markdown(f"<div class='month-header'>{month_names[st.session_state.calendar_view_month].upper()} {st.session_state.calendar_view_year}</div>", unsafe_allow_html=True)
+        
+        with col_nav3:
+            if st.button("▶️", key="cal_view_next"):
+                if st.session_state.calendar_view_month == 12:
+                    st.session_state.calendar_view_month = 1
+                    st.session_state.calendar_view_year += 1
+                else:
+                    st.session_state.calendar_view_month += 1
+                st.rerun()
+        
+        # Create calendar data
+        import calendar
+        
+        # Get calendar for the selected month/year
+        cal = calendar.monthcalendar(st.session_state.calendar_view_year, st.session_state.calendar_view_month)
+        
+        # Get data for the month
+        month_start = dt.date(st.session_state.calendar_view_year, st.session_state.calendar_view_month, 1)
+        if st.session_state.calendar_view_month == 12:
+            month_end = dt.date(st.session_state.calendar_view_year + 1, 1, 1) - dt.timedelta(days=1)
+        else:
+            month_end = dt.date(st.session_state.calendar_view_year, st.session_state.calendar_view_month + 1, 1) - dt.timedelta(days=1)
+        
+        # Filter data for this month
+        if has_data:
+            df_cal = display_df.copy()
+            df_cal["date"] = pd.to_datetime(df_cal["date"])
+            month_data = df_cal[
+                (df_cal["date"].dt.date >= month_start) & 
+                (df_cal["date"].dt.date <= month_end)
+            ]
+        else:
+            month_data = pd.DataFrame()
+        
+        # Create Outlook-style calendar using HTML table
+        st.markdown('<div class="outlook-calendar">', unsafe_allow_html=True)
+        
+        # Create HTML table for calendar
+        calendar_html = f'''
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    <th>Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+        '''
+        
+        # Add calendar weeks
+        for week in cal:
+            calendar_html += '<tr>'
+            for i, day in enumerate(week):
+                if day == 0:
+                    calendar_html += '<td></td>'
+                else:
+                    day_date = dt.date(st.session_state.calendar_view_year, st.session_state.calendar_view_month, day)
+                    
+                    # Check if we have data for this day
+                    day_data = None
+                    if not month_data.empty:
+                        day_data = month_data[month_data["date"].dt.date == day_date]
+                    
+                    # Determine day styling
+                    day_class = ""
+                    if day_date == current_date:
+                        day_class = "today"
+                    elif day_data is not None and not day_data.empty:
+                        day_row = day_data.iloc[0]
+                        is_menstruating = day_row.get("menstruating_today") in [True, "Yes", "yes"]
+                        has_pms = day_row.get("pms_symptoms") and day_row.get("pms_symptoms") != ["None"]
+                        cycle_day = day_row.get("cycle_day", 0)
+                        is_ovulation_day = (cycle_day >= 12 and cycle_day <= 16)
+                        
+                        if is_menstruating:
+                            day_class = "menstrual"
+                        elif is_ovulation_day:
+                            day_class = "ovulation"
+                        elif has_pms:
+                            day_class = "pms"
+                    
+                    # Check if day is selected/tracked
+                    period_key = f"track_period_{day_date.isoformat()}"
+                    if period_key in st.session_state and st.session_state[period_key]:
+                        day_class = "selected"
+                    
+                    calendar_html += f'<td><button class="calendar-day {day_class}" onclick="alert(\'{day_date}\')">{day}</button></td>'
+            calendar_html += '</tr>'
+        
+        calendar_html += '''
+            </tbody>
+        </table>
+        '''
+        
+        st.markdown(calendar_html, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Legend
+        st.markdown("### Legend")
+        legend_col1, legend_col2, legend_col3, legend_col4 = st.columns(4)
+        
+        with legend_col1:
+            st.markdown("🩸 **Menstruating**")
+        with legend_col2:
+            st.markdown("🥚 **Ovulation**")
+        with legend_col3:
+            st.markdown("🟡 **PMS**")
+        with legend_col4:
+            st.markdown("⚫ **Selected**")
+        
+        st.caption("💡 Click on any day to track or untrack as a period day")
+        
+    else:
+        st.info("📅 Calendar view is available for female users. Enable demo mode or log in to see your calendar.")
 
 # -----------------------------------------------------------------------------
 # Evidence Explorer tab (now wired to f_sorted)
@@ -871,6 +1469,45 @@ with tab_evidence:
                 default=default_evdir,
                 help="Filter by type of evidence"
             )
+    
+    # =========================================================================
+    # THERAPY DEFINITIONS SECTION
+    # =========================================================================
+    with st.expander("📚 **Therapy Definitions** - What each therapy means", expanded=False):
+        st.markdown("""
+        Learn about the different complementary and alternative therapies available:
+        """)
+        
+        # Therapy definitions dictionary
+        therapy_definitions = {
+            "Acupuncture": "A traditional Chinese medicine practice involving the insertion of thin needles at specific points on the body to stimulate energy flow and promote healing. Used for pain management, stress reduction, and various health conditions.",
+            
+            "Aromatherapy": "The therapeutic use of essential oils extracted from plants to promote physical and psychological well-being. Oils can be inhaled, applied topically, or used in baths to reduce stress, improve sleep, and manage pain.",
+            
+            "Ayurveda": "An ancient Indian holistic healing system that emphasizes balance between mind, body, and spirit through diet, herbal remedies, yoga, meditation, and lifestyle practices tailored to individual constitution types (doshas).",
+            
+            "Cognitive Behavioural Therapy": "A structured, evidence-based psychotherapy that helps identify and change negative thought patterns and behaviors. Particularly effective for anxiety, depression, PTSD, and chronic pain management.",
+            
+            "Exercise Therapy": "Structured physical activity programs designed to improve strength, flexibility, endurance, and overall health. Includes aerobic exercise, resistance training, stretching, and functional movement tailored to individual needs.",
+            
+            "Herbal": "The use of plants and plant extracts for medicinal purposes. Includes teas, tinctures, capsules, and topical preparations. Common herbs include St. John's Wort for depression, ginger for nausea, and turmeric for inflammation.",
+            
+            "Massage": "Manual manipulation of soft tissues (muscles, tendons, ligaments) to reduce tension, improve circulation, and promote relaxation. Varieties include Swedish, deep tissue, sports, and therapeutic massage.",
+            
+            "Meditation": "Mental training practices that cultivate awareness, focus, and inner calm. Includes mindfulness meditation, transcendental meditation, loving-kindness meditation, and body scan techniques for stress reduction and mental clarity.",
+            
+            "Qi Gong": "A Chinese mind-body practice combining gentle movements, breathing techniques, and meditation to cultivate and balance 'qi' (life energy). Used to improve flexibility, reduce stress, and enhance overall vitality.",
+            
+            "Tai Chi": "An ancient Chinese martial art practiced as a gentle form of exercise involving slow, flowing movements coordinated with deep breathing. Benefits include improved balance, flexibility, strength, and mental calmness.",
+            
+            "Yoga": "An Indian practice integrating physical postures (asanas), breathing exercises (pranayama), and meditation. Styles range from gentle (Hatha, Yin) to vigorous (Vinyasa, Ashtanga), promoting flexibility, strength, and mental well-being."
+        }
+        
+        # Display definitions in a clean format
+        for therapy, definition in therapy_definitions.items():
+            st.markdown(f"**{therapy}:**")
+            st.markdown(f"> {definition}")
+            st.markdown("")  # Add spacing
     
     # Apply filters specific to this tab
     base = evidence.copy()
@@ -1545,7 +2182,7 @@ with tab_analysis:
         "physical_symptoms", "emotional_symptoms",
         "patience_score", "anxiety_score", "cravings",
         "menstruating_today", "cycle_day", "flow", "pms_symptoms",
-        "good_day", "therapy_on", "therapy_name",
+        "good_day", "therapy_on", "therapy_name", "wake_ups_n",
     ]
 
     # Load data from database or initialize empty dataframe
@@ -1625,7 +2262,7 @@ with tab_analysis:
     # Optional: gentle nudge until we have 7 days of data
     n_days = len(st.session_state.n1_df["date"].unique()) if not st.session_state.n1_df.empty else 0
     if n_days < 7:
-        st.info("Add a few days to see your 7-day trend here.", icon="💡")
+        st.info("Add a few days to see your 7-day trend in the 🏠 **Dashboard** tab.", icon="💡")
 
     # ===== Outside-the-form Action Bar (column layout; matches screenshot) =====
 
@@ -1758,6 +2395,42 @@ with tab_analysis:
 
     # ---- Form (cleaned) with Sex at birth + conditional menstrual tracking + cravings ----
     defs = _defaults_from_yesterday()
+    
+    # Function to auto-calculate cycle day based on menstrual days
+    def calculate_cycle_day(date, df):
+        """Calculate cycle day based on menstrual days pattern"""
+        if df.empty:
+            return 1
+        
+        # Convert dates to datetime
+        df_copy = df.copy()
+        df_copy["date"] = pd.to_datetime(df_copy["date"])
+        current_date = pd.to_datetime(date)
+        
+        # Find all menstrual days (where menstruating_today is True/Yes)
+        menstrual_days = df_copy[
+            (df_copy["menstruating_today"].isin([True, "Yes", "yes"])) & 
+            (df_copy["date"] <= current_date)
+        ].sort_values("date")
+        
+        if menstrual_days.empty:
+            return 1
+        
+        # Find the most recent menstrual start
+        last_period_start = menstrual_days.iloc[-1]["date"]
+        
+        # Calculate days since last period started
+        days_since_period = (current_date - last_period_start).days + 1
+        
+        # If currently menstruating, it's day 1 of cycle
+        if df_copy[df_copy["date"] == current_date]["menstruating_today"].isin([True, "Yes", "yes"]).any():
+            return 1
+        
+        # Calculate cycle day (assume 28-day cycle if no pattern established)
+        cycle_day = days_since_period
+        if cycle_day > 35:  # If more than 35 days, reset to 1
+            return 1
+        return min(cycle_day, 35)
 
     # Menstrual options (kept local to this block for portability)
     pms_options = [
@@ -1767,24 +2440,26 @@ with tab_analysis:
     flow_options = ["None","Light","Medium","Heavy"]
 
     with st.form("n1_entry_form", clear_on_submit=False):
-        # Row 1: Date only (sex is outside the form)
-        c1a, _ = st.columns(2)
+        # Row 1: Date and Mood
+        c1a, c1b = st.columns(2)
         with c1a:
             f_date = st.date_input("Today's date:", value=dt.date.today(), format="DD/MM/YYYY")
+        with c1b:
+            f_mood = st.slider("Overall mood (0–10)", 0, 10, int(round(defs["mood_score"])), help="How's your overall mood today?")
 
-        # Core Metrics Section
-        st.markdown("#### 💚 Core Metrics")
-        c5, c6 = st.columns(2)
-        with c5:
+        # Row 2: Sleep hours and Times woke up
+        c2a, c2b = st.columns(2)
+        with c2a:
             f_sleep = st.slider("Sleep hours last night", 0, 14, int(round(defs["sleep_hours"])))
-        with c6:
-            f_mood = st.slider("Overall mood (0–10)", 0, 10, int(round(defs["mood_score"])))
-        
-        c7, c8 = st.columns(2)
-        with c7:
-            f_pain = st.slider("Pain (0–10)", 0, 10, int(round(defs["pain_score"])))
-        with c8:
+        with c2b:
+            f_wake_ups = st.number_input("Times woke up", 0, 20, 0, help="How many times did you wake up during the night?")
+
+        # Row 3: Stress and Pain
+        c3a, c3b = st.columns(2)
+        with c3a:
             f_stress = st.slider("Stress (0–10)", 0, 10, int(round(defs["stress_score"])))
+        with c3b:
+            f_pain = st.slider("Pain (0–10)", 0, 10, int(round(defs["pain_score"])))
 
         # Therapies Section
         st.markdown("#### 🌟 Therapy Tracking")
@@ -1824,22 +2499,26 @@ with tab_analysis:
         # ---- Conditional Menstrual Tracking (only if Female) ----
         if is_female:
             st.markdown("### 🩸 Hormonal Cycle")
-            hc1, hc2, hc3, hc4 = st.columns(4)
+            st.caption("💡 **Tip:** Just mark your menstrual days - cycle day will be calculated automatically!")
+            hc1, hc2 = st.columns(2)
             with hc1:
                 f_menstruating = st.radio("Menstruating today?", ["No", "Yes"], index=0)
             with hc2:
-                f_cycle_day = st.number_input("Cycle day", min_value=1, max_value=40, value=1, step=1)
-            with hc3:
-                f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
-            with hc4:
                 f_pms = st.multiselect(
                     "PMS symptoms",
                     ["None", "Cramps", "Bloating", "Breast tenderness", "Headache", "Irritability", "Low mood", "Anxiety", "Fatigue", "Food cravings"],
                     default=["None"]
                 )
+            
+            # Only show flow field if menstruating today is "Yes"
+            if f_menstruating == "Yes":
+                hc3 = st.columns(1)[0]
+                with hc3:
+                    f_flow = st.selectbox("Flow", ["None", "Light", "Medium", "Heavy"], index=0)
+            else:
+                f_flow = "None"  # Clear flow data when not menstruating
         else:
             f_menstruating = "No"
-            f_cycle_day = 0
             f_flow = "None"
             f_pms = ["None"]
 
@@ -1894,6 +2573,9 @@ with tab_analysis:
                 therapy_on_val = 0
                 therapy_name_val = ""
             
+            # Auto-calculate cycle day based on menstrual days
+            auto_cycle_day = calculate_cycle_day(f_date, st.session_state.n1_df) if is_female else 0
+            
             _append_row({
                 "date": f_date,
                 "sex_at_birth": st.session_state["sex_at_birth"],  # value from toggle
@@ -1903,6 +2585,7 @@ with tab_analysis:
                 "sleep_hours": f_sleep,
                 "stress_score": f_stress,
                 "mood_score": f_mood,
+                "wake_ups_n": f_wake_ups,
                 "movement": f_movement,
                 "digestive_sounds": f_digestive,
                 "bowel_movements_n": f_bowel,
@@ -1913,7 +2596,7 @@ with tab_analysis:
                 "anxiety_score": f_anxiety,
                 "cravings": f_cravings,
                 "menstruating_today": f_menstruating,
-                "cycle_day": f_cycle_day,
+                "cycle_day": auto_cycle_day,
                 "flow": f_flow,
                 "pms_symptoms": f_pms,
                 "good_day": st.session_state.get("good_day", False),
@@ -1923,29 +2606,121 @@ with tab_analysis:
             st.success("Row added!")
 
 
-    # ==== Show data (with ☺️ badge when good_day=True) ====
+    # ==== Show data (with beautiful card-based display) ====
     if not st.session_state.n1_df.empty:
         df_show = st.session_state.n1_df.copy()
         df_show["date"] = pd.to_datetime(df_show["date"], errors="coerce").dt.date
+        
+        # Sort by date (newest first)
+        df_show = df_show.sort_values("date", ascending=False)
+        
+        st.markdown("### 📊 Your Daily Log Entries")
+        
+        # Display entries as beautiful cards
+        for idx, row in df_show.head(10).iterrows():  # Show last 10 entries
+            with st.container():
+                # Card header with date and good day indicator
+                col1, col2, col3 = st.columns([2, 1, 1])
+                
+                with col1:
+                    if row.get("good_day", False):
+                        st.markdown(f"### 📅 {row['date']} ☺️ **Good Day!**")
+                    else:
+                        st.markdown(f"### 📅 {row['date']}")
+                
+                with col2:
+                    if row.get("therapy_used"):
+                        st.markdown(f"**💊 {row['therapy_used']}**")
+                
+                with col3:
+                    if row.get("condition_today"):
+                        conditions = row['condition_today'].split(',') if isinstance(row['condition_today'], str) else []
+                        st.markdown(f"🏥 {len(conditions)} condition(s)")
+                
+                # Main metrics row
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    if pd.notna(row.get("pain_score")):
+                        pain_val = int(row["pain_score"])
+                        pain_emoji = "🔴" if pain_val >= 7 else "🟡" if pain_val >= 4 else "🟢"
+                        st.metric("😣 Pain", f"{pain_val}/10", help=f"Pain level: {pain_val}/10", 
+                                delta=None if pain_val == 0 else f"{pain_emoji} {pain_val}")
+                
+                with col2:
+                    if pd.notna(row.get("mood_score")):
+                        mood_val = int(row["mood_score"])
+                        mood_emoji = "😊" if mood_val >= 7 else "😐" if mood_val >= 4 else "😔"
+                        st.metric("😊 Mood", f"{mood_val}/10", help=f"Mood level: {mood_val}/10",
+                                delta=None if mood_val == 0 else f"{mood_emoji} {mood_val}")
+                
+                with col3:
+                    if pd.notna(row.get("sleep_hours")):
+                        sleep_val = float(row["sleep_hours"])
+                        wake_ups = int(row.get("wake_ups_n", 0)) if pd.notna(row.get("wake_ups_n")) else 0
+                        sleep_emoji = "😴" if sleep_val >= 8 else "😪" if sleep_val >= 6 else "🥱"
+                        wake_emoji = "😵‍💫" if wake_ups >= 3 else "😴" if wake_ups == 0 else "😪"
+                        st.metric("😴 Sleep", f"{sleep_val}h", help=f"Sleep duration: {sleep_val} hours, woke up {wake_ups} times",
+                                delta=None if sleep_val == 0 else f"{sleep_emoji} {sleep_val}h ({wake_emoji}{wake_ups})")
+                
+                with col4:
+                    if pd.notna(row.get("stress_score")):
+                        stress_val = int(row["stress_score"])
+                        stress_emoji = "😰" if stress_val >= 7 else "😐" if stress_val >= 4 else "😌"
+                        st.metric("😰 Stress", f"{stress_val}/10", help=f"Stress level: {stress_val}/10",
+                                delta=None if stress_val == 0 else f"{stress_emoji} {stress_val}")
+                
+                # Additional details in expander
+                with st.expander("📝 View Details", expanded=False):
+                    detail_col1, detail_col2 = st.columns(2)
+                    
+                    with detail_col1:
+                        if row.get("movement"):
+                            st.markdown(f"**🏃 Movement:** {row['movement']}")
+                        if row.get("cravings"):
+                            st.markdown(f"**🍫 Cravings:** {row['cravings']}")
+                        if row.get("therapy_used"):
+                            st.markdown(f"**💊 Therapy:** {row['therapy_used']}")
+                        if pd.notna(row.get("wake_ups_n")) and row.get("wake_ups_n", 0) > 0:
+                            st.markdown(f"**😵‍💫 Wake-ups:** {int(row['wake_ups_n'])} times")
+                    
+                    with detail_col2:
+                        if row.get("condition_today"):
+                            st.markdown(f"**🏥 Conditions:** {row['condition_today']}")
+                        if row.get("menstruating_today"):
+                            st.markdown("**🩸 Menstruating:** Yes")
+                            if pd.notna(row.get("cycle_day")) and row.get("cycle_day", 0) > 0:
+                                st.markdown(f"**📅 Cycle day:** {int(row['cycle_day'])}")
+                        if row.get("therapy_on"):
+                            st.markdown(f"**📅 Started therapy:** {row['therapy_on']}")
+                
+                st.markdown("---")
+        
+        # Show total count and option to view all
+        if len(df_show) > 10:
+            st.info(f"Showing last 10 of {len(df_show)} entries. Use the table view below to see all data.")
+        
+        # Option to view as traditional table
+        with st.expander("📋 View as Traditional Table", expanded=False):
+            # Use ☺️ instead of ⭐
+            df_show_table = df_show.copy()
+            df_show_table["☺️"] = df_show_table["good_day"].fillna(False).map(lambda x: "☺️" if bool(x) else "")
 
-        # Use ☺️ instead of ⭐
-        df_show["☺️"] = df_show["good_day"].fillna(False).map(lambda x: "☺️" if bool(x) else "")
+            preferred = [c for c in [
+                "☺️", "date", "pain_score", "stress_score", "sleep_hours", "mood_score", "wake_ups_n",
+                "therapy_used", "condition_today", "movement", "cravings", "menstruating_today"
+            ] if c in df_show_table.columns]
+            others = [c for c in df_show_table.columns if c not in preferred and c != "good_day"]  # hide raw bool
 
-        preferred = [c for c in [
-            "☺️", "date", "pain_score", "stress_score", "sleep_hours", "mood_score",
-            "therapy_used", "condition_today", "movement", "cravings", "menstruating_today"
-        ] if c in df_show.columns]
-        others = [c for c in df_show.columns if c not in preferred and c != "good_day"]  # hide raw bool
-
-        st.dataframe(
-            df_show[preferred + others],
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "☺️": st.column_config.TextColumn("", help="Marked as a good day"),
-                "menstruating_today": st.column_config.CheckboxColumn("Menstruating", disabled=True),
-            },
-        )
+            st.dataframe(
+                df_show_table[preferred + others],
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "☺️": st.column_config.TextColumn("", help="Marked as a good day"),
+                    "menstruating_today": st.column_config.CheckboxColumn("Menstruating", disabled=True),
+                },
+            )
     else:
         st.info("No rows yet — add your first day above or use 'Duplicate yesterday' after your first entry.")
 
@@ -2177,7 +2952,7 @@ with tab_settings:
                     "movement", "digestive_sounds", "bowel_movements_n", "stool_consistency",
                     "physical_symptoms", "emotional_symptoms",
                     "patience_score", "anxiety_score", "cravings",
-                    "menstruating_today", "cycle_day", "flow", "pms_symptoms",
+                    "menstruating_today", "cycle_day", "flow", "pms_symptoms", "wake_ups_n",
                     "good_day", "therapy_on", "therapy_name",
                 ])
                 st.success("✅ All data cleared.")
