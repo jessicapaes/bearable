@@ -1,0 +1,7 @@
+# OpenAI Configuration
+OPENAI_API_KEY=sk-your-actual-key-here
+OPENAI_MODEL=gpt-3.5-turbo
+
+# Optional: Adjust rate limits and cache
+# AI_RATE_LIMIT_PER_DAY=50
+# AI_CACHE_TTL_HOURS=24
