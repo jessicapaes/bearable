@@ -2980,6 +2980,17 @@ with tab2:
             else:
                 therapy_on_val = 0
                 therapy_name_val = ""
+            
+            # Additional logic: If user is using a therapy but didn't check "started therapy today"
+            # and they have an active therapy, keep it active
+            if not f_started_therapy and f_therapy_used and len(f_therapy_used) > 0:
+                # Check if any of the therapies used today match an active therapy
+                if last_row is not None and "therapy_name" in last_row:
+                    active_therapy = str(last_row.get("therapy_name", ""))
+                    if active_therapy and any(therapy.lower() in active_therapy.lower() or active_therapy.lower() in therapy.lower() 
+                                            for therapy in f_therapy_used):
+                        therapy_on_val = 1
+                        therapy_name_val = active_therapy
 
             # Auto-calculate cycle day
             auto_cycle_day = calculate_cycle_day(f_date, st.session_state.n1_df) if is_female else 0
