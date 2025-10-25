@@ -2,7 +2,7 @@
 
 A comprehensive Streamlit app that helps you **explore evidence-based therapies** (ClinicalTrials.gov + PubMed) and **track your personal health journey** with N‑of‑1 trials. Now with **user authentication**, **cloud database storage**, and **enhanced UI design**!
 
-> **🆕 Latest Updates:** Enhanced therapy results visualization with purple-pink gradient design, improved form layouts, and streamlined user interface!
+> **🆕 Latest Updates:** Complete database integration with Supabase, redesigned Quick Actions section with glass-card styling, and enhanced user authentication system!
 
 ---
 
@@ -63,11 +63,21 @@ A comprehensive Streamlit app that helps you **explore evidence-based therapies*
   * **Import previous data** - restore from backups
   * **Data privacy** - you own your data, stored securely
 
+### 🚀 Quick Actions (app_v17_final.py)
+
+  * **Copy Yesterday** - duplicate previous day's entries with one click
+  * **Add Note** - quick note-taking with popover interface
+  * **Mark Good Day** - toggle good day status
+  * **Track Cycle** - enable/disable menstrual cycle tracking
+  * **Glass-card design** - modern white container with shadow/elevation
+  * **Visual icons** - intuitive circular icons for each action
+  * **Database persistence** - all actions saved to Supabase
+
 ---
 
 ## 🧭 Solution Architecture
 
-### With Authentication (app_v4_auth.py)
+### With Authentication (app_v17_final.py - Latest)
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -77,7 +87,7 @@ A comprehensive Streamlit app that helps you **explore evidence-based therapies*
                    │  Streamlit UI + Plotly
                    ▼
 ┌────────────────────────────────────────────────────────────────┐
-│              Streamlit App (app_v4_auth.py)                    │
+│              Streamlit App (app_v17_final.py)                    │
 │  • Authentication Gate (login_ui.py)                           │
 │  • Tabs: Dashboard | Evidence Explorer | Daily Log | Settings │
 │  • User-specific data loading from database                    │
@@ -158,7 +168,8 @@ painreliefmap/
 ├── app/
 │   ├── app_v3.py                    # ✨ Original app (no auth, session-only data)
 │   ├── app_v4_auth.py               # 🔐 Authenticated app with database
-│   ├── app_v16_final.py             # 🎨 LATEST! Enhanced UI with gradient design
+│   ├── app_v16_final.py             # 🎨 Enhanced UI with gradient design
+│   ├── app_v17_final.py             # 🚀 LATEST! Full database integration + Quick Actions redesign
 │   ├── app_chat.py                  # Experimental chat interface
 │   └── causal.py                    # Statistical analysis functions
 │
@@ -199,7 +210,8 @@ painreliefmap/
 |------|-------------|--------------|----------|
 | **app_v3.py** | Original app | Session state (temporary) | Quick testing, no signup needed |
 | **app_v4_auth.py** | Authenticated app | Supabase database (permanent) | Personal use, multiple users, data persists |
-| **app_v16_final.py** | 🎨 **LATEST!** Enhanced UI | Supabase database (permanent) | **Recommended** - best user experience with gradient design |
+| **app_v17_final.py** | 🚀 **LATEST!** Full database integration | Supabase database (permanent) | **Recommended** - complete auth + database + enhanced UI |
+| **app_v16_final.py** | 🎨 Enhanced UI with gradient design | Supabase database (permanent) | Enhanced user experience with gradient design |
 
 All apps share the same evidence database (CSV) and have the same features - the difference is user accounts, data persistence, and UI enhancements.
 
@@ -320,7 +332,7 @@ python -m streamlit run app/app_v3.py
 
 **With Authentication (Recommended):**
 ```bash
-python -m streamlit run app/app_v16_final.py
+python -m streamlit run app/app_v17_final.py
 ```
 
 **With Authentication (Legacy):**
