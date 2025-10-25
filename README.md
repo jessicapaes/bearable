@@ -1,8 +1,8 @@
 # 💆🏻‍♀️ PainReliefMap — Evidence Explorer + N‑of‑1 Tracker
 
-A comprehensive Streamlit app that helps you **explore evidence-based therapies** (ClinicalTrials.gov + PubMed) and **track your personal health journey** with N‑of‑1 trials. Now with **user authentication** and **cloud database storage**!
+A comprehensive Streamlit app that helps you **explore evidence-based therapies** (ClinicalTrials.gov + PubMed) and **track your personal health journey** with N‑of‑1 trials. Now with **user authentication**, **cloud database storage**, and **enhanced UI design**!
 
-> **🆕 New in v4:** User accounts, persistent data storage, and enhanced dashboard with therapy effect analysis!
+> **🆕 Latest Updates:** Enhanced therapy results visualization with purple-pink gradient design, improved form layouts, and streamlined user interface!
 
 ---
 
@@ -45,7 +45,7 @@ A comprehensive Streamlit app that helps you **explore evidence-based therapies*
   * **"Duplicate yesterday"** for easier data entry
   * **Quick notes** and "good day" markers
 
-### 📈 Therapy Effect Analysis (New!)
+### 📈 Therapy Effect Analysis (Enhanced!)
 
   * **Statistical analysis** with bootstrap confidence intervals
   * **Before/after comparison** for each therapy
@@ -53,6 +53,8 @@ A comprehensive Streamlit app that helps you **explore evidence-based therapies*
   * **Correlation matrix** - discover relationships between metrics
   * **Compare with research** - see how your results match clinical trials
   * **Percentage improvements** calculated automatically
+  * **🎨 Beautiful gradient design** - purple-pink themed results cards
+  * **Enhanced visualizations** - improved charts and data presentation
 
 ### ⚙️ Data Management
 
@@ -154,8 +156,9 @@ PainReliefMap combines **external scientific evidence** with **user-generated da
 painreliefmap/
 │
 ├── app/
-│   ├── app_v3.py                    # ✨ Main app (no auth, session-only data)
-│   ├── app_v4_auth.py               # 🔐 NEW! Authenticated app with database
+│   ├── app_v3.py                    # ✨ Original app (no auth, session-only data)
+│   ├── app_v4_auth.py               # 🔐 Authenticated app with database
+│   ├── app_v16_final.py             # 🎨 LATEST! Enhanced UI with gradient design
 │   ├── app_chat.py                  # Experimental chat interface
 │   └── causal.py                    # Statistical analysis functions
 │
@@ -190,14 +193,15 @@ painreliefmap/
 └── README.md                        # This file
 ```
 
-### Two App Versions
+### Three App Versions
 
 | File | Description | Data Storage | Use Case |
 |------|-------------|--------------|----------|
 | **app_v3.py** | Original app | Session state (temporary) | Quick testing, no signup needed |
 | **app_v4_auth.py** | Authenticated app | Supabase database (permanent) | Personal use, multiple users, data persists |
+| **app_v16_final.py** | 🎨 **LATEST!** Enhanced UI | Supabase database (permanent) | **Recommended** - best user experience with gradient design |
 
-Both apps share the same evidence database (CSV) and have the same features - the difference is user accounts and data persistence.
+All apps share the same evidence database (CSV) and have the same features - the difference is user accounts, data persistence, and UI enhancements.
 
 ---
 
@@ -314,7 +318,12 @@ Follow the prompts to configure your Supabase credentials.
 python -m streamlit run app/app_v3.py
 ```
 
-**With Authentication:**
+**With Authentication (Recommended):**
+```bash
+python -m streamlit run app/app_v16_final.py
+```
+
+**With Authentication (Legacy):**
 ```bash
 python -m streamlit run app/app_v4_auth.py
 ```
@@ -431,6 +440,9 @@ Want to test without setting up authentication? Use demo mode:
 * ✅ Export to CSV and HTML reports
 * ✅ Row-level security for data privacy
 * ✅ Demo mode for testing without signup
+* ✅ **Enhanced UI design** - purple-pink gradient therapy results cards
+* ✅ **Improved form layouts** - better spacing and visual hierarchy
+* ✅ **Streamlined user interface** - cleaner, more modern design
 
 ### 🚧 In Progress
 
