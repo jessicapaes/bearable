@@ -800,8 +800,9 @@ st.markdown("""
         backdrop-filter: blur(20px) !important;
         border-radius: 25px !important;
         padding: 40px !important;
-        padding-bottom: 60px !important;
+        padding-bottom: 40px !important;
         margin-bottom: 100px !important;
+        min-height: 400px !important;
         box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
         border: 1px solid rgba(255, 255, 255, 0.8) !important;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -1524,13 +1525,16 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
                 st.rerun()
 
             st.markdown("""
-                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                    <p style="color: #94a3b8; font-size: 14px; margin: 0 0 15px 0;">Don't have an account?</p>
+                <div style="text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0;">
+                    <p style="color: #94a3b8; font-size: 14px; margin: 0 0 10px 0;">Don't have an account?</p>
                 </div>
             """, unsafe_allow_html=True)
 
             # Create Account button inside form
             create_account_clicked = st.form_submit_button("CREATE FREE ACCOUNT", use_container_width=True, type="primary")
+            
+            # Add spacing below the button to push it up from the bottom
+            st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
 
             if create_account_clicked:
                 st.session_state.show_auth_page = True
@@ -2148,126 +2152,57 @@ with tab1:
 
                         # Create therapy effect card with enhanced design
                         st.markdown(f"""
-                        <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-                                    border: 3px solid {effect_color}; border-radius: 24px;
-                                    padding: 2rem; margin: 1.5rem 0;
-                                    box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05);">
-                            <div style="display: flex; justify-content: space-between; align-items: center;
-                                        margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="background: white; border-radius: 24px; padding: 2rem; margin: 1.5rem 0;
+                                    box-shadow: 0 20px 60px rgba(0,0,0,0.12); border-left: 6px solid #8b5cf6;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <div style="background: linear-gradient(135deg, {effect_color} 0%, {effect_color}dd 100%);
+                                    <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
                                                 width: 50px; height: 50px; border-radius: 14px;
-                                                display: flex; align-items: center; justify-content: center;
-                                                box-shadow: 0 8px 20px {effect_color}44;">
+                                                display: flex; align-items: center; justify-content: center;">
                                         <span style="font-size: 24px;">🎯</span>
                                     </div>
-                                    <h3 style="margin: 0; color: #0f172a; font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px;">
+                                    <h3 style="margin: 0; color: #0f172a; font-size: 1.75rem; font-weight: 800;">
                                         {therapy}
                                     </h3>
                                 </div>
-                                <div style="background: linear-gradient(135deg, {sig_color} 0%, {sig_color}ee 100%);
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
                                             color: white; padding: 0.65rem 1.5rem; border-radius: 25px;
-                                            font-size: 0.9rem; font-weight: 700; letter-spacing: 0.3px;
-                                            box-shadow: 0 6px 20px {sig_color}55;">
+                                            font-size: 0.9rem; font-weight: 700;">
                                     {sig_badge}
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                                        gap: 1.25rem; margin-bottom: 1.5rem;">
-                                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
-                                            padding: 1.5rem; border-radius: 16px;
-                                            box-shadow: 0 8px 24px rgba(253, 224, 71, 0.25);
-                                            transition: transform 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                        <span style="font-size: 20px;">📏</span>
-                                        <div style="color: #78350f; font-size: 0.75rem; font-weight: 700;
-                                                    letter-spacing: 1px; text-transform: uppercase;">
-                                            How Much Change?
-                                        </div>
-                                    </div>
-                                    <div style="color: #0f172a; font-size: 2rem; font-weight: 900;
-                                                line-height: 1; margin-bottom: 0.5rem;">
-                                        {effect_label}
-                                    </div>
-                                    <div style="color: #92400e; font-size: 0.9rem; font-weight: 600;">
-                                        {effect_description}
-                                    </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+                                            padding: 1.5rem; border-radius: 16px; color: white;">
+                                    <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">HOW MUCH CHANGE?</div>
+                                    <div style="font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem;">{effect_label}</div>
+                                    <div style="font-size: 0.9rem; font-weight: 600;">{effect_description}</div>
                                 </div>
-                                <div style="background: linear-gradient(135deg, #dbeafe 0%, #60a5fa 100%);
-                                            padding: 1.5rem; border-radius: 16px;
-                                            box-shadow: 0 8px 24px rgba(96, 165, 250, 0.25);
-                                            transition: transform 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                        <span style="font-size: 20px;">📉</span>
-                                        <div style="color: #1e3a8a; font-size: 0.75rem; font-weight: 700;
-                                                    letter-spacing: 1px; text-transform: uppercase;">
-                                            Pain Reduction
-                                        </div>
-                                    </div>
-                                    <div style="color: #0f172a; font-size: 2rem; font-weight: 900;
-                                                line-height: 1; margin-bottom: 0.5rem;">
-                                        {abs(therapy_effect['effect']):.1f} pts
-                                    </div>
-                                    <div style="color: #1e3a8a; font-size: 0.9rem; font-weight: 600;">
-                                        {abs(therapy_effect['effect_pct']):.1f}% change
-                                    </div>
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+                                            padding: 1.5rem; border-radius: 16px; color: white;">
+                                    <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">PAIN REDUCTION</div>
+                                    <div style="font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem;">{abs(therapy_effect['effect']):.1f} pts</div>
+                                    <div style="font-size: 0.9rem; font-weight: 600;">{abs(therapy_effect['effect_pct']):.1f}% change</div>
                                 </div>
-                                <div style="background: linear-gradient(135deg, #d1fae5 0%, #34d399 100%);
-                                            padding: 1.5rem; border-radius: 16px;
-                                            box-shadow: 0 8px 24px rgba(52, 211, 153, 0.25);
-                                            transition: transform 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                        <span style="font-size: 20px;">📊</span>
-                                        <div style="color: #065f46; font-size: 0.75rem; font-weight: 700;
-                                                    letter-spacing: 1px; text-transform: uppercase;">
-                                            Reliability
-                                        </div>
-                                    </div>
-                                    <div style="color: #0f172a; font-size: 1.4rem; font-weight: 900;
-                                                line-height: 1.2; margin-bottom: 0.5rem;">
-                                        {"95% confident this is real" if therapy_effect['significant'] else "Need more tracking days"}
-                                    </div>
-                                    <div style="color: #065f46; font-size: 0.9rem; font-weight: 600;">
-                                        Based on {therapy_effect['days_before'] + therapy_effect['days_after']} days of data
-                                    </div>
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+                                            padding: 1.5rem; border-radius: 16px; color: white;">
+                                    <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">RELIABILITY</div>
+                                    <div style="font-size: 1.4rem; font-weight: 900; margin-bottom: 0.5rem;">{"95% confident this is real" if therapy_effect['significant'] else "Need more tracking days"}</div>
+                                    <div style="font-size: 0.9rem; font-weight: 600;">Based on {therapy_effect['days_before'] + therapy_effect['days_after']} days of data</div>
                                 </div>
-                                <div style="background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
-                                            padding: 1.5rem; border-radius: 16px;
-                                            box-shadow: 0 8px 24px rgba(165, 180, 252, 0.25);
-                                            transition: transform 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                        <span style="font-size: 20px;">📅</span>
-                                        <div style="color: #3730a3; font-size: 0.75rem; font-weight: 700;
-                                                    letter-spacing: 1px; text-transform: uppercase;">
-                                            Tracking Period
-                                        </div>
-                                    </div>
-                                    <div style="color: #0f172a; font-size: 2rem; font-weight: 900;
-                                                line-height: 1; margin-bottom: 0.5rem;">
-                                        {therapy_effect['days_before'] + therapy_effect['days_after']} days
-                                    </div>
-                                    <div style="color: #3730a3; font-size: 0.9rem; font-weight: 600;">
-                                        {therapy_effect['days_before']} before, {therapy_effect['days_after']} after
-                                    </div>
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+                                            padding: 1.5rem; border-radius: 16px; color: white;">
+                                    <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">TRACKING PERIOD</div>
+                                    <div style="font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem;">{therapy_effect['days_before'] + therapy_effect['days_after']} days</div>
+                                    <div style="font-size: 0.9rem; font-weight: 600;">{therapy_effect['days_before']} before, {therapy_effect['days_after']} after</div>
                                 </div>
                             </div>
-                            <div style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-                                        padding: 1.5rem; border-radius: 16px; margin-top: 1rem;
-                                        border-left: 4px solid {effect_color};">
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                                            gap: 1rem; color: #334155; font-size: 0.95rem; line-height: 1.8;">
-                                    <div>
-                                        <strong style="color: #3b82f6; font-weight: 700;">📈 Before:</strong>
-                                        <span style="font-weight: 600;"> {therapy_effect['before_mean']:.1f}/10 avg pain</span>
-                                    </div>
-                                    <div>
-                                        <strong style="color: #8b5cf6; font-weight: 700;">📉 After:</strong>
-                                        <span style="font-weight: 600;"> {therapy_effect['after_mean']:.1f}/10 avg pain</span>
-                                    </div>
-                                    <div>
-                                        <strong style="color: #8b5cf6; font-weight: 700;">🎯 Impact:</strong>
-                                        <span style="font-weight: 600;"> {abs(therapy_effect['effect']):.1f} point {"reduction" if therapy_effect['effect'] < 0 else "increase"}</span>
-                                    </div>
+                            <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 16px; margin-top: 1rem;
+                                        border-left: 6px solid #8b5cf6;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; color: #334155;">
+                                    <div><strong style="color: #3b82f6;">📈 Before:</strong> <span style="font-weight: 600;">{therapy_effect['before_mean']:.1f}/10 avg pain</span></div>
+                                    <div><strong style="color: #8b5cf6;">📉 After:</strong> <span style="font-weight: 600;">{therapy_effect['after_mean']:.1f}/10 avg pain</span></div>
+                                    <div><strong style="color: #8b5cf6;">🎯 Impact:</strong> <span style="font-weight: 600;">{abs(therapy_effect['effect']):.1f} point {"reduction" if therapy_effect['effect'] < 0 else "increase"}</span></div>
                                 </div>
                             </div>
                         </div>
