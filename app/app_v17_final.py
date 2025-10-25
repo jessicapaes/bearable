@@ -3183,7 +3183,7 @@ with tab3:
         color="Evidence",
         orientation='h',
         title="Clinical Evidence by Therapy Type",
-        color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
+        color_discrete_map={"Positive": "#86efac", "Mixed": "#fed7aa", "Negative": "#fca5a5"},
         height=400,
         category_orders={"Therapy_Ranked": therapy_data_sorted["Therapy_Ranked"].tolist()}
     )
