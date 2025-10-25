@@ -2352,27 +2352,43 @@ with tab1:
                         </div>
                         """, unsafe_allow_html=True)
             else:
-                st.info("""
-                🎯 **Start tracking a therapy in the Daily Log tab to see causal analysis here!**
-                
-                **Requirements for causal analysis:**
-                - ✅ **3+ days of data BEFORE starting the therapy**
-                - ✅ **10+ days of data AFTER starting the therapy**
-                - ✅ **Check "Started therapy today?" and enter therapy name**
-                
-                Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
-                """)
+                st.markdown("""
+                <div style="background: #e0f2fe; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e3a8a; margin: 0 0 1rem 0; font-weight: 700; font-size: 1.1rem;">
+                        🎯 Start tracking a therapy in the Daily Log tab to see causal analysis here!
+                    </h4>
+                    <h5 style="color: #1e3a8a; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 1rem;">
+                        Requirements for causal analysis:
+                    </h5>
+                    <ul style="color: #1e3a8a; margin: 0; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;"><strong>3+ days of data BEFORE starting the therapy</strong></li>
+                        <li style="margin-bottom: 0.5rem;"><strong>10+ days of data AFTER starting the therapy</strong></li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Check "Started therapy today?" and enter therapy name</strong></li>
+                    </ul>
+                    <p style="color: #1e3a8a; margin: 1rem 0 0 0; font-size: 0.95rem;">
+                        Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
         else:
-            st.info("""
-            🎯 **Start tracking a therapy in the Daily Log tab to see causal analysis here!**
-            
-            **Requirements for causal analysis:**
-            - ✅ **3+ days of data BEFORE starting the therapy**
-            - ✅ **10+ days of data AFTER starting the therapy**
-            - ✅ **Check "Started therapy today?" and enter therapy name**
-            
-            Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
-            """)
+            st.markdown("""
+            <div style="background: #e0f2fe; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h4 style="color: #1e3a8a; margin: 0 0 1rem 0; font-weight: 700; font-size: 1.1rem;">
+                    🎯 Start tracking a therapy in the Daily Log tab to see causal analysis here!
+                </h4>
+                <h5 style="color: #1e3a8a; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 1rem;">
+                    Requirements for causal analysis:
+                </h5>
+                <ul style="color: #1e3a8a; margin: 0; padding-left: 1.5rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>3+ days of data BEFORE starting the therapy</strong></li>
+                    <li style="margin-bottom: 0.5rem;"><strong>10+ days of data AFTER starting the therapy</strong></li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Check "Started therapy today?" and enter therapy name</strong></li>
+                </ul>
+                <p style="color: #1e3a8a; margin: 1rem 0 0 0; font-size: 0.95rem;">
+                    Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
         # ============================================================================
         # KEY INSIGHTS SUMMARY
@@ -2812,20 +2828,31 @@ with tab2:
         
         # Add helpful information about therapy tracking requirements
         if f_started_therapy:
-            st.info("""
-            📊 **Therapy Tracking Requirements:**
-            
-            **For causal analysis to appear:**
-            - ✅ **3+ days of data BEFORE starting this therapy**
-            - ✅ **10+ days of data AFTER starting this therapy**
-            
-            **What you'll get:**
-            - 📈 Statistical analysis of therapy effectiveness
-            - 📊 Before/after pain level comparison
-            - 🎯 Confidence intervals and significance testing
-            
-            Check the **Causal Analysis** tab after logging 13+ days total!
-            """)
+            st.markdown("""
+            <div style="background: #e0f2fe; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h4 style="color: #1e3a8a; margin: 0 0 1rem 0; font-weight: 700; font-size: 1.1rem;">
+                    📊 Therapy Tracking Requirements
+                </h4>
+                <h5 style="color: #1e3a8a; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 1rem;">
+                    For causal analysis to appear:
+                </h5>
+                <ul style="color: #1e3a8a; margin: 0 0 1rem 0; padding-left: 1.5rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>3+ days of data BEFORE starting this therapy</strong></li>
+                    <li style="margin-bottom: 0.5rem;"><strong>10+ days of data AFTER starting this therapy</strong></li>
+                </ul>
+                <h5 style="color: #1e3a8a; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 1rem;">
+                    What you'll get:
+                </h5>
+                <ul style="color: #1e3a8a; margin: 0 0 1rem 0; padding-left: 1.5rem;">
+                    <li style="margin-bottom: 0.5rem;">📈 Statistical analysis of therapy effectiveness</li>
+                    <li style="margin-bottom: 0.5rem;">📊 Before/after pain level comparison</li>
+                    <li style="margin-bottom: 0.5rem;">🎯 Confidence intervals and significance testing</li>
+                </ul>
+                <p style="color: #1e3a8a; margin: 0; font-size: 0.95rem;">
+                    Check the <strong>Causal Analysis</strong> tab after logging 13+ days total!
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
         # Conditional Menstrual Tracking
         if is_female:
