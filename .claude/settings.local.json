@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(findstr:*)",
+      "Bash(streamlit run:*)",
+      "Bash(timeout:*)",
+      "Bash(dir:*)",
+      "Bash(taskkill:*)",
+      "Bash(copy:*)",
+      "Bash(cp:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Bearable v12 with enhanced UI/UX improvements\n\nMajor enhancements:\n- Rebranded from Pain Relief Map to Bearable\n- Improved Daily Log tab with modern section headers and better spacing\n- Enhanced Quick Actions section with icon circles and cleaner button layout\n- Fixed slider design - removed value bubble/box around numbers\n- Modern Recent Entries cards with color-coded pain indicators\n- Improved toggle switches with gradient purple styling\n- Enhanced button designs with hover effects and better typography\n- Added Exit Demo banner for easy navigation back to home\n- Removed \"None\" defaults from multiselect fields\n- Better container styling with proper borders and shadows\n\n🐻 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(start http://localhost:8501)",
+      "Bash(C:UsersjesspAnaconda3Scriptsstreamlit.exe run appapp_v13_final.py)",
+      "Bash(tasklist:*)",
+      "Bash(netstat:*)",
+      "Bash(git commit:*)",
+      "Bash(\"C:\\Users\\jessp\\Anaconda3\\Scripts\\streamlit.exe\" run appapp_v16_final.py)",
+      "Bash(run_app.bat)",
+      "Bash(cmd //c \"cd /d C:\\Users\\jessp\\OneDrive\\Education\\AI Tech Institute Course\\Repositories\\painreliefmap && run_app.bat\")",
+      "Bash(\"C:\\Users\\jessp\\Anaconda3\\Scripts\\streamlit.exe\" run \"C:\\Users\\jessp\\OneDrive\\Education\\AI Tech Institute Course\\Repositories\\painreliefmap\\app\\app_v16_final.py\")",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

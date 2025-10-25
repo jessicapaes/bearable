@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Streamlit
+.streamlit/secrets.toml
+
+# User Data (IMPORTANT - Don't commit user accounts!)
+data/accounts.json
+data/*_data.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+nul
+_ul
+
+# Old versions (keep for now, but don't track changes)
+app/app_v*.py
+app/app.py
+app/app_v2.py
+app/app_chat.py
+app/causal.py

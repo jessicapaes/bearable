@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Purple bear head silhouette -->
+  <!-- Left ear -->
+  <circle cx="28" cy="28" r="18" fill="#7c5dcf"/>
+  <!-- Right ear -->
+  <circle cx="72" cy="28" r="18" fill="#7c5dcf"/>
+  <!-- Main head -->
+  <circle cx="50" cy="55" r="35" fill="#8b6ddb"/>
+  <!-- Snout/muzzle area -->
+  <ellipse cx="50" cy="68" rx="20" ry="15" fill="#9d82e8"/>
+</svg>
