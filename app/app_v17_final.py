@@ -2352,9 +2352,27 @@ with tab1:
                         </div>
                         """, unsafe_allow_html=True)
             else:
-                st.info("🎯 Start tracking a therapy in the Daily Log tab to see causal analysis here!")
+                st.info("""
+                🎯 **Start tracking a therapy in the Daily Log tab to see causal analysis here!**
+                
+                **Requirements for causal analysis:**
+                - ✅ **3+ days of data BEFORE starting the therapy**
+                - ✅ **10+ days of data AFTER starting the therapy**
+                - ✅ **Check "Started therapy today?" and enter therapy name**
+                
+                Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
+                """)
         else:
-            st.info("🎯 Start tracking a therapy in the Daily Log tab to see causal analysis here!")
+            st.info("""
+            🎯 **Start tracking a therapy in the Daily Log tab to see causal analysis here!**
+            
+            **Requirements for causal analysis:**
+            - ✅ **3+ days of data BEFORE starting the therapy**
+            - ✅ **10+ days of data AFTER starting the therapy**
+            - ✅ **Check "Started therapy today?" and enter therapy name**
+            
+            Once you meet these requirements, you'll see statistical analysis of your therapy's effectiveness!
+            """)
 
         # ============================================================================
         # KEY INSIGHTS SUMMARY
@@ -2791,6 +2809,23 @@ with tab2:
                 )
             else:
                 f_therapy_name = ""
+        
+        # Add helpful information about therapy tracking requirements
+        if f_started_therapy:
+            st.info("""
+            📊 **Therapy Tracking Requirements:**
+            
+            **For causal analysis to appear:**
+            - ✅ **3+ days of data BEFORE starting this therapy**
+            - ✅ **10+ days of data AFTER starting this therapy**
+            
+            **What you'll get:**
+            - 📈 Statistical analysis of therapy effectiveness
+            - 📊 Before/after pain level comparison
+            - 🎯 Confidence intervals and significance testing
+            
+            Check the **Causal Analysis** tab after logging 13+ days total!
+            """)
 
         # Conditional Menstrual Tracking
         if is_female:
