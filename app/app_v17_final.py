@@ -1028,8 +1028,13 @@ for key, default in {
 # ============================================================================
 def calculate_therapy_effect(df, therapy_name, metric="pain_score"):
     """Calculate Difference-in-Differences therapy effect"""
-    # Find therapy start date
-    therapy_start = df[df['therapy_started'] == therapy_name]['date'].min()
+    # Find therapy start date - look for when therapy_on became 1 for this therapy
+    therapy_rows = df[(df['therapy_on'] == 1) & (df['therapy_name'] == therapy_name)]
+    
+    if therapy_rows.empty:
+        return None
+    
+    therapy_start = therapy_rows['date'].min()
 
     if pd.isna(therapy_start):
         return None
@@ -2153,13 +2158,13 @@ with tab1:
             marker=dict(size=10, line=dict(width=2, color='white'))
         ))
 
-        # Add therapy start marker if therapy_started column exists and has data
-        if 'therapy_started' in display_df.columns:
-            therapy_starts = display_df[display_df['therapy_started'].notna() & (display_df['therapy_started'] != '')]
+        # Add therapy start marker if therapy_on and therapy_name columns exist and have data
+        if 'therapy_on' in display_df.columns and 'therapy_name' in display_df.columns:
+            therapy_starts = display_df[(display_df['therapy_on'] == 1) & (display_df['therapy_name'].notna()) & (display_df['therapy_name'] != '')]
             if not therapy_starts.empty:
                 for _, row in therapy_starts.iterrows():
                     therapy_date = row['date']
-                    therapy_name = row['therapy_started']
+                    therapy_name = row['therapy_name']
                     # Add vertical line without annotation (which causes issues)
                     fig.add_vline(
                         x=therapy_date,
@@ -2229,13 +2234,16 @@ with tab1:
         </div>
         """, unsafe_allow_html=True)
 
-        # Check if there are any therapies started
-        if 'therapy_started' in display_df.columns:
-            therapies_started = display_df[display_df['therapy_started'].notna() & (display_df['therapy_started'] != '')]['therapy_started'].unique()
-
-            if len(therapies_started) > 0:
+        # Check if there are any therapies started (using therapy_on and therapy_name columns)
+        if 'therapy_on' in display_df.columns and 'therapy_name' in display_df.columns:
+            # Find therapies that are currently being tracked (therapy_on = 1)
+            active_therapies = display_df[display_df['therapy_on'] == 1]['therapy_name'].unique()
+            # Remove empty strings and None values
+            active_therapies = [t for t in active_therapies if t and str(t).strip()]
+            
+            if len(active_therapies) > 0:
                 # Analyse each therapy
-                for therapy in therapies_started:
+                for therapy in active_therapies:
                     therapy_effect = calculate_therapy_effect(display_df, therapy, metric="pain_score")
 
                     if therapy_effect and therapy_effect.get('ready'):
