@@ -18,7 +18,7 @@ def show_login_page(auth_manager: AuthManager):
         # Logo and title
         st.markdown("""
         <div style="text-align: center; padding: 2rem 0;">
-            <h1 style="color: #667eea; font-size: 2.5rem;">💆🏻‍♀️ Pain Relief Map</h1>
+            <h1 style="color: #667eea; font-size: 2.5rem;">🐻 Bearable</h1>
             <p style="color: #7f8c8d; font-size: 1.1rem;">
                 Track your health journey with science-backed insights
             </p>
@@ -49,7 +49,7 @@ def show_login_page(auth_manager: AuthManager):
             
             if st.button("🎭 Continue in Demo Mode (No Login Required)", type="primary"):
                 st.session_state.authenticated = True
-                st.session_state.user = {"id": "demo-user", "email": "demo@painreliefmap.com"}
+                st.session_state.user = {"id": "demo-user", "email": "demo@bearable.com"}
                 st.session_state.demo_mode = True
                 st.rerun()
             return
@@ -140,7 +140,7 @@ def show_login_page(auth_manager: AuthManager):
         st.caption("No account needed - explore with sample data")
         if st.button("Continue in Demo Mode", use_container_width=True):
             st.session_state.authenticated = True
-            st.session_state.user = {"id": "demo-user", "email": "demo@painreliefmap.com"}
+            st.session_state.user = {"id": "demo-user", "email": "demo@bearable.com"}
             st.session_state.demo_mode = True
             st.rerun()
 

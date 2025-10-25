@@ -2054,11 +2054,13 @@ with tab1:
                 delta={'reference': pain_prev, 'increasing': {'color': "#ef4444"}, 'decreasing': {'color': "#10b981"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
-                    'bar': {'color': "#ec4899", 'thickness': 0.7},
-                    'bgcolor': "#f7fafc",
+                    'bar': {'color': "#ef4444", 'thickness': 0.7},
+                    'bgcolor': "#fef2f2",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 10], 'color': '#f1f5f9'}
+                        {'range': [0, 3], 'color': '#dcfce7'},
+                        {'range': [3, 7], 'color': '#fef3c7'},
+                        {'range': [7, 10], 'color': '#fecaca'}
                     ]
                 }
             ))
@@ -2082,10 +2084,12 @@ with tab1:
                 gauge={
                     'axis': {'range': [0, 8], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#3b82f6", 'thickness': 0.7},
-                    'bgcolor': "#f7fafc",
+                    'bgcolor': "#eff6ff",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 8], 'color': '#f1f5f9'}
+                        {'range': [0, 4], 'color': '#fecaca'},
+                        {'range': [4, 6], 'color': '#fef3c7'},
+                        {'range': [6, 8], 'color': '#dcfce7'}
                     ]
                 }
             ))
@@ -2103,16 +2107,18 @@ with tab1:
                 mode="gauge+number+delta",
                 value=mood_current,
                 domain={'x': [0, 1], 'y': [0, 1]},
-                title={'text': "🙂 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
+                title={'text': "😊 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
                 number={'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
                 delta={'reference': mood_prev, 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#8b5cf6", 'thickness': 0.7},
-                    'bgcolor': "#f7fafc",
+                    'bgcolor': "#faf5ff",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 10], 'color': '#f1f5f9'}
+                        {'range': [0, 3], 'color': '#fecaca'},
+                        {'range': [3, 7], 'color': '#fef3c7'},
+                        {'range': [7, 10], 'color': '#dcfce7'}
                     ]
                 }
             ))
@@ -2787,13 +2793,8 @@ with tab2:
             <p style="color: rgba(255,255,255,0.9); margin: 0.3rem 0 0 0; font-size: 0.9rem;">
                 Monitor your treatment approaches and their effects
             </p>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown("""
-        <div style="background: rgba(16, 185, 129, 0.08); padding: 0.8rem 1rem; border-radius: 8px;
-                    margin-bottom: 1rem; border-left: 3px solid #8b5cf6;">
-            <p style="margin: 0; color: #334155; font-size: 14px;">
-                <strong>💡 Tip:</strong> You can track multiple therapies simultaneously. Use the checkbox below only when starting a NEW therapy for before/after analysis.
+            <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">
+                💡 Tip: You can track multiple therapies simultaneously. Use the checkbox below only when starting a NEW therapy for before/after analysis.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -2869,13 +2870,8 @@ with tab2:
                 <p style="color: rgba(255,255,255,0.9); margin: 0.3rem 0 0 0; font-size: 0.9rem;">
                     Track your menstrual cycle and related symptoms
                 </p>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown("""
-            <div style="background: rgba(236, 72, 153, 0.08); padding: 0.8rem 1rem; border-radius: 8px;
-                        margin-bottom: 1rem; border-left: 3px solid #ec4899;">
-                <p style="margin: 0; color: #334155; font-size: 14px;">
-                    <strong>💡 Tip:</strong> Just mark your menstrual days - cycle day will be calculated automatically!
+                <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">
+                    💡 Tip: Just mark your menstrual days - cycle day will be calculated automatically!
                 </p>
             </div>
             """, unsafe_allow_html=True)

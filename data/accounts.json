@@ -1,7 +1,6 @@
 {
   "admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
   "test": "6e659deaa85842cdabb5c6305fcc40033ba43772ec00d45c2a3c921741a5e377",
-  "jess.paes@outlook.com": "dc884bb4f227f5a3be7895f75e8ccf4edb2f20a32841ae2fbe34330193c980eb",
   "testuser@example.com": {
     "name": "Test User",
     "username": "testuser@example.com",
@@ -13,5 +12,11 @@
     "username": "jessicapaes@icloud.com",
     "password": "Test123",
     "email": "jessicapaes@icloud.com"
+  },
+  "jess.paes@outlook.com": {
+    "name": "Jess",
+    "username": "jess.paes@outlook.com",
+    "password": "dc884bb4f227f5a3be7895f75e8ccf4edb2f20a32841ae2fbe34330193c980eb",
+    "email": "jess.paes@outlook.com"
   }
 }
