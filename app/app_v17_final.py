@@ -549,6 +549,27 @@ st.markdown("""
         background-image: linear-gradient(135deg, #db2777 0%, #ec4899 100%) !important;
     }
 
+    /* SAVE ENTRY button - Pink styling */
+    div[data-testid="stForm"] .stFormSubmitButton > button:has-text("💾 SAVE ENTRY"),
+    div[data-testid="stForm"] .stFormSubmitButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        background-color: #ec4899 !important;
+        background-image: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    div[data-testid="stForm"] .stFormSubmitButton > button:has-text("💾 SAVE ENTRY"):hover,
+    div[data-testid="stForm"] .stFormSubmitButton > button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #db2777 0%, #ec4899 100%) !important;
+        background-color: #db2777 !important;
+        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4) !important;
+        transform: translateY(-1px) !important;
+    }
+
     /* Pink secondary buttons - all variations */
     .stButton > button[kind="secondary"],
     .stFormSubmitButton > button[kind="secondary"],
@@ -2605,7 +2626,7 @@ with tab2:
             """, unsafe_allow_html=True)
             
             # Use popover for note input
-            with st.popover("Add Note ⌄", use_container_width=True):
+            with st.popover("Add Note", use_container_width=True):
                 note = st.text_area("Note for today", key="quick_note_text", height=100, placeholder="Write your note here...")
                 col_save, col_clear = st.columns(2)
                 with col_save:
