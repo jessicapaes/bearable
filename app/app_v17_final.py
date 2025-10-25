@@ -2007,16 +2007,6 @@ with tab1:
             if not user_df.empty:
                 st.session_state.n1_df = user_df
     
-    # Debug information (remove in production)
-    if st.session_state.get("authenticated", False):
-        st.sidebar.markdown("### 🔍 Debug Info")
-        st.sidebar.write(f"Authenticated: {st.session_state.get('authenticated', False)}")
-        st.sidebar.write(f"Demo Mode: {demo_mode}")
-        st.sidebar.write(f"AUTH_ENABLED: {AUTH_ENABLED}")
-        st.sidebar.write(f"Data rows: {len(st.session_state.n1_df)}")
-        if st.session_state.get("user"):
-            st.sidebar.write(f"User ID: {st.session_state.user.id}")
-    
     # Use demo or user data
     if st.session_state.n1_df.empty and (not AUTH_ENABLED or demo_mode or not st.session_state.get("authenticated", False)):
         display_df = generate_demo_data()
