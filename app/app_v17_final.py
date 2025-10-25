@@ -61,11 +61,17 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Check authentication if enabled
+# Check authentication if enabled - but don't force login immediately
 if AUTH_ENABLED:
-    if not require_authentication(auth_manager):
-        st.stop()
-    show_user_menu(auth_manager)
+    # Only show login page if user explicitly requests it
+    if st.session_state.get("show_login_page", False):
+        if not require_authentication(auth_manager):
+            st.stop()
+        show_user_menu(auth_manager)
+    elif st.session_state.get("authenticated", False):
+        # User is authenticated, show the app
+        show_user_menu(auth_manager)
+    # If not authenticated and not showing login page, continue to landing page
 
 # Demo mode check
 demo_mode = st.session_state.get("demo_mode", not AUTH_ENABLED)
@@ -1018,7 +1024,7 @@ for key, default in {
     'n1_df': pd.DataFrame(),
     'show_signup': False,
     'show_password_reset': False,
-    'show_auth_page': False
+    'show_login_page': False
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
@@ -1174,198 +1180,13 @@ def generate_demo_data():
     return pd.DataFrame(demo_data)
 
 # ============================================================================
-# AUTH LANDING PAGE - Sign In / Create Account
-# ============================================================================
-if st.session_state.show_auth_page and not st.session_state.authenticated and not st.session_state.demo_mode:
-    # Clean header with bear icon and title
-    st.markdown("""
-    <div style="text-align: center; padding: 3rem 0 2rem 0;">
-        <div style="display: inline-flex; align-items: center; gap: 15px; margin-bottom: 1.5rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 50px; height: 50px;">
-                <circle cx="28" cy="28" r="18" fill="#667eea"/>
-                <circle cx="72" cy="28" r="18" fill="#667eea"/>
-                <circle cx="50" cy="55" r="35" fill="#667eea"/>
-                <ellipse cx="50" cy="68" rx="20" ry="15" fill="#5568d3"/>
-            </svg>
-            <h1 style="margin: 0; font-size: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                       -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">
-                Welcome to Bearable
-            </h1>
-        </div>
-        <p style="margin: 0; color: #64748b; font-size: 18px; font-weight: 500;">
-            Track your health journey with science-backed insights
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Two column layout for Sign In and Create Account
-    col1, col2 = st.columns(2, gap="large")
-
-    # SIGN IN FORM
-    with col1:
-        with st.form("auth_signin_form", clear_on_submit=False):
-            st.markdown("""
-                <h3 style="margin: 0 0 10px 0; color: #1a202c;">🔐 Sign In</h3>
-                <p style="font-weight: 600; margin-bottom: 25px; color: #64748b;">Access your personal health dashboard</p>
-            """, unsafe_allow_html=True)
-
-            username = st.text_input("Email", placeholder="your.email@example.com", label_visibility="visible", key="auth_login_email")
-            password = st.text_input("Password", type="password", placeholder="Enter your password", label_visibility="visible", key="auth_login_pass")
-
-            col_login, col_forgot = st.columns([3, 1])
-            with col_login:
-                st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
-                login_clicked = st.form_submit_button("SIGN IN", use_container_width=True, type="primary")
-                st.markdown('</div>', unsafe_allow_html=True)
-            with col_forgot:
-                st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
-                forgot_clicked = st.form_submit_button("Forgot?", use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-            # Add spacing below buttons to make the form taller
-            st.markdown('<div style="margin-bottom: 3rem;"></div>', unsafe_allow_html=True)
-
-            if login_clicked:
-                # Check demo credentials
-                if username == "demo" and password == "demo":
-                    st.session_state.authenticated = True
-                    st.session_state.username = username
-                    st.session_state.demo_mode = True
-                    st.session_state.show_auth_page = False
-                    st.session_state.redirect_to_daily_log = True
-                    st.success("✅ Login successful!")
-                    st.rerun()
-                else:
-                    # Check against saved accounts
-                    import json
-                    import os
-                    accounts_file = "data/accounts.json"
-
-                    if os.path.exists(accounts_file):
-                        with open(accounts_file, "r") as f:
-                            accounts = json.load(f)
-
-                        # Check if email exists and password matches
-                        if username in accounts:
-                            account_data = accounts[username]
-
-                            # Handle both old format (string) and new format (object)
-                            if isinstance(account_data, dict):
-                                # New format: check plaintext password
-                                if account_data.get("password") == password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.show_auth_page = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {account_data.get('name', username)}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                            else:
-                                # Old format: account_data is hashed password string
-                                import hashlib
-                                hashed_password = hashlib.sha256(password.encode()).hexdigest()
-                                if account_data == hashed_password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.show_auth_page = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {username}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                        else:
-                            st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                    else:
-                        st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-
-            if forgot_clicked:
-                st.session_state.show_password_reset = True
-                st.rerun()
-
-    # CREATE ACCOUNT FORM
-    with col2:
-        with st.form("auth_signup_form", clear_on_submit=False):
-            st.markdown("""
-                <h3 style="margin: 0 0 10px 0; color: #1a202c;">📝 Create Account</h3>
-                <p style="font-weight: 600; margin-bottom: 25px; color: #64748b;">Start tracking your health journey</p>
-            """, unsafe_allow_html=True)
-
-            new_name = st.text_input("Name", placeholder="Enter your full name", label_visibility="visible", key="auth_signup_name")
-            new_email = st.text_input("Email", placeholder="your.email@example.com", label_visibility="visible", key="auth_signup_email")
-            new_password = st.text_input("Password", type="password", placeholder="Create a strong password", label_visibility="visible", key="auth_signup_password")
-            confirm_password = st.text_input("Confirm Password", type="password", placeholder="Re-enter your password", label_visibility="visible", key="auth_signup_confirm")
-
-            signup_clicked = st.form_submit_button("CREATE ACCOUNT", use_container_width=True, type="primary")
-
-            # Add spacing below button to make the form taller
-            st.markdown('<div style="margin-bottom: 3rem;"></div>', unsafe_allow_html=True)
-
-            if signup_clicked:
-                # Validation
-                if not new_name or not new_email or not new_password:
-                    st.error("❌ Please fill in all fields")
-                elif new_password != confirm_password:
-                    st.error("❌ Passwords do not match")
-                elif len(new_password) < 6:
-                    st.error("❌ Password must be at least 6 characters")
-                elif "@" not in new_email:
-                    st.error("❌ Please enter a valid email address")
-                else:
-                    # Load existing accounts
-                    import json
-                    import os
-                    accounts_file = "data/accounts.json"
-
-                    # Create data directory if it doesn't exist
-                    os.makedirs("data", exist_ok=True)
-
-                    # Load existing accounts or create new file
-                    if os.path.exists(accounts_file):
-                        with open(accounts_file, "r") as f:
-                            accounts = json.load(f)
-                    else:
-                        accounts = {}
-
-                    # Check if email already exists
-                    if new_email in accounts:
-                        st.error("❌ This email is already registered")
-                    else:
-                        # Save new account - username is the email
-                        accounts[new_email] = {
-                            "name": new_name,
-                            "username": new_email,
-                            "password": new_password,
-                            "email": new_email
-                        }
-
-                        with open(accounts_file, "w") as f:
-                            json.dump(accounts, f, indent=2)
-
-                        st.success(f"✅ Account created successfully! Welcome, {new_name}!")
-                        st.session_state.authenticated = True
-                        st.session_state.username = new_email
-                        st.session_state.demo_mode = False
-                        st.session_state.show_auth_page = False
-                        st.session_state.redirect_to_daily_log = True
-                        st.rerun()
-
-    # Back to home button
-    st.markdown('<div style="margin-top: 3rem;"></div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("← Back to Home", use_container_width=True, key="auth_back_home"):
-            st.session_state.show_auth_page = False
-            st.rerun()
-
-    st.stop()
+# Authentication is now handled by src/login_ui.py
+# This section has been removed to prevent conflicts
 
 # ============================================================================
 # LANDING PAGE
 # ============================================================================
-elif not st.session_state.authenticated and not st.session_state.demo_mode:
+if not st.session_state.authenticated and not st.session_state.demo_mode:
     # MEGA HERO SECTION - Enhanced V9
     st.markdown("""
     <div class="hero-mega">
@@ -1521,105 +1342,35 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
         """, unsafe_allow_html=True)
     
     with col2:
-        # Form styled as glass card via CSS
-        with st.form("login_form", clear_on_submit=False):
-            st.markdown("""
+        # Simple login button that triggers Supabase authentication
+        st.markdown("""
+            <div style="background: rgba(255, 255, 255, 0.95);
+                        border-radius: 15px;
+                        padding: 2rem;
+                        margin-bottom: 1rem;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                        text-align: center;">
                 <h3 style="margin: 0 0 10px 0;">🔐 Sign In</h3>
                 <p style="font-weight: 600; margin-bottom: 25px; color: #64748b;">Access your personal health dashboard</p>
-            """, unsafe_allow_html=True)
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Click below to login with your Supabase account</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("🔐 Login to Bearable", use_container_width=True, type="primary"):
+            st.session_state.show_login_page = True
+            st.rerun()
+        
+        st.markdown("""
+            <div style="text-align: center; margin-top: 20px;">
+                <p style="color: #94a3b8; font-size: 14px; margin: 0 0 10px 0;">Don't have an account?</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("📝 Create Free Account", use_container_width=True):
+            st.session_state.show_login_page = True
+            st.rerun()
 
-            username = st.text_input("Email", placeholder="your.email@example.com", label_visibility="visible", key="login_email", help="")
-            password = st.text_input("Password", type="password", placeholder="Enter your password", label_visibility="visible", key="login_pass", help="")
-
-            col_login, col_forgot = st.columns([3, 1])
-            with col_login:
-                st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
-                login_clicked = st.form_submit_button("SIGN IN", use_container_width=True, type="primary")
-                st.markdown('</div>', unsafe_allow_html=True)
-            with col_forgot:
-                st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
-                forgot_clicked = st.form_submit_button("Forgot?", use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-            if login_clicked:
-                # Check demo credentials
-                if username == "demo" and password == "demo":
-                    st.session_state.authenticated = True
-                    st.session_state.username = username
-                    st.session_state.demo_mode = True
-                    st.session_state.redirect_to_daily_log = True
-                    st.success("✅ Login successful!")
-                    st.rerun()
-                else:
-                    # Check against saved accounts
-                    import json
-                    import os
-                    accounts_file = "data/accounts.json"
-
-                    if os.path.exists(accounts_file):
-                        with open(accounts_file, "r") as f:
-                            accounts = json.load(f)
-
-                        # Check if email exists and password matches
-                        if username in accounts:
-                            account_data = accounts[username]
-
-                            # Handle both old format (string) and new format (object)
-                            if isinstance(account_data, dict):
-                                # New format: check plaintext password
-                                if account_data.get("password") == password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {account_data.get('name', username)}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                            else:
-                                # Old format: account_data is hashed password string
-                                import hashlib
-                                hashed_password = hashlib.sha256(password.encode()).hexdigest()
-                                if account_data == hashed_password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {username}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                        else:
-                            st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                    else:
-                        st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-
-            if forgot_clicked:
-                st.session_state.show_password_reset = True
-                st.session_state.show_signup = False
-                st.rerun()
-
-            st.markdown("""
-                <div style="text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0;">
-                    <p style="color: #94a3b8; font-size: 14px; margin: 0 0 10px 0;">Don't have an account?</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-            # Create Account button inside form
-            create_account_clicked = st.form_submit_button("CREATE FREE ACCOUNT", use_container_width=True, type="primary")
-            
-            # Add spacing below the button to push it up from the bottom
-            st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
-
-            if create_account_clicked:
-                st.session_state.show_auth_page = True
-                st.session_state.show_signup = False
-                st.session_state.show_password_reset = False
-                st.rerun()
-
-        st.markdown('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
-
-        # Password Reset Form
+        # Old authentication forms removed - now using Supabase authentication from src/login_ui.py
         if st.session_state.show_password_reset:
             with st.form("password_reset_form", clear_on_submit=False):
                 st.markdown("""
@@ -1914,8 +1665,8 @@ with col2:
     else:
         # Show login button if not authenticated
         if st.button("🔐 Login", key="login_header", type="secondary", use_container_width=True):
-            # Show auth landing page
-            st.session_state.show_auth_page = True
+            # Show login page
+            st.session_state.show_login_page = True
             st.session_state.demo_mode = False
             st.session_state.authenticated = False
             st.session_state.username = ""
@@ -1987,6 +1738,34 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
     
+    # Debug: Show authentication status
+    if AUTH_ENABLED:
+        st.sidebar.markdown("### 🔍 Debug Info")
+        st.sidebar.write(f"**Authenticated:** {st.session_state.get('authenticated', False)}")
+        st.sidebar.write(f"**Demo Mode:** {st.session_state.get('demo_mode', False)}")
+        st.sidebar.write(f"**Database Enabled:** {db_manager.is_enabled()}")
+        user = st.session_state.get("user")
+        if user:
+            st.sidebar.write(f"**User ID:** {getattr(user, 'id', 'No ID')}")
+            st.sidebar.write(f"**User Email:** {getattr(user, 'email', 'No Email')}")
+        else:
+            st.sidebar.write("**User:** None")
+        st.sidebar.write(f"**Data Rows:** {len(st.session_state.get('n1_df', pd.DataFrame()))}")
+        
+        # Manual refresh button
+        if st.sidebar.button("🔄 Refresh Data", use_container_width=True):
+            user = st.session_state.get("user")
+            if user and hasattr(user, 'id'):
+                try:
+                    user_df = db_manager.get_user_logs(user.id)
+                    st.session_state.n1_df = user_df
+                    st.sidebar.success(f"✅ Loaded {len(user_df)} rows from database!")
+                    st.rerun()
+                except Exception as e:
+                    st.sidebar.error(f"❌ Error: {str(e)}")
+            else:
+                st.sidebar.error("❌ No user found")
+    
     # Initialize data from database or create empty dataframe
     if "n1_df" not in st.session_state:
         if AUTH_ENABLED and not demo_mode:
@@ -2008,9 +1787,16 @@ with tab1:
     if AUTH_ENABLED and not demo_mode and st.session_state.get("authenticated", False) and st.session_state.n1_df.empty:
         user = st.session_state.get("user")
         if user and hasattr(user, 'id'):
-            user_df = db_manager.get_user_logs(user.id)
-            if not user_df.empty:
-                st.session_state.n1_df = user_df
+            try:
+                user_df = db_manager.get_user_logs(user.id)
+                st.sidebar.write(f"**DB Query Result:** {len(user_df)} rows")
+                if not user_df.empty:
+                    st.session_state.n1_df = user_df
+                    st.sidebar.success("✅ Data loaded from database!")
+                else:
+                    st.sidebar.warning("⚠️ No data found in database")
+            except Exception as e:
+                st.sidebar.error(f"❌ Database error: {str(e)}")
     
     # Use demo or user data
     if st.session_state.n1_df.empty and (not AUTH_ENABLED or demo_mode or not st.session_state.get("authenticated", False)):
@@ -2054,19 +1840,17 @@ with tab1:
                 delta={'reference': pain_prev, 'increasing': {'color': "#ef4444"}, 'decreasing': {'color': "#10b981"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
-                    'bar': {'color': "#ef4444", 'thickness': 0.7},
-                    'bgcolor': "#fef2f2",
+                    'bar': {'color': "#ec4899", 'thickness': 0.7},
+                    'bgcolor': "#f7fafc",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 3], 'color': '#dcfce7'},
-                        {'range': [3, 7], 'color': '#fef3c7'},
-                        {'range': [7, 10], 'color': '#fecaca'}
+                        {'range': [0, 10], 'color': '#f1f5f9'}
                     ]
                 }
             ))
             pain_gauge.update_layout(
-                height=220,
-                margin=dict(l=10, r=10, t=70, b=10),
+                height=250,
+                margin=dict(l=15, r=15, t=80, b=50),
                 paper_bgcolor='rgba(0,0,0,0)',
                 font={'family': 'Inter'}
             )
@@ -2084,18 +1868,16 @@ with tab1:
                 gauge={
                     'axis': {'range': [0, 8], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#3b82f6", 'thickness': 0.7},
-                    'bgcolor': "#eff6ff",
+                    'bgcolor': "#f7fafc",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 4], 'color': '#fecaca'},
-                        {'range': [4, 6], 'color': '#fef3c7'},
-                        {'range': [6, 8], 'color': '#dcfce7'}
+                        {'range': [0, 8], 'color': '#f1f5f9'}
                     ]
                 }
             ))
             sleep_gauge.update_layout(
-                height=220,
-                margin=dict(l=10, r=10, t=70, b=10),
+                height=250,
+                margin=dict(l=15, r=15, t=80, b=50),
                 paper_bgcolor='rgba(0,0,0,0)',
                 font={'family': 'Inter'}
             )
@@ -2107,24 +1889,22 @@ with tab1:
                 mode="gauge+number+delta",
                 value=mood_current,
                 domain={'x': [0, 1], 'y': [0, 1]},
-                title={'text': "😊 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
+                title={'text': "🙂 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
                 number={'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
                 delta={'reference': mood_prev, 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#8b5cf6", 'thickness': 0.7},
-                    'bgcolor': "#faf5ff",
+                    'bgcolor': "#f7fafc",
                     'borderwidth': 0,
                     'steps': [
-                        {'range': [0, 3], 'color': '#fecaca'},
-                        {'range': [3, 7], 'color': '#fef3c7'},
-                        {'range': [7, 10], 'color': '#dcfce7'}
+                        {'range': [0, 10], 'color': '#f1f5f9'}
                     ]
                 }
             ))
             mood_gauge.update_layout(
-                height=220,
-                margin=dict(l=10, r=10, t=70, b=10),
+                height=250,
+                margin=dict(l=15, r=15, t=80, b=50),
                 paper_bgcolor='rgba(0,0,0,0)',
                 font={'family': 'Inter'}
             )
@@ -3030,7 +2810,14 @@ with tab2:
                 if user and hasattr(user, 'id'):
                     # Convert the DataFrame row to dict for database storage
                     rec = new_entry.iloc[0].to_dict()
-                    db_manager.save_log(user.id, rec)
+                    try:
+                        result = db_manager.save_log(user.id, rec)
+                        if result["success"]:
+                            st.sidebar.success("✅ Data saved to database!")
+                        else:
+                            st.sidebar.error(f"❌ Save failed: {result['message']}")
+                    except Exception as e:
+                        st.sidebar.error(f"❌ Save error: {str(e)}")
             
             st.success("✅ Entry saved successfully!")
             st.balloons()
