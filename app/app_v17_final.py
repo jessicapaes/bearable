@@ -1999,10 +1999,31 @@ with tab1:
             # Demo mode or no auth
             st.session_state.n1_df = pd.DataFrame()
     
+    # Refresh data from database if authenticated and data is empty
+    if AUTH_ENABLED and not demo_mode and st.session_state.get("authenticated", False) and st.session_state.n1_df.empty:
+        user = st.session_state.get("user")
+        if user and hasattr(user, 'id'):
+            user_df = db_manager.get_user_logs(user.id)
+            if not user_df.empty:
+                st.session_state.n1_df = user_df
+    
+    # Debug information (remove in production)
+    if st.session_state.get("authenticated", False):
+        st.sidebar.markdown("### 🔍 Debug Info")
+        st.sidebar.write(f"Authenticated: {st.session_state.get('authenticated', False)}")
+        st.sidebar.write(f"Demo Mode: {demo_mode}")
+        st.sidebar.write(f"AUTH_ENABLED: {AUTH_ENABLED}")
+        st.sidebar.write(f"Data rows: {len(st.session_state.n1_df)}")
+        if st.session_state.get("user"):
+            st.sidebar.write(f"User ID: {st.session_state.user.id}")
+    
     # Use demo or user data
-    if st.session_state.n1_df.empty:
+    if st.session_state.n1_df.empty and (not AUTH_ENABLED or demo_mode or not st.session_state.get("authenticated", False)):
         display_df = generate_demo_data()
         st.info("📊 Showing demo data. Start logging to see your own insights!")
+    elif st.session_state.n1_df.empty and AUTH_ENABLED and not demo_mode and st.session_state.get("authenticated", False):
+        display_df = pd.DataFrame()
+        st.info("📝 No data logged yet. Add your first entry in the Daily Log tab!")
     else:
         display_df = st.session_state.n1_df.copy()
     
