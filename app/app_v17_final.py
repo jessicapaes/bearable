@@ -2466,10 +2466,22 @@ with tab1:
                 """, unsafe_allow_html=True)
 
         if not insights:
-            st.info("📊 Keep logging for at least 7 days to see personalised insights!")
+            st.markdown("""
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #8b5cf6;">
+                <p style="color: #1a202c; margin: 0; font-size: 0.95rem;">
+                    📊 Keep logging for at least 7 days to see personalised insights!
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
     else:
-        st.info("📝 Start logging in the Daily Log tab to see your dashboard!")
+        st.markdown("""
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #8b5cf6;">
+            <p style="color: #1a202c; margin: 0; font-size: 0.95rem;">
+                📝 Start logging in the Daily Log tab to see your dashboard!
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Add bottom spacing to ensure content is visible above footer
     st.markdown("<div style='height: 150px;'></div>", unsafe_allow_html=True)
