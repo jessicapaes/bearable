@@ -881,20 +881,25 @@ st.markdown("""
         border: 2px solid #e2e8f0 !important;
     }
     
-    /* SLIDERS - Clean Design */
+    /* SLIDERS - FORCE BLUE COLOR (Override Streamlit Red) */
     .stSlider {
         padding: 10px 0 !important;
     }
 
-    /* Slider track - keep visible */
-    .stSlider > div > div > div > div {
+    /* Slider track - FORCE BLUE with multiple selectors */
+    .stSlider > div > div > div > div,
+    div[data-testid="stSlider"] > div > div > div > div,
+    .stSlider [data-baseweb="slider"] > div:first-child > div {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
         height: 10px !important;
         border-radius: 10px !important;
     }
 
-    /* Slider thumb (handle) - keep visible */
-    .stSlider > div > div > div > div > div {
+    /* Slider thumb (handle) - FORCE BLUE BORDER */
+    .stSlider > div > div > div > div > div,
+    div[data-testid="stSlider"] > div > div > div > div > div,
+    .stSlider [data-baseweb="slider"] [role="slider"],
+    .stSlider div[role="slider"] {
         background: white !important;
         border: 4px solid #667eea !important;
         width: 28px !important;
@@ -904,9 +909,48 @@ st.markdown("""
         transition: all 0.2s ease !important;
     }
 
-    .stSlider > div > div > div > div > div:hover {
+    .stSlider > div > div > div > div > div:hover,
+    div[data-testid="stSlider"] [role="slider"]:hover {
         transform: scale(1.15) !important;
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+    }
+    
+    /* Override Streamlit's accent-color (this controls slider/checkbox colors) */
+    input, select, textarea {
+        accent-color: #667eea !important;
+    }
+    
+    /* Force all range inputs to be blue */
+    input[type="range"],
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: #667eea !important;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        background: white !important;
+        border: 4px solid #667eea !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+    }
+    
+    input[type="range"]::-webkit-slider-runnable-track {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+        background: white !important;
+        border: 4px solid #667eea !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+    }
+    
+    input[type="range"]::-moz-range-track {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    /* Checkbox - Force blue */
+    input[type="checkbox"]:checked {
+        accent-color: #667eea !important;
+        background-color: #667eea !important;
     }
 
     /* Show slider value - simple number above handle */
