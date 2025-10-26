@@ -25,7 +25,10 @@
       "Bash(\"C:\\Users\\jessp\\Anaconda3\\Scripts\\streamlit.exe\" run \"C:\\Users\\jessp\\OneDrive\\Education\\AI Tech Institute Course\\Repositories\\painreliefmap\\app\\app_v16_final.py\")",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(find:*)",
+      "Bash(\"C:\\Users\\jessp\\Anaconda3\\Scripts\\streamlit.exe\" run \"C:\\Users\\jessp\\OneDrive\\Education\\AI Tech Institute Course\\Repositories\\painreliefmap\\app\\app_v19_final.py\")",
+      "Bash(\"C:\\Users\\jessp\\Anaconda3\\Scripts\\streamlit.exe\" run \"app/app_v20_final.py\")"
     ],
     "deny": [],
     "ask": []

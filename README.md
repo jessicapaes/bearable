@@ -18,7 +18,7 @@
 - 🆓 **Free:** No API keys or configuration required
 - 📊 **Performance:** 2-5s first load, <100ms cached loads
 
-See [V27_LIVE_API_INTEGRATION.md](V27_LIVE_API_INTEGRATION.md) for complete details.
+See [V27_LIVE_API_INTEGRATION.md](docs/V27_LIVE_API_INTEGRATION.md) for complete details.
 
 ---
 
@@ -64,7 +64,7 @@ python setup_auth.py  # Interactive wizard
 streamlit run app/app_v27_final.py
 ```
 
-📖 **Detailed setup:** See [QUICKSTART_AUTH.md](QUICKSTART_AUTH.md)
+📖 **Detailed setup:** See [QUICKSTART_AUTH.md](docs/QUICKSTART_AUTH.md)
 
 ---
 
@@ -166,29 +166,48 @@ streamlit run app/app_v27_final.py
 
 ```
 bearable/
-├── app/
-│   ├── app_v27_final.py          # 🚀 LATEST - Live APIs + Production app
+├── README.md                     # 📖 You are here
+├── requirements.txt              # Python dependencies  
+├── runtime.txt                   # Python version for deployment
+├── setup_auth.py                 # 🚀 Interactive setup wizard
+│
+├── app/                          # Streamlit applications
+│   ├── app_v27_final.py          # 🚀 LATEST - Live APIs + Production
 │   ├── app_v26_final.py          # Previous stable version
 │   └── bear_icon.svg             # App icon
-├── src/
+│
+├── src/                          # Core modules
 │   ├── auth.py                   # Authentication manager
-│   ├── db_operations.py          # Database CRUD
-│   └── causal.py                 # Statistical analysis
-├── scripts/
+│   ├── db_operations.py          # Database CRUD operations
+│   ├── causal.py                 # Statistical analysis
+│   └── login_ui.py               # Login UI components
+│
+├── scripts/                      # Utility scripts
 │   ├── create_user_tables.sql    # Database schema
-│   └── build_evidence_counts.py  # Evidence data builder
-├── data/
-│   ├── evidence_counts.csv       # Clinical trials data
-│   └── templates/                # Data templates
-├── docs/
+│   ├── build_evidence_counts.py  # Evidence data builder
+│   ├── test_app.py               # Application tests
+│   └── verify_setup.py           # Setup verification
+│
+├── data/                         # Data files
+│   ├── evidence_counts.csv       # Clinical trials evidence
+│   └── templates/                # CSV templates for tracking
+│
+├── docs/                         # 📚 Documentation
 │   ├── QUICKSTART_AUTH.md        # ⭐ 5-min setup guide
 │   ├── AUTHENTICATION_SETUP.md   # Detailed auth guide
+│   ├── V27_LIVE_API_INTEGRATION.md  # 🌐 Live API docs
 │   ├── V26_COMPREHENSIVE_AUDIT_FINDINGS.md  # Security audit
-│   └── V27_LIVE_API_INTEGRATION.md  # 🌐 Live API documentation
-├── requirements.txt              # Python dependencies
-├── setup_auth.py                 # Interactive setup wizard
-├── .env.example                  # Environment template
-└── README.md                     # This file
+│   └── ...                       # Version changelogs & guides
+│
+├── config/                       # Configuration files
+│   ├── config.env.example        # Environment variables template
+│   └── env_template.txt          # Alternative env template
+│
+├── deployment/                   # Deployment scripts
+│   ├── run_app.bat               # Windows batch script
+│   └── run_app.ps1               # PowerShell script
+│
+└── archive/                      # Archived/legacy files
 ```
 
 ---
@@ -197,7 +216,7 @@ bearable/
 
 ### Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (or copy from `config/config.env.example`):
 
    ```env
    SUPABASE_URL=https://your-project.supabase.co
@@ -205,6 +224,8 @@ Create a `.env` file in the project root:
    ```
 
 **Security Note:** Never commit `.env` to version control!
+
+📁 **Example file:** See `config/config.env.example` for a template
 
 ### Database Schema
 
@@ -263,10 +284,10 @@ sudo systemctl start bearable
 
 | Document | Description |
 |----------|-------------|
-| [QUICKSTART_AUTH.md](QUICKSTART_AUTH.md) | ⭐ 5-minute authentication setup |
-| [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md) | Detailed integration guide |
-| [V27_LIVE_API_INTEGRATION.md](V27_LIVE_API_INTEGRATION.md) | 🌐 **NEW!** Live API documentation |
-| [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](V26_COMPREHENSIVE_AUDIT_FINDINGS.md) | Security audit report |
+| [QUICKSTART_AUTH.md](docs/QUICKSTART_AUTH.md) | ⭐ 5-minute authentication setup |
+| [AUTHENTICATION_SETUP.md](docs/AUTHENTICATION_SETUP.md) | Detailed integration guide |
+| [V27_LIVE_API_INTEGRATION.md](docs/V27_LIVE_API_INTEGRATION.md) | 🌐 **NEW!** Live API documentation |
+| [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](docs/V26_COMPREHENSIVE_AUDIT_FINDINGS.md) | Security audit report |
 | [AUTHENTICATION_ARCHITECTURE.md](docs/AUTHENTICATION_ARCHITECTURE.md) | Technical architecture |
 
 ---
@@ -289,7 +310,7 @@ sudo systemctl start bearable
 - We don't sell or monetize your personal information
 - Open-source code - verify for yourself!
 
-📄 **Full security audit:** [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](V26_COMPREHENSIVE_AUDIT_FINDINGS.md)
+📄 **Full security audit:** [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](docs/V26_COMPREHENSIVE_AUDIT_FINDINGS.md)
 
 ---
 
@@ -369,7 +390,7 @@ streamlit run app/app_v26_final.py
 - Check RLS policies are enabled in Supabase
 - Check browser console for errors
 
-📚 **More help:** See [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md)
+📚 **More help:** See [AUTHENTICATION_SETUP.md](docs/AUTHENTICATION_SETUP.md)
 
 ---
 
