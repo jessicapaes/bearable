@@ -970,24 +970,17 @@ st.markdown("""
             grid-template-columns: 1fr;
         }
         
-        /* Mobile: Adjust container padding */
+        /* Mobile: Adjust container padding - Only on actual mobile devices */
         .block-container {
             padding: 2rem 1rem !important;
             max-width: 100% !important;
         }
         
-        /* Mobile: Fix tabs width */
+        /* Mobile: Fix tabs width - Keep alignment */
         div[data-testid="stTabs"] {
             padding: 0.5rem 1rem !important;
             margin: 0 -1rem !important;
             width: calc(100% + 2rem) !important;
-        }
-        
-        /* Mobile: Welcome box */
-        .glass-card {
-            padding: 20px 15px !important;
-            margin-left: -1rem !important;
-            margin-right: -1rem !important;
         }
         
         /* Mobile: Tab buttons */
@@ -996,22 +989,16 @@ st.markdown("""
             font-size: 14px !important;
         }
         
-        /* Mobile: Health Dashboard box */
-        div[style*="linear-gradient(135deg, #667eea"] {
-            padding: 1.5rem 1rem !important;
-            margin-left: -1rem !important;
-            margin-right: -1rem !important;
-        }
-        
         /* Mobile: Form inputs */
         input, textarea, select {
             font-size: 16px !important; /* Prevents zoom on iOS */
         }
         
-        /* Mobile: Buttons */
+        /* Mobile: Buttons - Don't override colors */
         button {
             padding: 12px 20px !important;
             font-size: 14px !important;
+            /* Preserve button colors - do not override */
         }
         
         /* Mobile: Charts */
@@ -1047,17 +1034,44 @@ st.markdown("""
             font-size: 12px !important;
         }
     }
+    
+    /* Desktop: Ensure proper styling is NOT overridden */
+    @media (min-width: 769px) {
+        .block-container {
+            padding: 2rem 3rem !important;
+            max-width: 1400px !important;
+        }
+        
+        div[data-testid="stTabs"] {
+            padding: 0.5rem 3rem !important;
+            margin: 0 -3rem !important;
+            width: calc(100% + 6rem) !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# Scroll to top on page load/navigation
+# Scroll to top on page load/navigation and tab switching
 st.markdown("""
 <script>
+// Scroll to top immediately
+window.scrollTo({top: 0, behavior: 'instant'});
+document.documentElement.scrollTop = 0;
+document.body.scrollTop = 0;
+
+// Add scroll-to-top on tab clicks
 setTimeout(function() {
-    window.scrollTo({top: 0, behavior: 'instant'});
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-}, 10);
+    const tabs = document.querySelectorAll('[role="tab"]');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            setTimeout(function() {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 100);
+        });
+    });
+}, 100);
 </script>
 """, unsafe_allow_html=True)
 
@@ -3696,15 +3710,15 @@ with tab3:
         if evidence == "Positive":
             evidence_color = "#22c55e"  # Bright Green
             evidence_emoji = "✅"
-            evidence_display = f"{evidence_emoji} {evidence} (shows benefit)"
+            evidence_display = f"{evidence_emoji} {evidence}"
         elif evidence == "Mixed":
             evidence_color = "#fb923c"  # Bright Orange
             evidence_emoji = "⚠️"
-            evidence_display = f"{evidence_emoji} {evidence} (some benefit, needs more research)"
+            evidence_display = f"{evidence_emoji} {evidence}"
         elif evidence == "Negative":
             evidence_color = "#ef4444"  # Red
             evidence_emoji = "❌"
-            evidence_display = f"{evidence_emoji} {evidence} (shows little to no benefit)"
+            evidence_display = f"{evidence_emoji} {evidence}"
         else:
             evidence_color = color
             evidence_display = evidence
@@ -3784,13 +3798,23 @@ with tab3:
             """, unsafe_allow_html=True)
 
         # Description
+        # Create evidence text with description
+        if evidence == "Positive":
+            evidence_text = f"<strong>{evidence.lower()} evidence (shows positive benefit)</strong>"
+        elif evidence == "Mixed":
+            evidence_text = f"<strong>{evidence.lower()} evidence (some benefit, needs more research)</strong>"
+        elif evidence == "Negative":
+            evidence_text = f"<strong>{evidence.lower()} evidence (shows little to no benefit)</strong>"
+        else:
+            evidence_text = f"<strong>{evidence.lower()} evidence</strong>"
+        
         st.markdown(f"""
         <div style="background: rgba(248, 250, 252, 0.8);
                     padding: 1.25rem 1.5rem; border-radius: 10px;
                     border-left: 4px solid {color};
                     margin-bottom: 2rem;">
             <p style="margin: 0; color: #334155; font-size: 0.95rem; line-height: 1.6;">
-                <strong style="color: {color};">{therapy_name}</strong> has shown <strong>{evidence.lower()} evidence</strong>
+                <strong style="color: {color};">{therapy_name}</strong> has shown {evidence_text}
                 in clinical research for various health conditions including pain management, anxiety, stress management,
                 and overall wellness improvement.
             </p>
