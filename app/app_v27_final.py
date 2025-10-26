@@ -35,12 +35,34 @@ st.set_page_config(
 # ============================================================================
 @st.cache_resource
 def init_supabase() -> Client:
-    """Initialize Supabase client with credentials from environment"""
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
+    """Initialize Supabase client with credentials from environment or Streamlit secrets"""
+    # Try to get from Streamlit secrets first (for cloud deployment)
+    try:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+    except (KeyError, FileNotFoundError):
+        # Fall back to environment variables (for local development)
+        url = os.getenv("SUPABASE_URL")
+        key = os.getenv("SUPABASE_KEY")
 
     if not url or not key:
-        st.error("⚠️ Supabase credentials not found in environment variables")
+        st.error("⚠️ Supabase credentials not found. Please add them to Streamlit secrets or .env file")
+        st.info("""
+        **For Streamlit Cloud:**
+        1. Go to App Settings → Secrets
+        2. Add: 
+        ```
+        SUPABASE_URL = "your-url"
+        SUPABASE_KEY = "your-key"
+        ```
+        
+        **For Local Development:**
+        Create a `.env` file with:
+        ```
+        SUPABASE_URL=your-url
+        SUPABASE_KEY=your-key
+        ```
+        """)
         return None
 
     try:
