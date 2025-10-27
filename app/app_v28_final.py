@@ -2547,7 +2547,7 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
                 <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 15px;">
                     <div style="font-size: 20px;">🏥</div>
                     <div style="font-size: 20px;">🔬</div>
-                    <div style="font-size: 20px;">💊</div>
+                    <div style="font-size: 20px;">🧘🏻‍♀️</div>
                     <div style="font-size: 20px;">🩺</div>
                 </div>
                 <p style="font-size: 13px; color: #64748b; margin-top: 15px; font-weight: 500;">Healthcare providers & health condition patients worldwide</p>
@@ -3624,7 +3624,7 @@ with tab2:
             )
         with c4:
             f_therapy_used = st.multiselect(
-                "💊 Natural Therapy used today",
+                "🧘🏻‍♀️ Natural Therapy used today",
                 options=therapy_options,
                 help="Select all natural therapies you used today."
             )
@@ -3924,7 +3924,7 @@ with tab2:
                     st.markdown(f"""
                     <div style="background: rgba(139, 92, 246, 0.08); padding: 0.8rem; border-radius: 10px; text-align: center;">
                         <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 0.3rem;">
-                            💊 Therapies
+                            🧘🏻‍♀️ Therapies
                         </div>
                         <div style="font-size: 0.9rem; color: #1a202c; font-weight: 600;">
                             {therapy_val}
@@ -4139,7 +4139,7 @@ with tab3:
     st.markdown("""
     <div style="margin: 2rem 0 1.5rem 0;">
         <h3 style="color: #1a202c; font-size: 1.5rem; font-weight: 800; margin: 0;">
-            💊 Detailed Therapy Information
+            🧘🏻‍♀️ Detailed Therapy Information
         </h3>
         <p style="color: #64748b; font-size: 0.95rem; margin: 0.5rem 0 0 0;">
             Comprehensive research data for each therapy
