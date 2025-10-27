@@ -1175,12 +1175,28 @@ st.markdown("""
     
     /* Fix z-index for all popovers and dropdowns to stay below sticky header */
     [data-baseweb="popover"],
-    [data-baseweb="select"] {
+    [data-baseweb="select"],
+    div[role="tooltip"],
+    .stSelectbox [data-baseweb="popover"],
+    .stMultiSelect [data-baseweb="popover"],
+    div[data-baseweb="popover"] {
         z-index: 100 !important;
     }
     
     /* Ensure sticky header stays on top */
     header[data-testid="stHeader"] {
+        z-index: 999 !important;
+    }
+    
+    /* Specific fix for condition selector dropdown */
+    div[role="listbox"],
+    ul[role="listbox"],
+    [role="option"] {
+        z-index: 100 !important;
+    }
+    
+    /* CSS for header that matches inline styles */
+    div[style*="position: fixed"][style*="top: 0"][style*="z-index: 999"] {
         z-index: 999 !important;
     }
     
