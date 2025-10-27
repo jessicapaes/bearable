@@ -2818,11 +2818,11 @@ with tab1:
             # Pain gauge (0-10, lower is better - use red color)
             pain_gauge = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
-                value=pain_current,
+                value=round(pain_current, 1),
                 domain={'x': [0, 1], 'y': [0, 1]},
                 title={'text': "😣 Pain Level", 'font': {'size': 18, 'family': 'Inter'}},
-                number={'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
-                delta={'reference': pain_prev, 'increasing': {'color': "#ef4444"}, 'decreasing': {'color': "#10b981"}},
+                number={'valueformat': '.1f', 'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
+                delta={'reference': round(pain_prev, 1), 'increasing': {'color': "#ef4444"}, 'decreasing': {'color': "#10b981"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#ec4899", 'thickness': 0.7},
@@ -2845,11 +2845,11 @@ with tab1:
             # Sleep gauge (0-8h, higher is better - use blue color)
             sleep_gauge = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
-                value=sleep_current,
+                value=round(sleep_current, 1),
                 domain={'x': [0, 1], 'y': [0, 1]},
                 title={'text': "😴 Sleep Hours", 'font': {'size': 18, 'family': 'Inter'}},
-                number={'suffix': "h", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
-                delta={'reference': sleep_prev, 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
+                number={'valueformat': '.1f', 'suffix': "h", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
+                delta={'reference': round(sleep_prev, 1), 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
                 gauge={
                     'axis': {'range': [0, 8], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#3b82f6", 'thickness': 0.7},
@@ -2872,11 +2872,11 @@ with tab1:
             # Mood gauge (0-10, higher is better - use green color)
             mood_gauge = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
-                value=mood_current,
+                value=round(mood_current, 1),
                 domain={'x': [0, 1], 'y': [0, 1]},
                 title={'text': "🙂 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
-                number={'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
-                delta={'reference': mood_prev, 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
+                number={'valueformat': '.1f', 'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
+                delta={'reference': round(mood_prev, 1), 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
                 gauge={
                     'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
                     'bar': {'color': "#8b5cf6", 'thickness': 0.7},
