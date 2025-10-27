@@ -24,7 +24,7 @@ load_dotenv()
 # PAGE CONFIGURATION - MUST BE FIRST
 # ============================================================================
 st.set_page_config(
-    page_title="Bearable v27 - Evidence-Based Health Tracking",
+    page_title="Bearable v28 - Evidence-Based Health Tracking",
     page_icon="app/bear_icon.svg",
     layout="wide",
     initial_sidebar_state="collapsed"
