@@ -229,12 +229,126 @@ Create a `.env` file in the project root (or copy from `config/config.env.exampl
 
 ### Database Schema
 
-The app requires these Supabase tables:
-- `user_profiles` - User account information
-- `user_logs` - Daily health tracking data
-- `app_users` - Quick lookup table (optional)
+The app uses the following Supabase PostgreSQL tables:
 
-Run `scripts/create_user_tables.sql` in Supabase SQL Editor to create them.
+#### Core Tables
+
+**`app_users`** - User account references
+- `user_id` (uuid, PK) - Unique user identifier
+- `email` (text, unique) - User email address
+
+**`user_profiles`** - Extended user information
+- `id` (int, PK) - Profile ID
+- `user_id` (uuid, unique, FK → auth.users) - User reference
+- `email` (varchar, unique) - User email
+- `display_name` (varchar) - Display name
+- `created_at`, `updated_at` (timestamp) - Timestamps
+
+**`user_logs`** - Daily health tracking data
+- `id` (int, PK) - Log entry ID
+- `user_id` (uuid, FK → auth.users) - User reference
+- `log_date` (date) - Date of log entry
+- `pain_score` (int, 0-10) - Pain level
+- `stress_score` (int, 0-10) - Stress level
+- `anxiety_score` (int, 0-10) - Anxiety level
+- `patience_score` (int, 0-10) - Patience level
+- `mood_score` (int, 0-10) - Mood level
+- `sleep_hours` (numeric, 0-24) - Hours of sleep
+- `therapy_on` (int, 0 or 1) - Therapy active flag
+- `therapy_name` (varchar) - Name of therapy
+- `condition_today` (text) - Current condition
+- `therapy_used` (text) - Therapies used
+- `physical_symptoms` (text) - Physical symptoms
+- `emotional_symptoms` (text) - Emotional symptoms
+- `notes` (text) - User notes
+- Plus menstrual cycle, digestive, and other tracking fields
+
+**`user_therapies`** - Therapy tracking
+- `id` (int, PK) - Therapy ID
+- `user_id` (uuid, FK → auth.users) - User reference
+- `therapy_name` (varchar) - Name of therapy
+- `start_date` (date) - When therapy started
+- `end_date` (date) - When therapy ended (if applicable)
+- `is_active` (boolean) - Currently active flag
+- `notes` (text) - Therapy notes
+- `created_at`, `updated_at` (timestamp) - Timestamps
+
+#### Evidence & Research Tables
+
+**`evidence_pairs`** - Clinical trials evidence summary
+- `id` (bigint, PK) - Evidence pair ID
+- `condition` (text) - Health condition
+- `therapy` (text) - Treatment/therapy
+- `clinicaltrials_n` (bigint) - Number of clinical trials
+- `pubmed_n` (bigint) - Number of PubMed articles
+- `trials_url` (text) - ClinicalTrials.gov URL
+- `articles_url` (text) - PubMed URL
+- `year_min`, `year_max` (int) - Year range
+- `study_types` (array) - Types of studies
+- `countries` (array) - Countries where studies conducted
+- `evidence_direction` (text) - Positive/Mixed/Negative
+- `effect_size_estimate` (float) - Effect size
+- `quality_rating` (int) - Quality score
+- `sample_size_min` (bigint) - Minimum sample size
+- `source` (text) - Data source
+- `last_updated` (date) - Last update date
+
+**`evidence_counts`** - Detailed evidence data
+- `id` (bigint, PK) - Evidence ID
+- `condition` (text) - Health condition
+- `therapy` (text) - Treatment/therapy
+- `clinicaltrials_n` (int) - Clinical trials count
+- `pubmed_n` (int) - PubMed articles count
+- `year` (int) - Publication year
+- `country` (text) - Study country
+- `study_type` (text) - Type of study
+- `source` (text) - Data source
+- `n_participants` (int) - Number of participants
+- `effect_direction` (text) - Effect direction
+- `quality_score` (numeric) - Quality rating
+- `journal_impact` (numeric) - Journal impact factor
+- `last_updated` (date) - Last update date
+- `topic_keywords` (text) - Research keywords
+
+#### Legacy/Demo Tables
+
+**`wellness_logs`** - Simplified wellness tracking
+- `id` (bigint, PK) - Log ID
+- `user_id` (uuid) - User reference
+- `date` (date) - Log date
+- `therapy_on` (boolean) - Therapy flag
+- `pain_score` (numeric) - Pain level
+- `sleep_hours` (numeric) - Sleep duration
+- `stress_score` (numeric) - Stress level
+- `created_at` (timestamp) - Creation timestamp
+
+**`observations`** - Clinical observations
+- `id` (bigint, PK) - Observation ID
+- `user_id` (uuid) - User reference
+- `obs_date` (date) - Observation date
+- `therapy_on` (int, 0 or 1) - Therapy flag
+- `pain_score` (numeric) - Pain level
+- `sleep_hours` (numeric) - Sleep hours
+- `stress_score` (numeric) - Stress level
+- `notes` (text) - Observation notes
+- `inserted_at` (timestamp) - Insert timestamp
+
+**`n1_data`** - N-of-1 trial demo data
+- `id` (bigint, PK) - Data ID
+- `user_label` (text) - User label (default 'demo')
+- `filename` (text) - Source filename
+- `dt` (date) - Data date
+- `therapy_on` (boolean) - Therapy flag
+- `pain_score` (numeric) - Pain level
+- `sleep_hours` (numeric) - Sleep hours
+- `stress_score` (numeric) - Stress level
+- `uploaded_at` (timestamp) - Upload timestamp
+
+#### Setup Instructions
+
+Run `scripts/create_user_tables.sql` in the Supabase SQL Editor to create the required tables, or refer to `supabase_schema.sql` for the complete schema definition.
+
+**Note:** Row-level security (RLS) policies should be enabled on all user-specific tables to ensure data privacy.
 
 ---
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+    <defs>
+        <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <!-- Left ear -->
+    <circle cx="28" cy="28" r="18" fill="url(#purpleGradient)"/>
+    <!-- Right ear -->
+    <circle cx="72" cy="28" r="18" fill="url(#purpleGradient)"/>
+    <!-- Main face -->
+    <circle cx="50" cy="55" r="35" fill="url(#purpleGradient)"/>
+    <!-- Chin/snout area -->
+    <ellipse cx="50" cy="68" rx="20" ry="15" fill="#764ba2" opacity="0.8"/>
+</svg>
+

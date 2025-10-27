@@ -815,6 +815,24 @@ st.markdown("""
         border-bottom: none !important;
     }
     
+    /* Ensure text stays white on selected tab - all child elements */
+    .stTabs [aria-selected="true"] * {
+        color: white !important;
+    }
+    
+    /* Selected tab on click/active */
+    .stTabs [aria-selected="true"]:active,
+    .stTabs [aria-selected="true"]:focus,
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        color: white !important;
+    }
+    
+    .stTabs [aria-selected="true"]:active *,
+    .stTabs [aria-selected="true"]:focus *,
+    .stTabs [data-baseweb="tab"][aria-selected="true"] * {
+        color: white !important;
+    }
+    
     /* Remove tab underline/indicator bar */
     .stTabs [data-baseweb="tab-highlight"] {
         background-color: transparent !important;
@@ -844,6 +862,12 @@ st.markdown("""
         border-bottom: none !important;
         text-decoration: none !important;
         outline: none !important;
+    }
+    
+    button[data-baseweb="tab"]:active {
+        border: none !important;
+        border-bottom: none !important;
+        text-decoration: none !important;
     }
     
     /* FORMS - Enhanced Inputs */
@@ -929,21 +953,21 @@ st.markdown("""
         overflow: hidden !important;
     }
 
-    /* POPOVER - Enhanced Design */
+    /* POPOVER - Enhanced Design - Purple to match other buttons */
     [data-testid="stPopover"] button {
         border-radius: 12px !important;
         padding: 12px 24px !important;
         font-weight: 600 !important;
         transition: all 0.3s ease !important;
-        background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         border: none !important;
         color: white !important;
-        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3) !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
     }
 
     [data-testid="stPopover"] button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4) !important;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
     }
 
     /* ENHANCED CONTAINER BORDERS */
@@ -985,7 +1009,6 @@ st.markdown("""
 
     .stSlider > div > div > div > div > div:hover,
     div[data-testid="stSlider"] [role="slider"]:hover {
-        transform: scale(1.2) !important;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6) !important;
     }
     
@@ -1146,7 +1169,7 @@ st.markdown("""
         backdrop-filter: blur(20px) !important;
         border-radius: 25px !important;
         padding: 40px !important;
-        padding-bottom: 40px !important;
+        padding-bottom: 80px !important;
         margin-bottom: 100px !important;
         min-height: 400px !important;
         box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
@@ -2547,8 +2570,8 @@ if st.session_state.demo_mode:
     <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                display: flex; align-items: center; justify-content: space-between;">
-        <a href="/" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
+                display: flex; align-items: center; justify-content: flex-start;">
+        <a href="?" target="_self" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 32px; height: 32px;">
                 <circle cx="28" cy="28" r="18" fill="#ffffff"/>
                 <circle cx="72" cy="28" r="18" fill="#ffffff"/>
@@ -2558,16 +2581,16 @@ if st.session_state.demo_mode:
             <h1 style="margin: 0; font-size: 1.5rem; color: white; font-weight: 800;">Bearable</h1>
             <span style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 0.5rem; box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);">DEMO MODE</span>
         </a>
-        <div id="auth-button-placeholder" style="min-width: 120px;"></div>
     </div>
     """, unsafe_allow_html=True)
+    
 else:
     st.markdown("""
     <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                display: flex; align-items: center; justify-content: space-between;">
-        <a href="/" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
+                display: flex; align-items: center; justify-content: flex-start;">
+        <a href="?" target="_self" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 32px; height: 32px;">
                 <circle cx="28" cy="28" r="18" fill="#ffffff"/>
                 <circle cx="72" cy="28" r="18" fill="#ffffff"/>
@@ -2576,34 +2599,8 @@ else:
             </svg>
             <h1 style="margin: 0; font-size: 1.5rem; color: white; font-weight: 800;">Bearable</h1>
         </a>
-        <div id="auth-button-placeholder" style="min-width: 120px;"></div>
     </div>
     """, unsafe_allow_html=True)
-
-# Add login/logout button in header
-col1, col2, col3 = st.columns([5.5, 1, 0.1])
-with col2:
-    st.markdown('<div style="margin-top: -2.8rem; position: relative; z-index: 1000;"></div>', unsafe_allow_html=True)
-    if st.session_state.authenticated:
-        # Show logout button if authenticated
-        if st.button("🚪 Logout", key="logout_header", type="secondary", use_container_width=True):
-            st.session_state.authenticated = False
-            st.session_state.demo_mode = False
-            st.session_state.username = ""
-            st.session_state.n1_df = pd.DataFrame()
-            st.rerun()
-    else:
-        # Show login button if not authenticated
-        if st.button("🔐 Login", key="login_header", type="secondary", use_container_width=True):
-            # Show auth landing page
-            st.session_state.show_auth_page = True
-            st.session_state.demo_mode = False
-            st.session_state.authenticated = False
-            st.session_state.username = ""
-            st.session_state.n1_df = pd.DataFrame()
-            st.session_state.show_signup = False
-            st.rerun()
-    st.markdown('<div style="margin-bottom: 0.5rem;"></div>', unsafe_allow_html=True)
 
 st.markdown("""
 <div style="background: rgba(255, 255, 255, 0.95);
@@ -2616,7 +2613,7 @@ st.markdown("""
             margin-left: -3rem;
             margin-right: -3rem;
             margin-bottom: 40px;
-            margin-top: 0;">
+            margin-top: 2rem;">
     <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 50px; height: 50px;">
             <circle cx="28" cy="28" r="18" fill="#7c5dcf"/>
@@ -2634,13 +2631,25 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Create tabs
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Dashboard",
-    "🌱 Daily Log",
-    "🔬 Evidence Explorer",
-    "⚙️ Settings"
-])
+# Create tabs - add login/logout as 5th tab
+if st.session_state.authenticated:
+    tab_names = [
+        "📊 Dashboard",
+        "🌱 Daily Log",
+        "🔬 Evidence Explorer",
+        "⚙️ Settings",
+        "🚪 Logout"
+    ]
+else:
+    tab_names = [
+        "📊 Dashboard",
+        "🌱 Daily Log",
+        "🔬 Evidence Explorer",
+        "⚙️ Settings",
+        "🔐 Login"
+    ]
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(tab_names)
 
 # Scroll to top when demo mode is activated
 if st.session_state.get("demo_just_started", False):
@@ -3351,7 +3360,7 @@ with tab2:
         with col1:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(102, 126, 234, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">🌿</span>
@@ -3361,20 +3370,9 @@ with tab2:
 
             # Check if data was already copied today
             today = dt.date.today()
-            tmp = st.session_state.n1_df.copy()
 
-            # Check if dataframe has data and 'date' column
-            if not tmp.empty and "date" in tmp.columns:
-                tmp["date"] = pd.to_datetime(tmp["date"], errors="coerce").dt.date
-                has_today_entry = today in set(tmp["date"])
-            else:
-                has_today_entry = False
-
-            button_label = "Copied ✓" if has_today_entry else "Copy Yesterday"
-            button_disabled = has_today_entry
-
-            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
-            if st.button(button_label, key="dup_yesterday_bar", use_container_width=True, disabled=button_disabled, type="primary"):
+            st.markdown('<div class="blue-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            if st.button("Copy Yesterday", key="dup_yesterday_bar", use_container_width=True, type="primary"):
                 last = _get_latest_row()
                 if last is None:
                     st.toast("⚠️ No previous day to duplicate yet. Add your first entry below.", icon="⚠️")
@@ -3397,7 +3395,7 @@ with tab2:
         with col2:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(102, 126, 234, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">📝</span>
@@ -3405,8 +3403,8 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-            # Use popover for note input - wrap in pink-button-wrapper for consistency
-            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            # Use popover for note input - wrap in blue-button-wrapper for consistency
+            st.markdown('<div class="blue-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
             with st.popover("Add Note", use_container_width=True):
                 note = st.text_area("Note for today", key="quick_note_text", height=100, placeholder="Write your note here...")
                 col_save, col_clear = st.columns(2)
@@ -3428,7 +3426,7 @@ with tab2:
         with col3:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(102, 126, 234, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">😊</span>
@@ -3440,7 +3438,7 @@ with tab2:
             current_status = st.session_state.get("good_day", False)
             button_label = "✅ Good Day (ON)" if current_status else "Mark Good Day"
 
-            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            st.markdown('<div class="blue-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
             if st.button(button_label, key="good_day_btn", use_container_width=True, type="primary"):
                 st.session_state["good_day"] = not current_status
                 st.rerun()
@@ -3450,7 +3448,7 @@ with tab2:
         with col4:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(102, 126, 234, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">🩸</span>
@@ -3462,7 +3460,7 @@ with tab2:
             cycle_status = st.session_state.get("track_cycle", False)
             cycle_label = "✅ Tracking (ON)" if cycle_status else "Track Cycle"
 
-            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            st.markdown('<div class="blue-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
             if st.button(cycle_label, key="track_cycle_btn", use_container_width=True, type="primary"):
                 st.session_state["track_cycle"] = not cycle_status
                 st.rerun()
@@ -3675,7 +3673,10 @@ with tab2:
             f_stool = st.selectbox("Stool consistency:", stool_options, index=0)
 
         # Submit
+        st.markdown('<div style="margin-top: 2rem;"></div>', unsafe_allow_html=True)
+        st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
         add_clicked = st.form_submit_button("💾 SAVE ENTRY", type="primary", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         if add_clicked:
             # Therapy tracking logic
             last_row = _get_latest_row()
@@ -4000,7 +4001,7 @@ with tab3:
     # Show filter results count
     condition_text = ", ".join(selected_conditions) if selected_conditions else "All Conditions"
     st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); padding: 0.8rem 1.5rem; 
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.8rem 1.5rem; 
                 border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
         <p style="margin: 0; color: white; font-size: 0.95rem; font-weight: 600;">
             Showing {len(therapy_data)} therapies for {condition_text} (Evidence from {start_year} - {end_year})
@@ -4413,6 +4414,79 @@ with tab4:
 
     # Add bottom spacing to ensure content is visible above footer
     st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
+
+# Tab 5: Login/Logout
+with tab5:
+    if st.session_state.authenticated:
+        # Logout content
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    padding: 2rem 2.5rem; border-radius: 20px; margin-bottom: 2rem;
+                    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);">
+            <h2 style="color: white; margin: 0; font-size: 2rem; font-weight: 800; text-align: center;">
+                🚪 Logout
+            </h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div style="text-align: center; padding: 2rem;">
+            <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">
+                You are currently logged in as <strong style="color: #667eea;">{st.session_state.username}</strong>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
+            if st.button("🚪 LOGOUT", key="logout_tab", type="primary", use_container_width=True):
+                st.session_state.authenticated = False
+                st.session_state.demo_mode = False
+                st.session_state.username = ""
+                st.session_state.n1_df = pd.DataFrame()
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
+    else:
+        # Login content - redirect to login page
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    padding: 2rem 2.5rem; border-radius: 20px; margin-bottom: 2rem;
+                    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);">
+            <h2 style="color: white; margin: 0; font-size: 2rem; font-weight: 800; text-align: center;">
+                🔐 Login to Your Account
+            </h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style="text-align: center; padding: 2rem;">
+            <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">
+                Click the button below to access the login page and sign in to your Bearable account.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
+            if st.button("🔐 GO TO LOGIN PAGE", key="login_tab", type="primary", use_container_width=True):
+                st.session_state.show_auth_page = True
+                st.session_state.demo_mode = False
+                st.session_state.authenticated = False
+                st.session_state.username = ""
+                st.session_state.n1_df = pd.DataFrame()
+                st.session_state.show_signup = False
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
