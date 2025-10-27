@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background transparent -->
+  
+  <!-- Bear head icon (white) -->
+  <g id="bear-icon">
+    <!-- Main head circle -->
+    <circle cx="32" cy="32" r="28" fill="#ffffff"/>
+    
+    <!-- Ears -->
+    <circle cx="18" cy="18" r="12" fill="#ffffff"/>
+    <circle cx="46" cy="18" r="12" fill="#ffffff"/>
+    
+    <!-- Snout/muzzle (slightly lighter) -->
+    <ellipse cx="32" cy="38" rx="12" ry="16" fill="#f3f4f6"/>
+  </g>
+  
+  <!-- "Bearable" text (white) -->
+  <text x="72" y="42" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="800" fill="#ffffff">
+    Bearable
+  </text>
+</svg>
+
