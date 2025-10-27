@@ -608,15 +608,17 @@ st.markdown("""
         background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
     }
 
-    /* Blue SIGN IN button - using wrapper class */
+    /* Blue SIGN IN button - using wrapper class with SOLID purple gradient */
     .blue-button-wrapper .stFormSubmitButton > button,
     .blue-button-wrapper .stFormSubmitButton > button[kind="primary"],
     .blue-button-wrapper .stButton > button,
     .blue-button-wrapper .stButton > button[kind="primary"],
     .blue-button-wrapper button,
-    .blue-button-wrapper button[kind="primary"] {
+    .blue-button-wrapper button[kind="primary"],
+    .blue-button-wrapper > button,
+    .blue-button-wrapper button[kind="tertiary"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        background-color: #667eea !important;
+        background-color: transparent !important;
         background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
         border: none !important;
@@ -628,10 +630,12 @@ st.markdown("""
     .blue-button-wrapper .stButton > button:hover,
     .blue-button-wrapper .stButton > button[kind="primary"]:hover,
     .blue-button-wrapper button:hover,
-    .blue-button-wrapper button[kind="primary"]:hover {
+    .blue-button-wrapper button[kind="primary"]:hover,
+    .blue-button-wrapper > button:hover,
+    .blue-button-wrapper button[kind="tertiary"]:hover {
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
         background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
-        background-color: #5568d3 !important;
+        background-color: transparent !important;
         background-image: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
     }
 
