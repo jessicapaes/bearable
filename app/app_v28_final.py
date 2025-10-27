@@ -1195,9 +1195,18 @@ st.markdown("""
         z-index: 100 !important;
     }
     
-    /* CSS for header that matches inline styles */
+    /* CSS for header that matches inline styles - MAXIMUM PRIORITY */
     div[style*="position: fixed"][style*="top: 0"][style*="z-index: 999"] {
-        z-index: 999 !important;
+        z-index: 9999 !important;
+    }
+    
+    /* Add even more baseweb selectors */
+    ul[role="listbox"],
+    li[role="option"],
+    div[role="option"],
+    .stSelectbox > div[data-baseweb="select"],
+    .stMultiSelect > div[data-baseweb="select"] {
+        z-index: 100 !important;
     }
     
     /* Multiselect input field */
