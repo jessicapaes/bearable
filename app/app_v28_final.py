@@ -1150,6 +1150,18 @@ st.markdown("""
         border: 2px solid #667eea !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2) !important;
+        z-index: 100 !important;
+    }
+    
+    /* Fix z-index for all popovers and dropdowns to stay below sticky header */
+    [data-baseweb="popover"],
+    [data-baseweb="select"] {
+        z-index: 100 !important;
+    }
+    
+    /* Ensure sticky header stays on top */
+    header[data-testid="stHeader"] {
+        z-index: 999 !important;
     }
     
     /* Multiselect input field */
