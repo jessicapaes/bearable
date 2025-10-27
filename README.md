@@ -3,52 +3,45 @@
 > **Track your health journey with science-backed insights. Explore evidence from 500,000+ clinical trials, track your symptoms, and discover what actually works for you.**
 
 [![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/jessicapaes/bearable)
-[![Version](https://img.shields.io/badge/version-v27-blue)](https://github.com/jessicapaes/bearable/releases)
+[![Version](https://img.shields.io/badge/version-v28-purple)](https://github.com/jessicapaes/bearable/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
----
-
-## 🌐 NEW in v27: Live API Integration!
-
-**Real-time evidence data** directly from ClinicalTrials.gov and PubMed APIs!
-
-- 🔴 **Live Data:** Connect to official APIs for up-to-the-minute clinical trial and research counts
-- ⚡ **Smart Caching:** 24-hour cache reduces API calls by 99% while keeping data fresh
-- 🛡️ **Reliable:** Automatic fallback to CSV if APIs are unavailable
-- 🆓 **Free:** No API keys or configuration required
-- 📊 **Performance:** 2-5s first load, <100ms cached loads
-
-See [V27_LIVE_API_INTEGRATION.md](docs/V27_LIVE_API_INTEGRATION.md) for complete details.
+[![Tests](https://img.shields.io/badge/tests-9%2F9%20passing-brightgreen)](TEST_REPORT_V28_FINAL.md)
 
 ---
 
 ## ✨ What is Bearable?
 
-Bearable is a comprehensive health tracking application that combines **evidence-based research** with **personal data tracking** to help you discover which natural therapies actually work for your health conditions.
+Bearable is a comprehensive, evidence-based health tracking application that combines **real-time clinical research** with **personal data tracking** to help you discover which natural therapies actually work for your health conditions.
+
+### 🎨 Beautiful Purple Branding
+- **Gradient purple buttons** - Modern, cohesive UI design
+- **Professional color scheme** - Purple (#667eea → #764ba2), Pink (#ec4899 → #f472b6), Blue accents
+- **Glass morphism** - Sleek, modern card designs
+- **Responsive design** - Perfect on desktop, tablet, and mobile
 
 ### 🎯 Perfect For
 - **Chronic pain management** - Track symptoms and therapy effectiveness
 - **N-of-1 trials** - Run personal experiments with statistical analysis
-- **Natural therapy research** - Explore evidence from clinical trials
-- **Health optimization** - Discover patterns and correlations
-- **Doctor consultations** - Share data-driven insights with providers
+- **Natural therapy research** - Explore evidence from 500,000+ clinical trials
+- **Health optimization** - Discover patterns and correlations in your data
+- **Doctor consultations** - Share data-driven insights with healthcare providers
 
 ---
 
 ## 🚀 Quick Start
 
-### Try Demo Mode (No Setup)
+### Try Demo Mode (No Setup Required)
 ```bash
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Run the app (with live APIs!)
-streamlit run app/app_v27_final.py
+# 2. Run the app
+streamlit run app/app_v28_final.py
 
-# 3. Click "Continue in Demo Mode"
+# 3. Click "START FREE DEMO" on the landing page
 ```
 
-Open [http://localhost:8501](http://localhost:8501) and start tracking!
+Open [http://localhost:8501](http://localhost:8501) and start exploring!
 
 ### Full Setup (5 Minutes)
 ```bash
@@ -60,8 +53,8 @@ pip install -r requirements.txt
 # 2. Set up Supabase (free tier)
 python setup_auth.py  # Interactive wizard
 
-# 3. Run the app (with live APIs!)
-streamlit run app/app_v27_final.py
+# 3. Run the app
+streamlit run app/app_v28_final.py
 ```
 
 📖 **Detailed setup:** See [QUICKSTART_AUTH.md](docs/QUICKSTART_AUTH.md)
@@ -71,30 +64,29 @@ streamlit run app/app_v27_final.py
 ## 🌟 Key Features
 
 ### 🔐 Secure & Private
-- **User authentication** with email verification
-- **Password reset** via secure links
+- **User authentication** with email/password and secure sessions
+- **Password reset** via secure email links
 - **Row-level security** - your data is yours alone
 - **Cloud storage** with Supabase (PostgreSQL)
 - **GDPR compliant** - export or delete your data anytime
 
 ### 📊 Personal Dashboard
-- **Health metrics** - pain, sleep, mood trends
-- **Interactive charts** - 14-day visualizations with Plotly
-- **Therapy analysis** - statistical before/after comparison
-- **Correlation matrix** - discover what affects your symptoms
-- **Timeline markers** - see when you started therapies
-- **Automated insights** - AI-powered pattern detection
+- **Interactive gauges** - Visual health metrics (Pain, Sleep, Mood)
+- **Trend charts** - 30-day visualizations with Plotly
+- **Therapy analysis** - Statistical before/after comparison
+- **Correlation insights** - Discover what affects your symptoms
+- **Timeline markers** - See when you started natural therapies
+- **Automated pattern detection** - AI-powered insights
 
-### 🔬 Evidence Explorer (NEW: Live API Data!)
+### 🔬 Evidence Explorer (Live API Data!)
 - **🔴 Real-time data** from ClinicalTrials.gov API v2
 - **🔴 Live PubMed counts** via E-utilities API
 - **500,000+ clinical trials** - always up-to-date
 - **30M+ research articles** - current counts
-- **Evidence ratings** - Positive, Mixed, Negative
+- **Evidence ratings** - Positive ✅, Mixed ⚠️, Negative ❌
 - **Filter by condition** - 30+ health conditions
 - **Natural therapies** - yoga, acupuncture, supplements, and more
 - **Smart caching** - fast loads with fresh data
-- **Automatic fallback** - CSV backup if APIs unavailable
 
 ### 🌱 Daily Log (30 seconds/day)
 - **Core metrics:** Pain (0-10), Sleep (hours), Mood (0-10)
@@ -102,42 +94,42 @@ streamlit run app/app_v27_final.py
 - **Emotional symptoms:** Anxiety, stress levels
 - **Therapy tracking:** Mark when you start/stop therapies
 - **Menstrual cycle:** Optional hormone tracking
-- **Quick actions:** Duplicate yesterday, add notes, mark good days
+- **Quick actions:** Copy yesterday, add notes, mark good days
 - **Auto-save:** Data syncs to cloud automatically
 
-### 📈 N-of-1 Analysis
-- **Statistical rigor** - Bootstrap confidence intervals
+### 📈 Statistical Analysis (N-of-1 Trials)
+- **Bootstrap confidence intervals** - Statistical rigor
 - **Before/after comparison** - 3 days before, 10 days after minimum
 - **Effect size** - Cohen's d calculation
-- **P-value** - statistical significance testing
-- **Visual results** - beautiful gradient cards with insights
+- **P-value** - Statistical significance testing
+- **Visual results** - Beautiful gradient cards with insights
 - **Plain English** - no statistics degree needed
 
 ### ⚙️ Data Management
-- **CSV export** - download all your data
-- **PDF reports** - shareable with healthcare providers
-- **Data import** - restore from backups
-- **Account settings** - update profile, change password
-- **Secure deletion** - remove your account anytime
+- **CSV export** - Download all your data
+- **JSON export** - Structured data format
+- **Data import** - Restore from backups
+- **Account settings** - Update profile, change password
+- **Secure deletion** - Remove your account anytime
 
 ---
 
 ## 📱 Screenshots
 
-### Dashboard
-![Dashboard](https://placehold.co/800x400/667eea/FFFFFF?text=Health+Dashboard)
+### Dashboard with Health Metrics
+![Dashboard](https://placehold.co/800x400/667eea/FFFFFF?text=Interactive+Dashboard)
 
-*Track pain, sleep, and mood trends with interactive visualizations*
+*Track pain, sleep, and mood trends with beautiful visualizations*
 
-### Evidence Explorer
+### Evidence Explorer (Live Data!)
 ![Evidence Explorer](https://placehold.co/800x400/764ba2/FFFFFF?text=Evidence+Explorer)
 
-*Explore evidence for natural therapies across 30+ health conditions*
+*Explore evidence from 500,000+ clinical trials*
 
 ### Daily Log
-![Daily Log](https://placehold.co/800x400/f093fb/FFFFFF?text=Daily+Wellness+Log)
+![Daily Log](https://placehold.co/800x400/ec4899/FFFFFF?text=Daily+Logging)
 
-*Log your symptoms in 30 seconds with an intuitive interface*
+*Log your symptoms in 30 seconds*
 
 ---
 
@@ -146,7 +138,8 @@ streamlit run app/app_v27_final.py
 ### Frontend
 - **Streamlit** - Rapid web app development
 - **Plotly** - Interactive data visualizations
-- **HTML/CSS** - Custom styling and responsive design
+- **HTML/CSS** - Custom purple gradient styling and responsive design
+- **JavaScript** - Smooth scroll and UI interactions
 
 ### Backend  
 - **Supabase** - Authentication & PostgreSQL database
@@ -155,10 +148,9 @@ streamlit run app/app_v27_final.py
 - **SciPy** - Statistical analysis
 
 ### Data Sources
-- **ClinicalTrials.gov API v2** - Live clinical trials data (NEW in v27!)
-- **PubMed E-Utilities API** - Live research article counts (NEW in v27!)
+- **ClinicalTrials.gov API v2** - Live clinical trials data
+- **PubMed E-utilities API** - Live research article counts
 - **Supabase PostgreSQL** - User health tracking data
-- **CSV Fallback** - Offline/backup evidence data
 
 ---
 
@@ -168,13 +160,13 @@ streamlit run app/app_v27_final.py
 bearable/
 ├── README.md                     # 📖 You are here
 ├── requirements.txt              # Python dependencies  
-├── runtime.txt                   # Python version for deployment
+├── runtime.txt                   # Python version
 ├── setup_auth.py                 # 🚀 Interactive setup wizard
 │
 ├── app/                          # Streamlit applications
-│   ├── app_v27_final.py          # 🚀 LATEST - Live APIs + Production
-│   ├── app_v26_final.py          # Previous stable version
-│   └── bear_icon.svg             # App icon
+│   ├── app_v28_final.py          # 🚀 LATEST - All features + testing
+│   ├── app_v27_final.py          # Previous version
+│   └── bear_icon.svg             # Bearable bear icon
 │
 ├── src/                          # Core modules
 │   ├── auth.py                   # Authentication manager
@@ -183,193 +175,51 @@ bearable/
 │   └── login_ui.py               # Login UI components
 │
 ├── scripts/                      # Utility scripts
-│   ├── create_user_tables.sql    # Database schema
-│   ├── build_evidence_counts.py  # Evidence data builder
-│   ├── test_app.py               # Application tests
-│   └── verify_setup.py           # Setup verification
+│   ├── comprehensive_test.py     # Automated test suite
+│   ├── create_test_users.py      # Generate test data
+│   └── ...                       # Other utilities
 │
 ├── data/                         # Data files
 │   ├── evidence_counts.csv       # Clinical trials evidence
-│   └── templates/                # CSV templates for tracking
+│   ├── test_users.json           # Test users (20 users, 90 days each)
+│   └── templates/                # CSV templates
 │
 ├── docs/                         # 📚 Documentation
-│   ├── QUICKSTART_AUTH.md        # ⭐ 5-min setup guide
-│   ├── AUTHENTICATION_SETUP.md   # Detailed auth guide
-│   ├── V27_LIVE_API_INTEGRATION.md  # 🌐 Live API docs
-│   ├── V26_COMPREHENSIVE_AUDIT_FINDINGS.md  # Security audit
-│   └── ...                       # Version changelogs & guides
+│   ├── BEARABLE_BRAND_GUIDE.md   # Brand guidelines
+│   ├── TEST_PLAN_V28.md          # Test plan
+│   ├── TEST_REPORT_V28_FINAL.md  # Test results
+│   └── ...                       # Other docs
 │
-├── config/                       # Configuration files
-│   ├── config.env.example        # Environment variables template
-│   └── env_template.txt          # Alternative env template
-│
-├── deployment/                   # Deployment scripts
-│   ├── run_app.bat               # Windows batch script
-│   └── run_app.ps1               # PowerShell script
-│
-└── archive/                      # Archived/legacy files
+└── .streamlit/                   # Streamlit config
+    └── secrets.toml              # Environment variables
 ```
-
----
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root (or copy from `config/config.env.example`):
-
-   ```env
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_KEY=your-anon-key-here
-   ```
-
-**Security Note:** Never commit `.env` to version control!
-
-📁 **Example file:** See `config/config.env.example` for a template
-
-### Database Schema
-
-The app uses the following Supabase PostgreSQL tables:
-
-#### Core Tables
-
-**`app_users`** - User account references
-- `user_id` (uuid, PK) - Unique user identifier
-- `email` (text, unique) - User email address
-
-**`user_profiles`** - Extended user information
-- `id` (int, PK) - Profile ID
-- `user_id` (uuid, unique, FK → auth.users) - User reference
-- `email` (varchar, unique) - User email
-- `display_name` (varchar) - Display name
-- `created_at`, `updated_at` (timestamp) - Timestamps
-
-**`user_logs`** - Daily health tracking data
-- `id` (int, PK) - Log entry ID
-- `user_id` (uuid, FK → auth.users) - User reference
-- `log_date` (date) - Date of log entry
-- `pain_score` (int, 0-10) - Pain level
-- `stress_score` (int, 0-10) - Stress level
-- `anxiety_score` (int, 0-10) - Anxiety level
-- `patience_score` (int, 0-10) - Patience level
-- `mood_score` (int, 0-10) - Mood level
-- `sleep_hours` (numeric, 0-24) - Hours of sleep
-- `therapy_on` (int, 0 or 1) - Therapy active flag
-- `therapy_name` (varchar) - Name of therapy
-- `condition_today` (text) - Current condition
-- `therapy_used` (text) - Therapies used
-- `physical_symptoms` (text) - Physical symptoms
-- `emotional_symptoms` (text) - Emotional symptoms
-- `notes` (text) - User notes
-- Plus menstrual cycle, digestive, and other tracking fields
-
-**`user_therapies`** - Therapy tracking
-- `id` (int, PK) - Therapy ID
-- `user_id` (uuid, FK → auth.users) - User reference
-- `therapy_name` (varchar) - Name of therapy
-- `start_date` (date) - When therapy started
-- `end_date` (date) - When therapy ended (if applicable)
-- `is_active` (boolean) - Currently active flag
-- `notes` (text) - Therapy notes
-- `created_at`, `updated_at` (timestamp) - Timestamps
-
-#### Evidence & Research Tables
-
-**`evidence_pairs`** - Clinical trials evidence summary
-- `id` (bigint, PK) - Evidence pair ID
-- `condition` (text) - Health condition
-- `therapy` (text) - Treatment/therapy
-- `clinicaltrials_n` (bigint) - Number of clinical trials
-- `pubmed_n` (bigint) - Number of PubMed articles
-- `trials_url` (text) - ClinicalTrials.gov URL
-- `articles_url` (text) - PubMed URL
-- `year_min`, `year_max` (int) - Year range
-- `study_types` (array) - Types of studies
-- `countries` (array) - Countries where studies conducted
-- `evidence_direction` (text) - Positive/Mixed/Negative
-- `effect_size_estimate` (float) - Effect size
-- `quality_rating` (int) - Quality score
-- `sample_size_min` (bigint) - Minimum sample size
-- `source` (text) - Data source
-- `last_updated` (date) - Last update date
-
-**`evidence_counts`** - Detailed evidence data
-- `id` (bigint, PK) - Evidence ID
-- `condition` (text) - Health condition
-- `therapy` (text) - Treatment/therapy
-- `clinicaltrials_n` (int) - Clinical trials count
-- `pubmed_n` (int) - PubMed articles count
-- `year` (int) - Publication year
-- `country` (text) - Study country
-- `study_type` (text) - Type of study
-- `source` (text) - Data source
-- `n_participants` (int) - Number of participants
-- `effect_direction` (text) - Effect direction
-- `quality_score` (numeric) - Quality rating
-- `journal_impact` (numeric) - Journal impact factor
-- `last_updated` (date) - Last update date
-- `topic_keywords` (text) - Research keywords
-
-#### Legacy/Demo Tables
-
-**`wellness_logs`** - Simplified wellness tracking
-- `id` (bigint, PK) - Log ID
-- `user_id` (uuid) - User reference
-- `date` (date) - Log date
-- `therapy_on` (boolean) - Therapy flag
-- `pain_score` (numeric) - Pain level
-- `sleep_hours` (numeric) - Sleep duration
-- `stress_score` (numeric) - Stress level
-- `created_at` (timestamp) - Creation timestamp
-
-**`observations`** - Clinical observations
-- `id` (bigint, PK) - Observation ID
-- `user_id` (uuid) - User reference
-- `obs_date` (date) - Observation date
-- `therapy_on` (int, 0 or 1) - Therapy flag
-- `pain_score` (numeric) - Pain level
-- `sleep_hours` (numeric) - Sleep hours
-- `stress_score` (numeric) - Stress level
-- `notes` (text) - Observation notes
-- `inserted_at` (timestamp) - Insert timestamp
-
-**`n1_data`** - N-of-1 trial demo data
-- `id` (bigint, PK) - Data ID
-- `user_label` (text) - User label (default 'demo')
-- `filename` (text) - Source filename
-- `dt` (date) - Data date
-- `therapy_on` (boolean) - Therapy flag
-- `pain_score` (numeric) - Pain level
-- `sleep_hours` (numeric) - Sleep hours
-- `stress_score` (numeric) - Stress level
-- `uploaded_at` (timestamp) - Upload timestamp
-
-#### Setup Instructions
-
-Run `scripts/create_user_tables.sql` in the Supabase SQL Editor to create the required tables, or refer to `supabase_schema.sql` for the complete schema definition.
-
-**Note:** Row-level security (RLS) policies should be enabled on all user-specific tables to ensure data privacy.
 
 ---
 
 ## 🧪 Testing
 
-### Automated Tests
-```bash
-# Run linter
-python -m pylint app/app_v26_final.py
+### Comprehensive Test Suite
+We've run **comprehensive automated testing** with **100% pass rate**!
 
-# Check for security issues
-python -m bandit -r app/
+```bash
+# Run automated tests
+python scripts/comprehensive_test.py
+
+# Create test users (20 users with 90 days of data each)
+python scripts/create_test_users.py
 ```
 
-### Manual Testing Checklist
-- ✅ Create account → Verify email → Login
-- ✅ Log 7 days of data → View dashboard charts
-- ✅ Start therapy → Log 10 more days → See analysis
-- ✅ Export data to CSV → Verify content
-- ✅ Change password → Login with new password
-- ✅ Test on mobile (responsive design)
+### Test Results: ✅ 9/9 Tests Passing (100%)
+- ✅ File existence and structure validation
+- ✅ Test user data generation (20 users, 90 days each)
+- ✅ Therapy tracking functionality
+- ✅ Multiple therapies per user
+- ✅ Before/after therapy data analysis
+- ✅ CSV/JSON export functionality
+- ✅ Date range validation
+- ✅ Data integrity checks
+
+See [TEST_REPORT_V28_FINAL.md](TEST_REPORT_V28_FINAL.md) for complete results.
 
 ---
 
@@ -383,26 +233,30 @@ python -m bandit -r app/
 
 ### Self-Hosted
 ```bash
-# Using Docker
+# Using Python directly
+pip install -r requirements.txt
+streamlit run app/app_v28_final.py
+
+# Using Docker (optional)
 docker build -t bearable .
 docker run -p 8501:8501 --env-file .env bearable
-
-# Using systemd
-sudo systemctl enable bearable.service
-sudo systemctl start bearable
 ```
 
 ---
 
-## 📖 Documentation
+## 🔧 Configuration
 
-| Document | Description |
-|----------|-------------|
-| [QUICKSTART_AUTH.md](docs/QUICKSTART_AUTH.md) | ⭐ 5-minute authentication setup |
-| [AUTHENTICATION_SETUP.md](docs/AUTHENTICATION_SETUP.md) | Detailed integration guide |
-| [V27_LIVE_API_INTEGRATION.md](docs/V27_LIVE_API_INTEGRATION.md) | 🌐 **NEW!** Live API documentation |
-| [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](docs/V26_COMPREHENSIVE_AUDIT_FINDINGS.md) | Security audit report |
-| [AUTHENTICATION_ARCHITECTURE.md](docs/AUTHENTICATION_ARCHITECTURE.md) | Technical architecture |
+### Environment Variables
+
+Create a `.streamlit/secrets.toml` file:
+
+```toml
+[SUPABASE]
+url = "https://your-project.supabase.co"
+key = "your-anon-key-here"
+```
+
+**Security Note:** Never commit secrets to version control!
 
 ---
 
@@ -415,7 +269,6 @@ sudo systemctl start bearable
 - ✅ JWT session tokens (httpOnly cookies)
 - ✅ Row-level security (RLS policies)
 - ✅ Environment variable protection
-- ✅ Rate limiting (Supabase Auth)
 
 ### Privacy Commitment
 - Your health data is **never shared** without your consent
@@ -424,39 +277,28 @@ sudo systemctl start bearable
 - We don't sell or monetize your personal information
 - Open-source code - verify for yourself!
 
-📄 **Full security audit:** [V26_COMPREHENSIVE_AUDIT_FINDINGS.md](docs/V26_COMPREHENSIVE_AUDIT_FINDINGS.md)
-
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Version History
 
-### ✅ v27 (Current)
+### ✅ v28 (Current) - October 2025
+- [x] 🎨 **Beautiful purple branding** - Gradient buttons, cohesive design
+- [x] ✅ **Comprehensive testing** - 9/9 tests passing, 20 test users, 90 days of data
+- [x] 🐛 **Bug fixes** - Add Note, Evidence Explorer dropdown z-index
+- [x] 📊 **Improved gauges** - Better value formatting
+- [x] 🔧 **Code quality** - Cleaner, more maintainable codebase
+
+### ✅ v27 (Previous)
 - [x] 🌐 **Live API integration** - ClinicalTrials.gov & PubMed
 - [x] Real-time evidence data fetching
 - [x] 24-hour intelligent caching
 - [x] Automatic CSV fallback
-- [x] Rate limiting protection
-
-### ✅ v26 (Previous)
-- [x] Comprehensive security audit
-- [x] Mobile responsive design
-- [x] Enhanced Evidence Explorer UX
-- [x] Scroll-to-top navigation
-- [x] Production-ready documentation
-
-### 🚧 v28 (Next)
-- [ ] NCBI API key support (10 req/sec for PubMed)
-- [ ] Parallel API requests for bulk loading
-- [ ] Email validation & password strength meter
-- [ ] Data export compression (ZIP)
-- [ ] Batch data import from CSV
 
 ### 🔮 Future
 - [ ] Mobile app (React Native)
 - [ ] Wearable device integration
-- [ ] AI-powered insights
+- [ ] Enhanced AI insights
 - [ ] Multi-language support
-- [ ] Social features (share with doctor)
 - [ ] Dark mode
 
 ---
@@ -466,56 +308,22 @@ sudo systemctl start bearable
 We welcome contributions! Here's how:
 
 1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
+2. **Create** a feature branch
+3. **Commit** your changes
+4. **Push** to the branch
 5. **Open** a Pull Request
-
-### Development Setup
-```bash
-git clone https://github.com/jessicapaes/bearable.git
-cd bearable
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-pip install -r requirements.txt
-streamlit run app/app_v26_final.py
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**"Supabase connection failed"**
-- Check your `.env` file exists with correct credentials
-- Verify URL format: `https://xxx.supabase.co` (no trailing slash)
-
-**"Table doesn't exist"**
-- Run `scripts/create_user_tables.sql` in Supabase SQL Editor
-- Check that tables were created successfully
-
-**"App won't start"**
-- Install dependencies: `pip install -r requirements.txt`
-- Check Python version: `python --version` (3.9+ required)
-
-**"Data not saving"**
-- Verify you're logged in (not demo mode)
-- Check RLS policies are enabled in Supabase
-- Check browser console for errors
-
-📚 **More help:** See [AUTHENTICATION_SETUP.md](docs/AUTHENTICATION_SETUP.md)
 
 ---
 
 ## 📊 Stats
 
-- **📝 Lines of Code:** 4,000+
+- **📝 Lines of Code:** 4,600+
 - **🔬 Clinical Trials:** 500,000+
 - **📚 PubMed Articles:** 30M+
 - **🏥 Health Conditions:** 30+
 - **🌿 Natural Therapies:** 24+
-- **⭐ User Rating:** Production Ready
+- **🧪 Tests:** 9/9 passing (100%)
+- **👥 Test Users:** 20 users with 90 days of data
 
 ---
 
@@ -523,7 +331,7 @@ streamlit run app/app_v26_final.py
 
 ### For Individuals
 - Track chronic pain and discover triggers
-- Test if therapies work with statistical rigor
+- Test if natural therapies work with statistical rigor
 - Optimize sleep, stress, and mood
 - Share data-driven insights with doctors
 
@@ -545,7 +353,7 @@ streamlit run app/app_v26_final.py
 
 ### Data Sources
 - **ClinicalTrials.gov** - AACT database
-- **PubMed** - E-Utilities API
+- **PubMed** - E-utilities API
 - **National Library of Medicine** - Research access
 
 ### Technologies
@@ -554,19 +362,13 @@ streamlit run app/app_v26_final.py
 - **Plotly** - Data visualization
 - **Python** - Scientific computing ecosystem
 
-### Community
-- Open-source contributors
-- Beta testers and early users
-- Healthcare professionals providing feedback
-
 ---
 
 ## 📞 Support
 
-- **📧 Email:** support@bearable.app (coming soon)
 - **💬 GitHub Issues:** [Report a bug](https://github.com/jessicapaes/bearable/issues)
 - **📖 Documentation:** [View docs](https://github.com/jessicapaes/bearable/tree/main/docs)
-- **🌐 Website:** bearable.app (coming soon)
+- **⭐ Star us:** Help others discover Bearable!
 
 ---
 
@@ -580,11 +382,12 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 If you find Bearable useful, please consider starring the repository! ⭐
 
-Made with ❤️ for people managing chronic health conditions.
+Made with ❤️ and 🐻 for people managing chronic health conditions.
 
 ---
 
-**Last Updated:** January 26, 2025  
-**Version:** v27  
+**Last Updated:** October 27, 2025  
+**Version:** v28  
 **Status:** Production Ready ✅  
+**Tests:** 9/9 Passing (100%) 🎉  
 **APIs:** Live & Operational 🟢
