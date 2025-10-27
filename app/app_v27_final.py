@@ -610,7 +610,11 @@ st.markdown("""
 
     /* Blue SIGN IN button - using wrapper class */
     .blue-button-wrapper .stFormSubmitButton > button,
-    .blue-button-wrapper button {
+    .blue-button-wrapper .stFormSubmitButton > button[kind="primary"],
+    .blue-button-wrapper .stButton > button,
+    .blue-button-wrapper .stButton > button[kind="primary"],
+    .blue-button-wrapper button,
+    .blue-button-wrapper button[kind="primary"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         background-color: #667eea !important;
         background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -620,7 +624,11 @@ st.markdown("""
     }
 
     .blue-button-wrapper .stFormSubmitButton > button:hover,
-    .blue-button-wrapper button:hover {
+    .blue-button-wrapper .stFormSubmitButton > button[kind="primary"]:hover,
+    .blue-button-wrapper .stButton > button:hover,
+    .blue-button-wrapper .stButton > button[kind="primary"]:hover,
+    .blue-button-wrapper button:hover,
+    .blue-button-wrapper button[kind="primary"]:hover {
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
         background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
         background-color: #5568d3 !important;
@@ -629,7 +637,14 @@ st.markdown("""
 
     /* White Forgot button - using wrapper class */
     .white-button-wrapper .stFormSubmitButton > button,
-    .white-button-wrapper button {
+    .white-button-wrapper .stFormSubmitButton > button[kind="primary"],
+    .white-button-wrapper .stFormSubmitButton > button[kind="secondary"],
+    .white-button-wrapper .stButton > button,
+    .white-button-wrapper .stButton > button[kind="primary"],
+    .white-button-wrapper .stButton > button[kind="secondary"],
+    .white-button-wrapper button,
+    .white-button-wrapper button[kind="primary"],
+    .white-button-wrapper button[kind="secondary"] {
         background: white !important;
         background-color: white !important;
         background-image: none !important;
@@ -639,17 +654,29 @@ st.markdown("""
     }
 
     .white-button-wrapper .stFormSubmitButton > button:hover,
-    .white-button-wrapper button:hover {
+    .white-button-wrapper .stFormSubmitButton > button[kind="primary"]:hover,
+    .white-button-wrapper .stFormSubmitButton > button[kind="secondary"]:hover,
+    .white-button-wrapper .stButton > button:hover,
+    .white-button-wrapper .stButton > button[kind="primary"]:hover,
+    .white-button-wrapper .stButton > button[kind="secondary"]:hover,
+    .white-button-wrapper button:hover,
+    .white-button-wrapper button[kind="primary"]:hover,
+    .white-button-wrapper button[kind="secondary"]:hover {
         border-color: #667eea !important;
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2) !important;
         background: white !important;
         background-color: white !important;
     }
 
-    /* Pink CREATE FREE ACCOUNT button - using wrapper class (works with secondary type) */
+    /* Pink CREATE FREE ACCOUNT button - using wrapper class (works with all button types) */
     .pink-button-wrapper .stFormSubmitButton > button,
+    .pink-button-wrapper .stFormSubmitButton > button[kind="primary"],
     .pink-button-wrapper .stFormSubmitButton > button[kind="secondary"],
+    .pink-button-wrapper .stButton > button,
+    .pink-button-wrapper .stButton > button[kind="primary"],
+    .pink-button-wrapper .stButton > button[kind="secondary"],
     .pink-button-wrapper button,
+    .pink-button-wrapper button[kind="primary"],
     .pink-button-wrapper button[kind="secondary"] {
         background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
         background-color: #ec4899 !important;
@@ -660,8 +687,13 @@ st.markdown("""
     }
 
     .pink-button-wrapper .stFormSubmitButton > button:hover,
+    .pink-button-wrapper .stFormSubmitButton > button[kind="primary"]:hover,
     .pink-button-wrapper .stFormSubmitButton > button[kind="secondary"]:hover,
+    .pink-button-wrapper .stButton > button:hover,
+    .pink-button-wrapper .stButton > button[kind="primary"]:hover,
+    .pink-button-wrapper .stButton > button[kind="secondary"]:hover,
     .pink-button-wrapper button:hover,
+    .pink-button-wrapper button[kind="primary"]:hover,
     .pink-button-wrapper button[kind="secondary"]:hover {
         box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4) !important;
         background: linear-gradient(135deg, #db2777 0%, #ec4899 100%) !important;
@@ -749,27 +781,69 @@ st.markdown("""
         box-sizing: border-box !important;
         margin: 0 !important;
         max-width: none !important;
+        border-bottom: none !important;
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 12px;
-        padding: 15px 30px;
-        font-weight: 700;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        border-radius: 12px !important;
+        padding: 15px 30px !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        transition: all 0.3s ease !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        border: none !important;
+        border-bottom: none !important;
+        background-color: transparent !important;
+        color: #334155 !important;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: rgba(102, 126, 234, 0.1);
-        transform: translateY(-2px);
+        background-color: rgba(102, 126, 234, 0.1) !important;
+        transform: translateY(-2px) !important;
+        color: #667eea !important;
+        border: none !important;
+        border-bottom: none !important;
+        text-decoration: none !important;
     }
     
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3) !important;
+        border: none !important;
+        border-bottom: none !important;
+    }
+    
+    /* Remove tab underline/indicator bar */
+    .stTabs [data-baseweb="tab-highlight"] {
+        background-color: transparent !important;
+        display: none !important;
+    }
+    
+    .stTabs [data-baseweb="tab-border"] {
+        background-color: transparent !important;
+        display: none !important;
+    }
+    
+    /* Remove any red default underlines on tabs */
+    button[data-baseweb="tab"] {
+        border: none !important;
+        border-bottom: none !important;
+        text-decoration: none !important;
+    }
+    
+    button[data-baseweb="tab"]:hover {
+        border: none !important;
+        border-bottom: none !important;
+        text-decoration: none !important;
+    }
+    
+    button[data-baseweb="tab"]:focus {
+        border: none !important;
+        border-bottom: none !important;
+        text-decoration: none !important;
+        outline: none !important;
     }
     
     /* FORMS - Enhanced Inputs */
@@ -895,24 +969,24 @@ st.markdown("""
         border-radius: 10px !important;
     }
 
-    /* Slider thumb (handle) - FORCE BLUE BORDER */
+    /* Slider thumb (handle) - Smaller with gradient fill */
     .stSlider > div > div > div > div > div,
     div[data-testid="stSlider"] > div > div > div > div > div,
     .stSlider [data-baseweb="slider"] [role="slider"],
     .stSlider div[role="slider"] {
-        background: white !important;
-        border: 4px solid #667eea !important;
-        width: 28px !important;
-        height: 28px !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        width: 20px !important;
+        height: 20px !important;
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4) !important;
         border-radius: 50% !important;
         transition: all 0.2s ease !important;
     }
 
     .stSlider > div > div > div > div > div:hover,
     div[data-testid="stSlider"] [role="slider"]:hover {
-        transform: scale(1.15) !important;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+        transform: scale(1.2) !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6) !important;
     }
     
     /* Override Streamlit's accent-color (this controls slider/checkbox colors) */
@@ -928,23 +1002,35 @@ st.markdown("""
     }
     
     input[type="range"]::-webkit-slider-thumb {
-        background: white !important;
-        border: 4px solid #667eea !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4) !important;
+        cursor: pointer !important;
     }
     
     input[type="range"]::-webkit-slider-runnable-track {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+        height: 10px !important;
+        border-radius: 10px !important;
     }
     
     input[type="range"]::-moz-range-thumb {
-        background: white !important;
-        border: 4px solid #667eea !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4) !important;
+        cursor: pointer !important;
     }
     
     input[type="range"]::-moz-range-track {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+        height: 10px !important;
+        border-radius: 10px !important;
     }
     
     /* Checkbox - Force blue */
@@ -1009,6 +1095,49 @@ st.markdown("""
 
     .stSelectbox:focus-within [data-baseweb="popover"] {
         max-height: 300px !important;
+    }
+    
+    /* MULTISELECT PILLS - Purple Gradient (Override Streamlit Red) */
+    .stMultiSelect [data-baseweb="tag"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background-color: #667eea !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25) !important;
+        border: none !important;
+    }
+    
+    .stMultiSelect [data-baseweb="tag"]:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
+        background-color: #5568d3 !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35) !important;
+    }
+    
+    /* Multiselect close button (X) */
+    .stMultiSelect [data-baseweb="tag"] svg {
+        fill: white !important;
+        color: white !important;
+    }
+    
+    /* Multiselect dropdown */
+    .stMultiSelect [data-baseweb="popover"] {
+        border: 2px solid #667eea !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2) !important;
+    }
+    
+    /* Multiselect input field */
+    .stMultiSelect [data-baseweb="select"] > div {
+        border-color: #e2e8f0 !important;
+        border-radius: 12px !important;
+    }
+    
+    .stMultiSelect [data-baseweb="select"] > div:focus-within {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
     }
     
     /* FORMS - Style form container like glass card */
@@ -1957,36 +2086,47 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
     </div>
     """, unsafe_allow_html=True)
 
-    col1_how, col2_how, col3_how = st.columns(3, gap="large")
+    col1_how, col2_how, col3_how, col4_how = st.columns(4, gap="medium")
 
     with col1_how:
         st.markdown("""
-        <div class="glass-card" style="text-align: center; min-height: 280px;">
+        <div class="glass-card" style="text-align: center; height: 340px; display: flex; flex-direction: column; justify-content: flex-start; padding: 30px 20px;">
             <div style="font-size: 56px; margin-bottom: 20px;">1️⃣</div>
-            <h3 style="font-size: 22px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Log Your Symptoms</h3>
-            <p style="color: #64748b; font-size: 15px; line-height: 1.7; font-weight: 500;">
-                Track pain, sleep, mood, and therapies in just 30 seconds per day. Simple sliders, no complex forms.
+            <h3 style="font-size: 20px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Check Evidence</h3>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; font-weight: 500;">
+                Explore the most studied natural therapies with positive evidence for your condition. Science-backed recommendations.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
     with col2_how:
         st.markdown("""
-        <div class="glass-card" style="text-align: center; min-height: 280px;">
+        <div class="glass-card" style="text-align: center; height: 340px; display: flex; flex-direction: column; justify-content: flex-start; padding: 30px 20px;">
             <div style="font-size: 56px; margin-bottom: 20px;">2️⃣</div>
-            <h3 style="font-size: 22px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Discover Patterns</h3>
-            <p style="color: #64748b; font-size: 15px; line-height: 1.7; font-weight: 500;">
-                AI analyses your data to show which therapies are working. See trends, correlations, and statistical insights.
+            <h3 style="font-size: 20px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Log Your Symptoms</h3>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; font-weight: 500;">
+                Track pain, sleep, mood, and therapies in just 30 seconds per day. Simple sliders, no complex forms.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
     with col3_how:
         st.markdown("""
-        <div class="glass-card" style="text-align: center; min-height: 280px;">
+        <div class="glass-card" style="text-align: center; height: 340px; display: flex; flex-direction: column; justify-content: flex-start; padding: 30px 20px;">
             <div style="font-size: 56px; margin-bottom: 20px;">3️⃣</div>
-            <h3 style="font-size: 22px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Feel Better</h3>
-            <p style="color: #64748b; font-size: 15px; line-height: 1.7; font-weight: 500;">
+            <h3 style="font-size: 20px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Discover Patterns</h3>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; font-weight: 500;">
+                AI analyses your data to show which therapies are working. See trends, correlations, and statistical insights.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col4_how:
+        st.markdown("""
+        <div class="glass-card" style="text-align: center; height: 340px; display: flex; flex-direction: column; justify-content: flex-start; padding: 30px 20px;">
+            <div style="font-size: 56px; margin-bottom: 20px;">4️⃣</div>
+            <h3 style="font-size: 20px; font-weight: 800; color: #1a202c; margin-bottom: 15px;">Feel Better</h3>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; font-weight: 500;">
                 Make data-driven decisions about your health. Share insights with your doctor. Take control of your pain.
             </p>
         </div>
@@ -1999,11 +2139,14 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
     col1, col2 = st.columns([1.3, 1], gap="large")
 
     with col1:
+        st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
         if st.button("🚀 START FREE DEMO", type="primary", use_container_width=True):
             st.session_state.demo_mode = True
             st.session_state.username = "Demo User"
             st.session_state.n1_df = generate_demo_data_with_therapy()
+            st.session_state.demo_just_started = True
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<p style="text-align: center; color: #64748b; font-size: 14px; margin-top: 15px; margin-bottom: 30px;">No credit card • No email required • Instant access</p>', unsafe_allow_html=True)
 
@@ -2149,7 +2292,9 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
             """, unsafe_allow_html=True)
 
             # Create Account button inside form
+            st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
             create_account_clicked = st.form_submit_button("CREATE FREE ACCOUNT", use_container_width=True, type="primary")
+            st.markdown('</div>', unsafe_allow_html=True)
             
             # Add spacing below the button to push it up from the bottom
             st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
@@ -2176,9 +2321,13 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
 
                 col1, col2 = st.columns(2)
                 with col1:
+                    st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
                     reset_clicked = st.form_submit_button("SEND RESET LINK", use_container_width=True, type="primary")
+                    st.markdown('</div>', unsafe_allow_html=True)
                 with col2:
+                    st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
                     cancel_reset_clicked = st.form_submit_button("CANCEL", use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
 
                 if reset_clicked:
                     # Validation
@@ -2358,11 +2507,14 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
 
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
+        st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
         if st.button("🚀 START FREE DEMO", type="primary", use_container_width=True, key="cta_bottom"):
             st.session_state.demo_mode = True
             st.session_state.username = "Demo User"
             st.session_state.n1_df = generate_demo_data_with_therapy()
+            st.session_state.demo_just_started = True
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.stop()
 
@@ -2396,7 +2548,7 @@ if st.session_state.demo_mode:
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 display: flex; align-items: center; justify-content: space-between;">
-        <a href="?" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
+        <a href="/" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 32px; height: 32px;">
                 <circle cx="28" cy="28" r="18" fill="#ffffff"/>
                 <circle cx="72" cy="28" r="18" fill="#ffffff"/>
@@ -2415,7 +2567,7 @@ else:
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 display: flex; align-items: center; justify-content: space-between;">
-        <a href="?" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
+        <a href="/" class="header-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 32px; height: 32px;">
                 <circle cx="28" cy="28" r="18" fill="#ffffff"/>
                 <circle cx="72" cy="28" r="18" fill="#ffffff"/>
@@ -2489,6 +2641,40 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "🔬 Evidence Explorer",
     "⚙️ Settings"
 ])
+
+# Scroll to top when demo mode is activated
+if st.session_state.get("demo_just_started", False):
+    st.markdown("""
+    <script>
+    // Scroll to top immediately and repeatedly to ensure it works
+    function scrollToTopForce() {
+        window.scrollTo(0, 0);
+        window.parent.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }
+    
+    // Execute immediately
+    scrollToTopForce();
+    
+    // Execute after slight delay to catch any late-rendering elements
+    setTimeout(scrollToTopForce, 50);
+    setTimeout(scrollToTopForce, 100);
+    setTimeout(scrollToTopForce, 200);
+    setTimeout(scrollToTopForce, 300);
+    
+    // Keep forcing scroll to top until page settles
+    let scrollAttempts = 0;
+    const scrollInterval = setInterval(function() {
+        scrollToTopForce();
+        scrollAttempts++;
+        if (scrollAttempts >= 10) {
+            clearInterval(scrollInterval);
+        }
+    }, 100);
+    </script>
+    """, unsafe_allow_html=True)
+    st.session_state.demo_just_started = False
 
 # Auto-redirect to Daily Log after login
 if st.session_state.get("redirect_to_daily_log", False):
@@ -3165,7 +3351,7 @@ with tab2:
         with col1:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(102, 126, 234, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">🌿</span>
@@ -3187,7 +3373,8 @@ with tab2:
             button_label = "Copied ✓" if has_today_entry else "Copy Yesterday"
             button_disabled = has_today_entry
 
-            if st.button(button_label, key="dup_yesterday_bar", use_container_width=True, disabled=button_disabled):
+            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            if st.button(button_label, key="dup_yesterday_bar", use_container_width=True, disabled=button_disabled, type="primary"):
                 last = _get_latest_row()
                 if last is None:
                     st.toast("⚠️ No previous day to duplicate yet. Add your first entry below.", icon="⚠️")
@@ -3204,12 +3391,13 @@ with tab2:
                     st.session_state.n1_df = pd.concat([st.session_state.n1_df, new_entry], ignore_index=True)
                     st.toast("✅ Duplicated yesterday's values to today!", icon="✅")
                     st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # Quick note popover
         with col2:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(16, 185, 129, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">📝</span>
@@ -3217,7 +3405,8 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-            # Use popover for note input
+            # Use popover for note input - wrap in pink-button-wrapper for consistency
+            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
             with st.popover("Add Note", use_container_width=True):
                 note = st.text_area("Note for today", key="quick_note_text", height=100, placeholder="Write your note here...")
                 col_save, col_clear = st.columns(2)
@@ -3233,12 +3422,13 @@ with tab2:
                     if st.button("Clear", key="quick_note_clear", use_container_width=True):
                         st.session_state["quick_note_text"] = ""
                         st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # Mark good day button
         with col3:
             st.markdown("""
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="background: rgba(245, 158, 11, 0.1); width: 80px; height: 80px;
+                <div style="background: rgba(236, 72, 153, 0.1); width: 80px; height: 80px;
                             border-radius: 50%; display: flex; align-items: center;
                             justify-content: center; margin: 0 auto 1rem auto;">
                     <span style="font-size: 3rem;">😊</span>
@@ -3249,11 +3439,12 @@ with tab2:
             # Button to toggle good day
             current_status = st.session_state.get("good_day", False)
             button_label = "✅ Good Day (ON)" if current_status else "Mark Good Day"
-            button_type = "primary" if current_status else "secondary"
 
-            if st.button(button_label, key="good_day_btn", use_container_width=True, type=button_type):
+            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            if st.button(button_label, key="good_day_btn", use_container_width=True, type="primary"):
                 st.session_state["good_day"] = not current_status
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # Track menstrual cycle button
         with col4:
@@ -3270,11 +3461,12 @@ with tab2:
             # Button to toggle cycle tracking
             cycle_status = st.session_state.get("track_cycle", False)
             cycle_label = "✅ Tracking (ON)" if cycle_status else "Track Cycle"
-            cycle_type = "primary" if cycle_status else "secondary"
 
-            if st.button(cycle_label, key="track_cycle_btn", use_container_width=True, type=cycle_type):
+            st.markdown('<div class="pink-button-wrapper" style="margin-bottom: 0;">', unsafe_allow_html=True)
+            if st.button(cycle_label, key="track_cycle_btn", use_container_width=True, type="primary"):
                 st.session_state["track_cycle"] = not cycle_status
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
         
         # Add extra spacing at the bottom of the Quick Actions box
         st.markdown('<div style="height: 2rem;"></div>', unsafe_allow_html=True)
@@ -4044,7 +4236,9 @@ with tab4:
                 new_email = st.text_input("Email", value=current_email, key="update_email",
                                          help="Changing email will require you to login again")
 
+                st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
                 update_profile = st.form_submit_button("💾 UPDATE PROFILE", type="primary")
+                st.markdown('</div>', unsafe_allow_html=True)
 
                 if update_profile:
                     if not new_name or not new_email:
@@ -4093,7 +4287,9 @@ with tab4:
                                             help="Must be at least 8 characters")
                 confirm_new_password = st.text_input("Confirm New Password", type="password", key="confirm_new_pwd")
 
+                st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
                 change_password = st.form_submit_button("🔐 CHANGE PASSWORD", type="primary")
+                st.markdown('</div>', unsafe_allow_html=True)
 
                 if change_password:
                     if not new_password or not confirm_new_password:
