@@ -1885,9 +1885,13 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
 
             col1, col2 = st.columns(2)
             with col1:
+                st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
                 reset_submit = st.form_submit_button("SEND RESET LINK", use_container_width=True, type="primary")
+                st.markdown('</div>', unsafe_allow_html=True)
             with col2:
+                st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
                 reset_cancel = st.form_submit_button("CANCEL", use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
             if reset_submit:
                 # Validation
@@ -1921,19 +1925,23 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
         
         # Back to sign in button
         st.markdown('<div style="margin-top: 2rem; text-align: center;">', unsafe_allow_html=True)
+        st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
         if st.button("← Back to Sign In", key="reset_back_to_signin"):
             st.session_state.show_password_reset = False
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Back to home button
         st.markdown('<div style="margin-top: 1rem;"></div>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
+            st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
             if st.button("← Back to Home", use_container_width=True, key="reset_back_home"):
                 st.session_state.show_auth_page = False
                 st.session_state.show_password_reset = False
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
         
         st.stop()  # Don't show the sign in/sign up forms
 
@@ -2013,7 +2021,9 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
             new_password = st.text_input("Password", type="password", placeholder="Create a strong password", label_visibility="visible", key="auth_signup_password")
             confirm_password = st.text_input("Confirm Password", type="password", placeholder="Re-enter your password", label_visibility="visible", key="auth_signup_confirm")
 
+            st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
             signup_clicked = st.form_submit_button("CREATE ACCOUNT", use_container_width=True, type="primary")
+            st.markdown('</div>', unsafe_allow_html=True)
 
             # Add spacing below button to make the form taller
             st.markdown('<div style="margin-bottom: 3rem;"></div>', unsafe_allow_html=True)
@@ -2051,9 +2061,11 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
     st.markdown('<div style="margin-top: 3rem;"></div>', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
+        st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
         if st.button("← Back to Home", use_container_width=True, key="auth_back_home"):
             st.session_state.show_auth_page = False
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.stop()
 
@@ -2409,9 +2421,13 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
 
                 col1, col2 = st.columns(2)
                 with col1:
+                    st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
                     signup_clicked = st.form_submit_button("CREATE ACCOUNT", use_container_width=True, type="primary")
+                    st.markdown('</div>', unsafe_allow_html=True)
                 with col2:
+                    st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
                     cancel_clicked = st.form_submit_button("CANCEL", use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
 
                 if signup_clicked:
                     # Validation
@@ -2551,18 +2567,22 @@ with st.sidebar:
         st.markdown("### 🎯 Demo Mode")
         st.info(f"Welcome, {st.session_state.username}!")
         st.markdown("---")
+        st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
         if st.button("🏠 EXIT DEMO & RETURN HOME", use_container_width=True, type="primary"):
             st.session_state.demo_mode = False
             st.session_state.authenticated = False
             st.session_state.n1_df = pd.DataFrame()
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
     elif st.session_state.authenticated:
         st.markdown(f"### 👋 {st.session_state.username}")
         st.markdown("---")
+        st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
         if st.button("🚪 LOGOUT", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.username = ""
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Modern Sticky Header Bar - Create unified header
 if st.session_state.demo_mode:
@@ -2752,9 +2772,11 @@ with tab1:
         # Show call to action
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
+            st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
             if st.button("📝 Go to Daily Log", type="primary", use_container_width=True, key="empty_state_cta"):
                 st.session_state.active_tab = "📝 Daily Log"
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
         
         st.stop()  # Don't show empty charts
     
@@ -3409,6 +3431,7 @@ with tab2:
                 note = st.text_area("Note for today", key="quick_note_text", height=100, placeholder="Write your note here...")
                 col_save, col_clear = st.columns(2)
                 with col_save:
+                    st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
                     if st.button("Save", key="quick_note_save", use_container_width=True, type="primary"):
                         if note.strip():
                             st.session_state.quick_notes.append(
@@ -3416,10 +3439,13 @@ with tab2:
                             )
                             st.toast("✓ Note saved!", icon="✅")
                             st.rerun()
+                    st.markdown('</div>', unsafe_allow_html=True)
                 with col_clear:
+                    st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
                     if st.button("Clear", key="quick_note_clear", use_container_width=True):
                         st.session_state["quick_note_text"] = ""
                         st.rerun()
+                    st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
         # Mark good day button
@@ -4321,7 +4347,8 @@ with tab4:
 
                 confirm_text = st.text_input("Type 'DELETE' to confirm", key="delete_confirm")
 
-                if st.button("🗑️ DELETE MY ACCOUNT", type="secondary"):
+                st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
+                if st.button("🗑️ DELETE MY ACCOUNT", type="primary"):
                     if confirm_text == "DELETE":
                         # Delete account
                         accounts.pop(current_email, None)
@@ -4338,6 +4365,7 @@ with tab4:
                         st.rerun()
                     else:
                         st.error("❌ Please type 'DELETE' to confirm")
+                st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown("---")
 
@@ -4363,6 +4391,7 @@ with tab4:
         
         with col1:
             csv_data = df.to_csv(index=False)
+            st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
             st.download_button(
                 label="📥 DOWNLOAD CSV",
                 data=csv_data,
@@ -4371,17 +4400,20 @@ with tab4:
                 use_container_width=True,
                 type="primary"
             )
+            st.markdown('</div>', unsafe_allow_html=True)
         
         with col2:
             json_data = df.to_json(orient='records', indent=2)
+            st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
             st.download_button(
                 label="📥 DOWNLOAD JSON",
                 data=json_data,
                 file_name=f"health_data_{datetime.now().strftime('%Y%m%d')}.json",
                 mime="application/json",
                 use_container_width=True,
-                type="secondary"
+                type="primary"
             )
+            st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.info("📝 No data to export yet. Start logging to see your data here!")
     
