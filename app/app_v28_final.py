@@ -3459,7 +3459,9 @@ with tab2:
                 with col_clear:
                     st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
                     if st.button("Clear", key="quick_note_clear", use_container_width=True):
-                        st.session_state["quick_note_text"] = ""
+                        # Use a different key for clearing to avoid state conflict
+                        if "quick_note_text" in st.session_state:
+                            del st.session_state["quick_note_text"]
                         st.rerun()
                     st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
