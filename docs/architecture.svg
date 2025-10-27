@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+        <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Security Border -->
+  <rect x="20" y="20" width="760" height="560" fill="none" stroke="#667eea" stroke-width="3" stroke-dasharray="5,5" rx="10"/>
+  <text x="400" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#667eea">🔒 Enterprise-Grade Security</text>
+  
+  <!-- Bottom Layer: Database -->
+  <rect x="250" y="450" width="300" height="100" fill="url(#blueGradient)" rx="10"/>
+  <text x="400" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">Supabase (PostgreSQL)</text>
+  <text x="400" y="505" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">🔒 Database</text>
+  <text x="400" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Row-Level Security • JWT Auth</text>
+  <text x="400" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">User Data Isolation</text>
+  
+  <!-- Middle Layer: APIs -->
+  <rect x="150" y="290" width="220" height="120" fill="url(#pinkGradient)" rx="10"/>
+  <text x="260" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white">ClinicalTrials.gov</text>
+  <text x="260" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white">🏥 API</text>
+  <text x="260" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Clinical Trial Data</text>
+  <text x="260" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">500,000+ Trials</text>
+  
+  <rect x="430" y="290" width="220" height="120" fill="url(#pinkGradient)" rx="10"/>
+  <text x="540" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white">PubMed</text>
+  <text x="540" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white">📚 API</text>
+  <text x="540" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Research Articles</text>
+  <text x="540" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">1M+ Publications</text>
+  
+  <!-- Top Layer: Application -->
+  <rect x="200" y="80" width="400" height="160" fill="url(#purpleGradient)" rx="10"/>
+  <text x="400" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">Streamlit Web Application</text>
+  <text x="400" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white">🐍 Python • 🌐 Mobile-Ready</text>
+  
+  <!-- App features -->
+  <rect x="230" y="155" width="100" height="60" fill="rgba(255,255,255,0.2)" rx="5"/>
+  <text x="280" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">📊</text>
+  <text x="280" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Dashboard</text>
+  <text x="280" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Analytics</text>
+  
+  <rect x="350" y="155" width="100" height="60" fill="rgba(255,255,255,0.2)" rx="5"/>
+  <text x="400" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">📝</text>
+  <text x="400" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Daily Log</text>
+  <text x="400" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Tracking</text>
+  
+  <rect x="470" y="155" width="100" height="60" fill="rgba(255,255,255,0.2)" rx="5"/>
+  <text x="520" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">🔬</text>
+  <text x="520" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Evidence</text>
+  <text x="520" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Explorer</text>
+  
+  <!-- Arrows -->
+  <line x1="400" y1="450" x2="260" y2="410" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="400" y1="450" x2="540" y2="410" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="260" y1="290" x2="400" y2="240" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="540" y1="290" x2="400" y2="240" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="6" refX="10" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+    </marker>
+  </defs>
+  
+  <!-- Data flow labels -->
+  <text x="300" y="345" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">24h cache</text>
+  <text x="450" y="345" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">Real-time</text>
+</svg>

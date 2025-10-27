@@ -2787,12 +2787,7 @@ with tab1:
     # Header box matching Daily Log style
     st.markdown("""
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                padding: 2rem 2.5rem; border-radius: 20px; 
-                margin-bottom: 2rem;
-                margin-left: -3rem;
-                margin-right: -3rem;
-                padding-left: calc(2.5rem + 3rem);
-                padding-right: calc(2.5rem + 3rem);
+                padding: 2rem 2.5rem; border-radius: 20px; margin-bottom: 2rem;
                 box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);">
         <h2 style="color: white; margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">
             📊 Health Dashboard
@@ -3310,7 +3305,7 @@ with tab1:
 condition_options = [
     "None", "Addiction", "Anxiety", "Burnout", "Cancer Pain", "Chronic Fatigue Syndrome",
     "Chronic Pain", "Depression", "Eating Disorders", "Endometriosis", "Fibromyalgia", "Headache",
-    "Infertility", "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause",
+    "Infertility", "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Lower Back Pain", "Menopause",
     "Migraine", "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
     "Osteoarthritis", "Perimenopause", "Polycystic Ovary Syndrome", "Post-Traumatic Stress Disorder",
     "Postoperative Pain", "Rheumatoid Arthritis", "Schizophrenia", "Shoulder Pain", "Stress"
@@ -3849,13 +3844,13 @@ with tab2:
             # Determine card color based on pain score
             pain = row.get('pain_score', 5)
             if pain <= 3:
-                card_color = "#8b5cf6"  # Green
+                card_color = "#10b981"  # Green
                 pain_emoji = "😊"
             elif pain <= 6:
-                card_color = "#ec4899"  # Orange
+                card_color = "#f59e0b"  # Orange
                 pain_emoji = "😐"
             else:
-                card_color = "#3b82f6"  # Red
+                card_color = "#ef4444"  # Red
                 pain_emoji = "😣"
 
             sleep_val = row.get('sleep_hours', 'N/A')
@@ -3992,9 +3987,9 @@ with tab3:
             "Awareness-based movement therapy for better function",
             "Gentle manipulation of skull and spine for nervous system balance"
         ],
-        "Condition": ["Low Back Pain", "Low Back Pain", "Anxiety", "Low Back Pain", "Rheumatoid Arthritis", "Low Back Pain", "General Wellness", "Anxiety",
-                      "Low Back Pain", "Anxiety", "Rheumatoid Arthritis", "Depression", "Depression", "General Wellness", "Chronic Pain", "Anxiety", 
-                      "Chronic Pain", "Low Back Pain", "Chronic Pain", "Low Back Pain", "Rheumatoid Arthritis", "Chronic Pain", "Chronic Pain", "Migraine"]
+        "Condition": ["Lower Back Pain", "Lower Back Pain", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis", "Lower Back Pain", "General Wellness", "Anxiety",
+                      "Lower Back Pain", "Anxiety", "Rheumatoid Arthritis", "Depression", "Depression", "General Wellness", "Chronic Pain", "Anxiety", 
+                      "Chronic Pain", "Lower Back Pain", "Chronic Pain", "Lower Back Pain", "Rheumatoid Arthritis", "Chronic Pain", "Chronic Pain", "Migraine"]
     })
 
     # FILTERS SECTION
@@ -4020,13 +4015,13 @@ with tab3:
             "Addiction", "Anxiety", "Arthritis", "Burnout", "Cancer Pain", 
             "Chronic Fatigue Syndrome", "Chronic Pain", "Depression", "Eating Disorders", 
             "Endometriosis", "Fibromyalgia", "Headache", "Infertility", "Insomnia", 
-            "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause", "Migraine", 
+            "Irritable Bowel Syndrome", "Knee Pain", "Lower Back Pain", "Menopause", "Migraine", 
             "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
             "PCOS", "Postoperative Pain", "Rheumatoid Arthritis", "Schizophrenia", 
             "Shoulder Pain", "Stress", "General Wellness"
         ]
-        # Default to "Low Back Pain" in demo mode, empty when signed in
-        default_conditions = ["Low Back Pain"] if st.session_state.demo_mode else []
+        # Default to "Lower Back Pain" in demo mode, empty when signed in
+        default_conditions = ["Lower Back Pain"] if st.session_state.demo_mode else []
         # Add spacing to align with therapies column
         st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
         
