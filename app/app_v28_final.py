@@ -24,7 +24,7 @@ load_dotenv()
 # PAGE CONFIGURATION - MUST BE FIRST
 # ============================================================================
 st.set_page_config(
-    page_title="Bearable v28 - Evidence-Based Health Tracking",
+    page_title="Bearable",
     page_icon="app/bear_icon.svg",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -595,17 +595,33 @@ st.markdown("""
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* Regular primary buttons (blue) */
-    .stButton > button[kind="primary"] {
+    /* Regular primary buttons (blue) - FORCE PURPLE GRADIENT */
+    .stButton > button[kind="primary"],
+    button[kind="primary"],
+    .stButton button[kind="primary"],
+    div[data-testid="stButton"] button[kind="primary"],
+    [data-testid="stButton"] button[kind="primary"],
+    .element-container button[kind="primary"],
+    .stButton > button.kind-primary {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background-color: transparent !important;
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
         border: none !important;
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
     }
 
-    .stButton > button[kind="primary"]:hover {
+    .stButton > button[kind="primary"]:hover,
+    button[kind="primary"]:hover,
+    .stButton button[kind="primary"]:hover,
+    div[data-testid="stButton"] button[kind="primary"]:hover,
+    [data-testid="stButton"] button[kind="primary"]:hover,
+    .element-container button[kind="primary"]:hover,
+    .stButton > button.kind-primary:hover {
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
         background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
+        background-color: transparent !important;
+        background-image: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
     }
 
     /* Blue SIGN IN button - using wrapper class with SOLID purple gradient */
