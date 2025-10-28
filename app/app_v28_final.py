@@ -803,7 +803,7 @@ st.markdown("""
         background-image: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%) !important;
     }
 
-    /* White Forgot button - using wrapper class */
+    /* White Forgot button - Modern minimal design */
     .white-button-wrapper .stFormSubmitButton > button,
     .white-button-wrapper .stFormSubmitButton > button[kind="primary"],
     .white-button-wrapper .stFormSubmitButton > button[kind="secondary"],
@@ -813,12 +813,14 @@ st.markdown("""
     .white-button-wrapper button,
     .white-button-wrapper button[kind="primary"],
     .white-button-wrapper button[kind="secondary"] {
-        background: white !important;
-        background-color: white !important;
+        background: transparent !important;
+        background-color: transparent !important;
         background-image: none !important;
         color: #667eea !important;
-        border: 2px solid #e2e8f0 !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+        border: 1px solid transparent !important;
+        box-shadow: none !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
     }
 
     .white-button-wrapper .stFormSubmitButton > button:hover,
@@ -830,10 +832,32 @@ st.markdown("""
     .white-button-wrapper button:hover,
     .white-button-wrapper button[kind="primary"]:hover,
     .white-button-wrapper button[kind="secondary"]:hover {
-        border-color: #667eea !important;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2) !important;
-        background: white !important;
-        background-color: white !important;
+        background: rgba(102, 126, 234, 0.08) !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+        text-decoration: underline !important;
+    }
+    
+    /* Password visibility toggle button */
+    button[aria-label*="password"],
+    button[aria-label*="Show"],
+    button[aria-label*="Hide"],
+    .stTextInput button,
+    input[type="password"] + button {
+        background: #667eea !important;
+        border: none !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 8px !important;
+        min-width: 40px !important;
+        height: 40px !important;
+        opacity: 1 !important;
+    }
+    
+    .stTextInput button:hover,
+    input[type="password"] + button:hover {
+        background: #5568d3 !important;
+        transform: scale(1.05);
     }
 
     /* Pink CREATE FREE ACCOUNT button - using wrapper class (works with all button types) */
@@ -4244,14 +4268,20 @@ with tab3:
             "Qi Gong": "Gentle movement and breathing exercises from Chinese tradition"
         }
         
-        # Get most common condition for each therapy
-        therapy_conditions = evidence_df.groupby('therapy')['condition'].apply(lambda x: x.mode()[0] if len(x) > 0 else "Multiple").reset_index()
-        therapy_conditions.columns = ['therapy', 'Condition']
+        # Get ALL conditions associated with each therapy (for filtering)
+        therapy_all_conditions = evidence_df.groupby('therapy')['condition'].apply(lambda x: list(x.unique())).reset_index()
+        therapy_all_conditions.columns = ['therapy', 'All_Conditions']
+        
+        # Get most common condition for display only
+        therapy_conditions_display = evidence_df.groupby('therapy')['condition'].apply(lambda x: x.mode()[0] if len(x) > 0 else "Multiple Conditions").reset_index()
+        therapy_conditions_display.columns = ['therapy', 'Condition']
         
         # Merge everything
-        all_therapy_data = therapy_summary.merge(therapy_conditions, on='therapy', how='left')
+        all_therapy_data = therapy_summary.merge(therapy_all_conditions, on='therapy', how='left')
+        all_therapy_data = all_therapy_data.merge(therapy_conditions_display, on='therapy', how='left')
         all_therapy_data['Definition'] = all_therapy_data['therapy'].map(therapy_definitions).fillna('Natural therapy approach')
         
+        # Keep All_Conditions for filtering but don't display it
         # Rename columns to match expected format
         all_therapy_data = all_therapy_data.rename(columns={
             'therapy': 'Natural Therapy',
@@ -4355,9 +4385,12 @@ with tab3:
     # Apply filters
     therapy_data = all_therapy_data.copy()
 
-    # Filter by condition(s)
+    # Filter by condition(s) - show therapies that have data for ANY selected condition
     if selected_conditions:  # If any conditions selected
-        therapy_data = therapy_data[therapy_data["Condition"].isin(selected_conditions)]
+        # Check if therapy has data for any of the selected conditions
+        therapy_data = therapy_data[therapy_data["All_Conditions"].apply(
+            lambda x: any(cond in x for cond in selected_conditions)
+        )]
 
     # Filter by selected therapies
     therapy_data = therapy_data[therapy_data["Natural Therapy"].isin(selected_therapies)]
@@ -4383,16 +4416,22 @@ with tab3:
 
     # Sort by Clinical Trials in descending order (highest first)
     therapy_data_sorted = therapy_data.sort_values("Clinical Trials", ascending=False)
-
+    
+    # Drop the All_Conditions column before display (it's only used for filtering)
+    if 'All_Conditions' in therapy_data_sorted.columns:
+        therapy_data_sorted_display = therapy_data_sorted.drop(columns=['All_Conditions'])
+    else:
+        therapy_data_sorted_display = therapy_data_sorted.copy()
+    
     # Add ranking numbers to therapy names
-    therapy_data_sorted["Therapy_Ranked"] = [
+    therapy_data_sorted_display["Therapy_Ranked"] = [
         f"{i+1}. {therapy}"
-        for i, therapy in enumerate(therapy_data_sorted["Natural Therapy"])
+        for i, therapy in enumerate(therapy_data_sorted_display["Natural Therapy"])
     ]
 
     # Create bar chart
     fig = px.bar(
-        therapy_data_sorted,
+        therapy_data_sorted_display,
         x="Clinical Trials",
         y="Therapy_Ranked",
         color="Evidence",
@@ -4400,7 +4439,7 @@ with tab3:
         title="Clinical Evidence by Therapy Type",
         color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
         height=400,
-        category_orders={"Therapy_Ranked": therapy_data_sorted["Therapy_Ranked"].tolist()}
+        category_orders={"Therapy_Ranked": therapy_data_sorted_display["Therapy_Ranked"].tolist()}
     )
 
     fig.update_layout(
