@@ -2520,7 +2520,7 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
         <div class="feature-grid">
             <div class="feature-box">
                 <span class="feature-icon">🔬</span>
-                <div class="feature-title">500K+ Clinical Trials</div>
+                <div class="feature-title">500K+ Trials & 1M+ Studies</div>
                 <div class="feature-desc">Access evidence from ClinicalTrials.gov and PubMed to find therapies backed by real science</div>
             </div>
             <div class="feature-box">
@@ -2582,48 +2582,20 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
                     st.success("✅ Login successful!")
                     st.rerun()
                 else:
-                    # Check against saved accounts
-                    import json
-                    import os
-                    accounts_file = "data/accounts.json"
-
-                    if os.path.exists(accounts_file):
-                        with open(accounts_file, "r") as f:
-                            accounts = json.load(f)
-
-                        # Check if email exists and password matches
-                        if username in accounts:
-                            account_data = accounts[username]
-
-                            # Handle both old format (string) and new format (object)
-                            if isinstance(account_data, dict):
-                                # New format: check plaintext password
-                                if account_data.get("password") == password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {account_data.get('name', username)}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                            else:
-                                # Old format: account_data is hashed password string
-                                import hashlib
-                                hashed_password = hashlib.sha256(password.encode()).hexdigest()
-                                if account_data == hashed_password:
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
-                                    st.session_state.demo_mode = False
-                                    st.session_state.redirect_to_daily_log = True
-                                    st.success(f"✅ Welcome back, {username}!")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ Invalid credentials. Try: demo / demo or create an account")
-                        else:
-                            st.error("❌ Invalid credentials. Try: demo / demo or create an account")
+                    # Sign in with Supabase Auth
+                    success, user_data, error_msg = sign_in_user(username, password)
+                    if success:
+                        # Get display name from user metadata
+                        display_name = user_data.user_metadata.get('display_name', username)
+                        st.session_state.authenticated = True
+                        st.session_state.username = username
+                        st.session_state.user_id = user_data.id
+                        st.session_state.demo_mode = False
+                        st.session_state.redirect_to_daily_log = True
+                        st.success(f"✅ Welcome back, {display_name}!")
+                        st.rerun()
                     else:
-                        st.error("❌ Invalid credentials. Try: demo / demo or create an account")
+                        st.error(f"❌ {error_msg}. Try: demo / demo or create an account")
 
             if forgot_clicked:
                 st.session_state.show_password_reset = True
