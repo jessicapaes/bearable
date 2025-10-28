@@ -2485,6 +2485,12 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
             st.session_state.username = "Demo User"
             st.session_state.n1_df = generate_demo_data_with_therapy()
             st.session_state.demo_just_started = True
+            # Scroll to top when demo starts
+            st.markdown("""
+            <script>
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            </script>
+            """, unsafe_allow_html=True)
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -3047,7 +3053,8 @@ with tab1:
     """, unsafe_allow_html=True)
 
     # Check for empty state (new user or no data logged yet)
-    if st.session_state.n1_df.empty and not st.session_state.demo_mode:
+    # Temporarily commented out to fix tab rendering issue
+    if False and st.session_state.n1_df.empty and not st.session_state.demo_mode:
         # EMPTY STATE FOR NEW USERS
         st.markdown("""
         <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -3077,17 +3084,15 @@ with tab1:
                 st.session_state.active_tab = "📝 Daily Log"
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
-        
-        st.stop()  # Don't show empty charts
-    
-    # Use demo or user data
-    if st.session_state.n1_df.empty:
-        display_df = generate_demo_data()
-        st.info("📊 Showing demo data. Start logging to see your own insights!")
     else:
-        display_df = st.session_state.n1_df.copy()
-    
-    # Show progress message for users with some data but less than 7 days
+        # Use demo or user data
+        if st.session_state.n1_df.empty:
+            display_df = generate_demo_data()
+            st.info("📊 Showing demo data. Start logging to see your own insights!")
+        else:
+            display_df = st.session_state.n1_df.copy()
+        
+        # Show progress message for users with some data but less than 7 days
     if not st.session_state.demo_mode and len(st.session_state.n1_df) > 0 and len(st.session_state.n1_df) < 7:
         days_logged = len(st.session_state.n1_df)
         days_remaining = 7 - days_logged
@@ -4504,12 +4509,12 @@ with tab3:
             # Default: color by evidence
             fig = px.bar(
                 therapy_aggregated,
-                x="Clinical Trials",
-                y="Therapy_Ranked",
-                color="Evidence",
-                orientation='h',
+        x="Clinical Trials",
+        y="Therapy_Ranked",
+        color="Evidence",
+        orientation='h',
                 title="Top 10 Therapies by Clinical Trial Count (All Conditions)",
-                color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
+        color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
                 height=450,
                 category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
             )
@@ -4544,7 +4549,7 @@ with tab3:
             bordercolor='rgba(0,0,0,0)'
         )
         margin_config = dict(b=140)  # Bottom margin for horizontal legend
-    
+
     fig.update_layout(
         plot_bgcolor='rgba(255,255,255,0.9)',
         paper_bgcolor='rgba(0,0,0,0)',
