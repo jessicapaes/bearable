@@ -2520,7 +2520,7 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
         <div class="feature-grid">
             <div class="feature-box">
                 <span class="feature-icon">🔬</span>
-                <div class="feature-title">500K+ Trials & 1M+ Studies</div>
+                <div class="feature-title">500K+ Trials AND<br>1M+ Studies</div>
                 <div class="feature-desc">Access evidence from ClinicalTrials.gov and PubMed to find therapies backed by real science</div>
             </div>
             <div class="feature-box">
