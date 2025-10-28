@@ -812,7 +812,11 @@ st.markdown("""
     .white-button-wrapper .stButton > button[kind="secondary"],
     .white-button-wrapper button,
     .white-button-wrapper button[kind="primary"],
-    .white-button-wrapper button[kind="secondary"] {
+    .white-button-wrapper button[kind="secondary"],
+    .white-button-wrapper [data-baseweb="button"],
+    .white-button-wrapper [data-baseweb="base-button"],
+    div.white-button-wrapper button,
+    div.white-button-wrapper [data-baseweb="button"] {
         background: transparent !important;
         background-color: transparent !important;
         background-image: none !important;
@@ -831,7 +835,11 @@ st.markdown("""
     .white-button-wrapper .stButton > button[kind="secondary"]:hover,
     .white-button-wrapper button:hover,
     .white-button-wrapper button[kind="primary"]:hover,
-    .white-button-wrapper button[kind="secondary"]:hover {
+    .white-button-wrapper button[kind="secondary"]:hover,
+    .white-button-wrapper [data-baseweb="button"]:hover,
+    .white-button-wrapper [data-baseweb="base-button"]:hover,
+    div.white-button-wrapper button:hover,
+    div.white-button-wrapper [data-baseweb="button"]:hover {
         background: rgba(102, 126, 234, 0.08) !important;
         color: #5568d3 !important;
         border-color: transparent !important;
