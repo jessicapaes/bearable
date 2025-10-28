@@ -1046,6 +1046,29 @@ st.markdown("""
         color: #334155 !important;
         margin-bottom: 8px !important;
     }
+    
+    /* DATE INPUT - Fix Calendar Header Purple Background */
+    /* Override the calendar popup header background */
+    div[data-baseweb="popover"] [data-baseweb="button"],
+    div[data-baseweb="calendar"] > div:first-child,
+    div[data-baseweb="calendar"] > div > div:first-child,
+    div[data-baseweb="popover"] header {
+        background: white !important;
+        background-color: white !important;
+    }
+    
+    /* Calendar header controls (month/year dropdowns, arrows) */
+    div[data-baseweb="calendar"] button {
+        background: transparent !important;
+        color: #1f2937 !important;
+        border-color: #e5e7eb !important;
+    }
+    
+    /* Selected date styling */
+    div[data-baseweb="calendar"] button[aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+    }
 
     /* TOGGLE SWITCHES - Modern Design */
     [data-testid="stToggle"] {
@@ -4088,33 +4111,65 @@ with tab3:
     </div>
     """, unsafe_allow_html=True)
 
+    # Check if user wants to fetch live data
+    if 'fetching_evidence' in st.session_state and st.session_state.fetching_evidence:
+        st.session_state.fetching_evidence = False
+        
+        # Define the therapies and conditions to fetch
+        therapies_list = ["Acupuncture", "Yoga", "Meditation", "Massage", "Tai Chi", 
+                         "Cognitive Behavioural Therapy", "Herbal", "Aromatherapy", 
+                         "Exercise Therapy", "Qi Gong"]
+        conditions_list = [
+            "Addiction", "Anxiety", "Cancer Pain", "Chronic Fatigue Syndrome", "Chronic Pain",
+            "Depression", "Endometriosis", "Fibromyalgia", "Headache", "Infertility", 
+            "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause", 
+            "Migraine", "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
+            "Osteoarthritis", "Perimenopause", "Polycystic Ovary Syndrome", "Postoperative Pain",
+            "Post-Traumatic Stress Disorder", "Rheumatoid Arthritis", "Schizophrenia",
+            "Shoulder Pain", "Stress"
+        ]
+        
+        st.info("⏳ **Fetching live data from PubMed & ClinicalTrials.gov...** This may take 5-10 minutes.")
+        
+        # Fetch live data
+        live_evidence_df = fetch_live_evidence_for_therapies(therapies_list, conditions_list)
+        
+        if not live_evidence_df.empty:
+            # Save to CSV
+            output_path = Path("data/evidence_counts.csv")
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            live_evidence_df.to_csv(output_path, index=False)
+            
+            # Clear cache and reload
+            load_evidence_data.clear()
+            evidence_df = load_evidence_data()
+            st.success(f"✅ Successfully fetched and saved live evidence data for {len(live_evidence_df)} records!")
+            st.rerun()
+        else:
+            st.error("❌ Failed to fetch live evidence data. Please try again or use the script method.")
+            st.stop()
+    
     # Load evidence data from CSV
     evidence_df = load_evidence_data()
     
     if evidence_df.empty:
-        st.warning("⚠️ Evidence data not loaded. Using sample data for demonstration.")
-        # Fallback to hardcoded sample data
-        all_therapy_data = pd.DataFrame({
-            "Natural Therapy": ["Acupuncture", "Yoga", "Meditation", "Massage", "Tai Chi", "Cognitive Behavioural Therapy", 
-                               "Herbal", "Aromatherapy", "Exercise Therapy", "Qi Gong"],
-            "Clinical Trials": [1234, 892, 756, 645, 423, 734, 389, 234, 987, 378],
-            "PubMed Articles": [5678, 4321, 3890, 2876, 1987, 3421, 1876, 987, 4532, 1654],
-            "Evidence": ["Positive", "Positive", "Positive", "Mixed", "Positive", "Positive", "Mixed", "Positive", "Positive", "Positive"],
-            "Definition": [
-                "Traditional Chinese medicine practice using thin needles at specific body points",
-                "Mind-body practice combining physical postures, breathing, and meditation",
-                "Mental training practice to focus awareness and achieve calm and clarity",
-                "Manual manipulation of soft tissue to reduce tension and promote healing",
-                "Gentle Chinese martial art combining slow movements and deep breathing",
-                "Talk therapy to change negative thought patterns and behaviors",
-                "Use of plant-based remedies to support health and treat various conditions",
-                "Use of essential oils and aromatic compounds for therapeutic benefits",
-                "Structured exercise program to restore movement and reduce pain",
-                "Gentle movement and breathing exercises from Chinese tradition"
-            ],
-            "Condition": ["Lower Back Pain", "Lower Back Pain", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis", 
-                         "Anxiety", "General Wellness", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis"]
-        })
+        st.error("⚠️ **No evidence data available.**")
+        st.info("""
+        **To load evidence data, please:**
+        1. Run `python scripts/build_evidence_counts.py` to generate the data file, OR
+        2. Click '🔄 Refresh Evidence Data' button below to fetch live data from PubMed & ClinicalTrials.gov
+        
+        **Note:** Fetching live data may take 5-10 minutes and will query ~320 condition-therapy combinations.
+        """)
+        
+        # Add refresh button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔄 Refresh Evidence Data", type="primary", use_container_width=True):
+                st.session_state.fetching_evidence = True
+                st.rerun()
+        
+        st.stop()
     else:
         # Transform CSV data into the expected format
         # Get unique therapies and aggregate data
@@ -4157,7 +4212,21 @@ with tab3:
         # Sort by Clinical Trials count
         all_therapy_data = all_therapy_data.sort_values('Clinical Trials', ascending=False).reset_index(drop=True)
         
-        st.success(f"✅ Loaded live evidence data for {len(all_therapy_data)} natural therapies")
+        # Get the last updated date from the CSV
+        csv_path = _locate_evidence_csv()
+        if csv_path:
+            last_modified = datetime.fromtimestamp(csv_path.stat().st_mtime).strftime("%Y-%m-%d")
+            st.success(f"✅ Loaded evidence data for {len(all_therapy_data)} natural therapies (Last updated: {last_modified})")
+        else:
+            st.success(f"✅ Loaded evidence data for {len(all_therapy_data)} natural therapies")
+        
+        # Add refresh button in sidebar or at top
+        st.markdown("---")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔄 Update Evidence Data (Fetch Live from APIs)", type="secondary", use_container_width=True):
+                st.session_state.fetching_evidence = True
+                st.rerun()
 
     # FILTERS SECTION
     st.markdown("""
