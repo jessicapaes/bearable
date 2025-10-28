@@ -2587,14 +2587,14 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
                     if success:
                         # Get display name from user metadata
                         display_name = user_data.user_metadata.get('display_name', username)
-                        st.session_state.authenticated = True
-                        st.session_state.username = username
+                                    st.session_state.authenticated = True
+                                    st.session_state.username = username
                         st.session_state.user_id = user_data.id
-                        st.session_state.demo_mode = False
-                        st.session_state.redirect_to_daily_log = True
+                                    st.session_state.demo_mode = False
+                                    st.session_state.redirect_to_daily_log = True
                         st.success(f"✅ Welcome back, {display_name}!")
-                        st.rerun()
-                    else:
+                                    st.rerun()
+                                else:
                         st.error(f"❌ {error_msg}. Try: demo / demo or create an account")
 
             if forgot_clicked:
@@ -3056,14 +3056,14 @@ with tab1:
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
     else:
-        # Use demo or user data
-        if st.session_state.n1_df.empty:
-            display_df = generate_demo_data()
-            st.info("📊 Showing demo data. Start logging to see your own insights!")
-        else:
-            display_df = st.session_state.n1_df.copy()
-        
-        # Show progress message for users with some data but less than 7 days
+    # Use demo or user data
+    if st.session_state.n1_df.empty:
+        display_df = generate_demo_data()
+        st.info("📊 Showing demo data. Start logging to see your own insights!")
+    else:
+        display_df = st.session_state.n1_df.copy()
+    
+    # Show progress message for users with some data but less than 7 days
     if not st.session_state.demo_mode and len(st.session_state.n1_df) > 0 and len(st.session_state.n1_df) < 7:
         days_logged = len(st.session_state.n1_df)
         days_remaining = 7 - days_logged
@@ -4433,7 +4433,7 @@ with tab3:
         base_colors = ['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#2563eb', '#1d4ed8']
         color_map = {cond: base_colors[i % len(base_colors)] for i, cond in enumerate(selected_conditions)}
         
-        fig = px.bar(
+    fig = px.bar(
             therapy_by_condition,
             x="Clinical Trials",
             y="Therapy_Ranked",
@@ -4574,14 +4574,24 @@ with tab3:
         color = uniform_header_color  # All therapies use the same color
         
         # Use URLs from CSV if available, otherwise generate generic ones
-        if 'trials_url' in row and pd.notna(row['trials_url']) and row['trials_url']:
+        # If multiple conditions are selected, generate combined URLs
+        if multiple_conditions and selected_conditions:
+            # Generate combined ClinicalTrials.gov URL with all selected conditions
+            conditions_part = ' AND '.join([f'({cond})' for cond in selected_conditions])
+            trials_url = f"https://clinicaltrials.gov/search?cond={conditions_part}+AND+({therapy_name.replace(' ', '+')})"
+            
+            # Generate combined PubMed URL with all selected conditions  
+            conditions_terms = ' OR '.join([f'"{cond}"' for cond in selected_conditions])
+            therapy_terms = f'"{therapy_name}" OR "{therapy_name.lower()}"'
+            pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term=({conditions_terms})+AND+({therapy_terms})"
+        elif 'trials_url' in row and pd.notna(row['trials_url']) and row['trials_url']:
             trials_url = row['trials_url']
         else:
             trials_url = f"https://clinicaltrials.gov/search?term={therapy_name.replace(' ', '+')}"
         
-        if 'articles_url' in row and pd.notna(row['articles_url']) and row['articles_url']:
+        if not multiple_conditions and 'articles_url' in row and pd.notna(row['articles_url']) and row['articles_url']:
             pubmed_url = row['articles_url']
-        else:
+        elif not multiple_conditions:
             pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term={therapy_name.replace(' ', '+')}"
 
         # Set evidence color and emoji based on evidence type
