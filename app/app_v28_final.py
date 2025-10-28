@@ -2016,14 +2016,18 @@ def generate_demo_data_with_therapy(therapy_start_day=7):
         sleep_hours = max(5, min(9, 5.5 + (day * 0.05) + np.random.normal(0, 0.2)))
         mood_score = max(4, min(9, 5 + (day * 0.08) + np.random.normal(0, 0.3)))
 
+        # Check if this is Oct 27, 2025 or after therapy start
+        oct_27_2025 = datetime(2025, 10, 27).date()
+        has_yoga = (day >= therapy_start_day) or (current_date == oct_27_2025)
+        
         demo_data.append({
             "date": current_date,
             "pain_score": round(pain_score, 1),
             "sleep_hours": round(sleep_hours, 1),
             "mood_score": round(mood_score, 1),
             "stress_score": round(7 - (day * 0.06), 1),
-            "therapy_started": "Yoga" if day == therapy_start_day else "",
-            "therapies_continuing": ["Yoga"] if day >= therapy_start_day else []
+            "therapy_started": "Yoga" if (day == therapy_start_day or current_date == oct_27_2025) else "",
+            "therapies_continuing": ["Yoga"] if has_yoga else []
         })
 
     return pd.DataFrame(demo_data)
