@@ -4303,7 +4303,9 @@ with tab3:
             'clinicaltrials_n': 'Clinical Trials',
             'pubmed_n': 'PubMed Articles',
             'evidence_direction': 'Evidence',
-            'condition': 'Condition'
+            'condition': 'Condition',
+            'trials_url': 'trials_url',
+            'articles_url': 'articles_url'
         })
         
         # Sort by Clinical Trials count
@@ -4476,7 +4478,9 @@ with tab3:
             'Clinical Trials': 'sum',
             'PubMed Articles': 'sum',
             'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear',
-            'Definition': 'first'
+            'Definition': 'first',
+            'trials_url': 'first',
+            'articles_url': 'first'
         }).reset_index()
         
         therapy_aggregated = therapy_aggregated.sort_values("Clinical Trials", ascending=False)
@@ -4596,6 +4600,17 @@ with tab3:
         therapy_name = row['Natural Therapy']
         evidence = row['Evidence']
         color = uniform_header_color  # All therapies use the same color
+        
+        # Use URLs from CSV if available, otherwise generate generic ones
+        if 'trials_url' in row and pd.notna(row['trials_url']) and row['trials_url']:
+            trials_url = row['trials_url']
+        else:
+            trials_url = f"https://clinicaltrials.gov/search?term={therapy_name.replace(' ', '+')}"
+        
+        if 'articles_url' in row and pd.notna(row['articles_url']) and row['articles_url']:
+            pubmed_url = row['articles_url']
+        else:
+            pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term={therapy_name.replace(' ', '+')}"
 
         # Set evidence color and emoji based on evidence type
         if evidence == "Positive":
@@ -4639,8 +4654,6 @@ with tab3:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            # Create ClinicalTrials.gov search URL
-            trials_url = f"https://clinicaltrials.gov/search?term={therapy_name.replace(' ', '+')}"
             st.markdown(f"""
             <div style="background: linear-gradient(135deg, {color}15 0%, {color}25 100%);
                         padding: 1.5rem; border-radius: 12px; text-align: center;
@@ -4657,8 +4670,6 @@ with tab3:
             """, unsafe_allow_html=True)
 
         with col2:
-            # Create PubMed search URL
-            pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term={therapy_name.replace(' ', '+')}"
             st.markdown(f"""
             <div style="background: linear-gradient(135deg, {color}15 0%, {color}25 100%);
                         padding: 1.5rem; border-radius: 12px; text-align: center;
