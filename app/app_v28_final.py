@@ -4353,8 +4353,8 @@ with tab3:
             "PCOS", "Postoperative Pain", "Rheumatoid Arthritis", "Schizophrenia", 
             "Shoulder Pain", "Stress", "General Wellness"
         ]
-        # Default to "Low Back Pain" in demo mode, empty when signed in
-        default_conditions = ["Low Back Pain"] if st.session_state.demo_mode else []
+        # Default to "Depression" and "Anxiety" in demo mode, empty when signed in
+        default_conditions = ["Depression", "Anxiety"] if st.session_state.demo_mode else []
         # Add spacing to align with therapies column
         st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
         
