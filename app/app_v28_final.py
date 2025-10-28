@@ -2587,14 +2587,14 @@ elif not st.session_state.authenticated and not st.session_state.demo_mode:
                     if success:
                         # Get display name from user metadata
                         display_name = user_data.user_metadata.get('display_name', username)
-                                    st.session_state.authenticated = True
-                                    st.session_state.username = username
+                        st.session_state.authenticated = True
+                        st.session_state.username = username
                         st.session_state.user_id = user_data.id
-                                    st.session_state.demo_mode = False
-                                    st.session_state.redirect_to_daily_log = True
+                        st.session_state.demo_mode = False
+                        st.session_state.redirect_to_daily_log = True
                         st.success(f"✅ Welcome back, {display_name}!")
-                                    st.rerun()
-                                else:
+                        st.rerun()
+                    else:
                         st.error(f"❌ {error_msg}. Try: demo / demo or create an account")
 
             if forgot_clicked:
@@ -3056,23 +3056,23 @@ with tab1:
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
     else:
-    # Use demo or user data
-    if st.session_state.n1_df.empty:
-        display_df = generate_demo_data()
-        st.info("📊 Showing demo data. Start logging to see your own insights!")
-    else:
-        display_df = st.session_state.n1_df.copy()
-    
-    # Show progress message for users with some data but less than 7 days
-    if not st.session_state.demo_mode and len(st.session_state.n1_df) > 0 and len(st.session_state.n1_df) < 7:
-        days_logged = len(st.session_state.n1_df)
-        days_remaining = 7 - days_logged
-        st.info(f"📊 Great progress! You've logged **{days_logged}** day(s). Keep going for **{days_remaining}** more day(s) to unlock full trend analysis!")
-    
-    if not display_df.empty:
-        # Calculate metrics
-        latest = display_df.iloc[-1]
-        previous_avg = display_df.iloc[:-7].mean(numeric_only=True) if len(display_df) > 7 else display_df.iloc[:1].mean(numeric_only=True)
+        # Use demo or user data
+        if st.session_state.n1_df.empty:
+            display_df = generate_demo_data()
+            st.info("📊 Showing demo data. Start logging to see your own insights!")
+        else:
+            display_df = st.session_state.n1_df.copy()
+        
+        # Show progress message for users with some data but less than 7 days
+        if not st.session_state.demo_mode and len(st.session_state.n1_df) > 0 and len(st.session_state.n1_df) < 7:
+            days_logged = len(st.session_state.n1_df)
+            days_remaining = 7 - days_logged
+            st.info(f"📊 Great progress! You've logged **{days_logged}** day(s). Keep going for **{days_remaining}** more day(s) to unlock full trend analysis!")   
+
+        if not display_df.empty:
+            # Calculate metrics
+            latest = display_df.iloc[-1]
+            previous_avg = display_df.iloc[:-7].mean(numeric_only=True) if len(display_df) > 7 else display_df.iloc[:1].mean(numeric_only=True)
         
         pain_current = latest.get("pain_score", 5)
         pain_prev = previous_avg.get("pain_score", 7)
