@@ -4567,8 +4567,23 @@ with tab3:
 
     # Use single uniform color for all therapy headers
     uniform_header_color = "#667eea"  # Blue/purple for all therapies
+    
+    # Use aggregated data for therapy cards to avoid duplicates when multiple conditions are selected
+    if multiple_conditions:
+        # For multiple conditions, use the aggregated data grouped by therapy
+        cards_data = therapy_data.groupby('Natural Therapy').agg({
+            'Clinical Trials': 'sum',
+            'PubMed Articles': 'sum',
+            'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear',
+            'Definition': 'first',
+            'trials_url': 'first',
+            'articles_url': 'first'
+        }).reset_index()
+    else:
+        # For single condition, use the original therapy_data
+        cards_data = therapy_data.copy()
 
-    for idx, row in therapy_data.iterrows():
+    for idx, row in cards_data.iterrows():
         therapy_name = row['Natural Therapy']
         evidence = row['Evidence']
         color = uniform_header_color  # All therapies use the same color
