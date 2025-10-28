@@ -3078,25 +3078,25 @@ with tab1:
             pain_prev = previous_avg.get("pain_score", 7)
             pain_delta = pain_current - pain_prev
         
-        sleep_current = latest.get("sleep_hours", 7)
-        sleep_prev = previous_avg.get("sleep_hours", 5)
-        sleep_delta = sleep_current - sleep_prev
+            sleep_current = latest.get("sleep_hours", 7)
+            sleep_prev = previous_avg.get("sleep_hours", 5)
+            sleep_delta = sleep_current - sleep_prev
         
-        mood_current = latest.get("mood_score", 7)
-        mood_prev = previous_avg.get("mood_score", 4)
-        mood_delta = mood_current - mood_prev
+            mood_current = latest.get("mood_score", 7)
+            mood_prev = previous_avg.get("mood_score", 4)
+            mood_delta = mood_current - mood_prev
         
-        # HUGE Metrics with Gauges
-        st.markdown("### 📈 Your Health Metrics")
-        col1, col2, col3 = st.columns(3)
+            # HUGE Metrics with Gauges
+            st.markdown("### 📈 Your Health Metrics")
+            col1, col2, col3 = st.columns(3)
 
-        with col1:
-            # Pain gauge (0-10, lower is better - use red color)
-            pain_gauge = go.Figure(go.Indicator(
-                mode="gauge+number+delta",
-                value=round(pain_current, 1),
-                domain={'x': [0, 1], 'y': [0, 1]},
-                title={'text': "😣 Pain Level", 'font': {'size': 18, 'family': 'Inter'}},
+            with col1:
+                # Pain gauge (0-10, lower is better - use red color)
+                pain_gauge = go.Figure(go.Indicator(
+                    mode="gauge+number+delta",
+                    value=round(pain_current, 1),
+                    domain={'x': [0, 1], 'y': [0, 1]},
+                    title={'text': "😣 Pain Level", 'font': {'size': 18, 'family': 'Inter'}},
                 number={'valueformat': '.1f', 'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
                 delta={'reference': round(pain_prev, 1), 'increasing': {'color': "#ef4444"}, 'decreasing': {'color': "#10b981"}},
                 gauge={
