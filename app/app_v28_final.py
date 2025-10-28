@@ -4552,8 +4552,20 @@ with tab3:
         showlegend=True,
         legend=legend_config,
         margin=margin_config,
-        xaxis=dict(title="Number of Clinical Trials"),
-        yaxis=dict(title="", categoryorder='total ascending'),  # Show largest at top
+        xaxis=dict(
+            title="Number of Clinical Trials",
+            showgrid=True,
+            gridcolor='rgba(102, 126, 234, 0.2)',
+            gridwidth=2,
+            linecolor='#667eea',
+            linewidth=2
+        ),
+        yaxis=dict(
+            title="",
+            categoryorder='total ascending',  # Show largest at top
+            linecolor='#667eea',
+            linewidth=2
+        ),
         title_font_size=18,
         title_font_family="Inter",
         title_font_color="#1a202c"
