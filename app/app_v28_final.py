@@ -189,6 +189,26 @@ st.markdown("""
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
     
+    /* FORCE BUTTON COLORS - Override Streamlit Cloud red theme */
+    /* This targets Streamlit's default theme colors that get applied on Cloud */
+    div[data-baseweb="base-button"],
+    button[data-baseweb="button"],
+    [data-baseweb="base-button"],
+    [data-baseweb="button"],
+    button.element-container,
+    button {
+        --primary-color: #667eea !important;
+        background-color: var(--primary-color, #667eea) !important;
+    }
+    
+    /* Override Streamlit's accent-color CSS variable */
+    :root {
+        --primary: #667eea !important;
+        --secondary-background-color: #f8f9ff !important;
+        --background-color: #ffffff !important;
+        --text-color: #1e293b !important;
+    }
+    
     /* Hide Streamlit Branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
