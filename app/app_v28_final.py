@@ -4413,76 +4413,131 @@ with tab3:
         st.warning("⚠️ No therapies found matching your filters. Try adjusting your selection.")
         st.stop()
 
-    # Group by therapy and aggregate counts for display (but keep individual condition-therapy pairs in data)
-    # This allows us to show one row per therapy in the chart/table
-    therapy_aggregated = therapy_data.groupby('Natural Therapy').agg({
-        'Clinical Trials': 'sum',
-        'PubMed Articles': 'sum',
-        'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear',
-        'Definition': 'first'
-    }).reset_index()
-
-    # Sort by Clinical Trials in descending order (highest first)
-    therapy_aggregated = therapy_aggregated.sort_values("Clinical Trials", ascending=False)
-
-    # Add ranking numbers to therapy names
-    therapy_aggregated["Therapy_Ranked"] = [
-        f"{i+1}. {therapy}"
-        for i, therapy in enumerate(therapy_aggregated["Natural Therapy"])
-    ]
+    # Check if multiple conditions are selected for stacked breakdown
+    multiple_conditions = len(selected_conditions) > 1
     
-    # Determine if therapies are filtered (all therapies selected vs. specific subset)
-    all_therapies = all_therapy_data['Natural Therapy'].unique().tolist()
-    is_filtered = len(selected_therapies) < len(all_therapies) and len(selected_therapies) > 0
-    
-    # Create bar chart - color by therapy if filtered, by evidence if showing all
-    if is_filtered and len(selected_therapies) <= 12:  # Color by therapy if 12 or fewer selected
-        # Generate distinct colors for selected therapies
-        therapy_colors = px.colors.qualitative.Set3 + px.colors.qualitative.Pastel + px.colors.qualitative.Dark2
-        color_map = {therapy: therapy_colors[i % len(therapy_colors)] for i, therapy in enumerate(selected_therapies)}
+    if multiple_conditions:
+        # For multiple conditions, show breakdown by condition in stacked bars
+        # Group by therapy and condition to preserve breakdown
+        therapy_by_condition = therapy_data.groupby(['Natural Therapy', 'Condition']).agg({
+            'Clinical Trials': 'sum',
+            'PubMed Articles': 'sum',
+            'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear'
+        }).reset_index()
+        
+        # Calculate totals for ranking
+        therapy_totals = therapy_by_condition.groupby('Natural Therapy')['Clinical Trials'].sum().reset_index()
+        therapy_totals = therapy_totals.sort_values("Clinical Trials", ascending=False)
+        
+        # Add ranking
+        therapy_totals["Therapy_Ranked"] = [
+            f"{i+1}. {therapy}" for i, therapy in enumerate(therapy_totals["Natural Therapy"])
+        ]
+        
+        # Merge ranking back
+        therapy_by_condition = therapy_by_condition.merge(therapy_totals[['Natural Therapy', 'Therapy_Ranked']], on='Natural Therapy')
+        
+        # Generate distinct shades for each condition
+        base_colors = ['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#2563eb', '#1d4ed8']
+        color_map = {cond: base_colors[i % len(base_colors)] for i, cond in enumerate(selected_conditions)}
         
         fig = px.bar(
-            therapy_aggregated,
+            therapy_by_condition,
             x="Clinical Trials",
             y="Therapy_Ranked",
-            color="Natural Therapy",
+            color="Condition",
             orientation='h',
-            title=f"Clinical Evidence for Selected Therapies (n={len(selected_therapies)})",
+            title=f"Top 10 Therapies by Clinical Trial Count ({condition_text})",
             color_discrete_map=color_map,
-            height=400,
-            category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
+            height=450,
+            category_orders={"Therapy_Ranked": therapy_totals["Therapy_Ranked"].tolist()}
         )
     else:
-        # Default: color by evidence
-        fig = px.bar(
-            therapy_aggregated,
-            x="Clinical Trials",
-            y="Therapy_Ranked",
-            color="Evidence",
-            orientation='h',
-            title="Top 10 Therapies by Clinical Trial Count (All Conditions)",
-            color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
-            height=400,
-            category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
-        )
+        # Single condition or all conditions - aggregate by therapy
+        therapy_aggregated = therapy_data.groupby('Natural Therapy').agg({
+            'Clinical Trials': 'sum',
+            'PubMed Articles': 'sum',
+            'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear',
+            'Definition': 'first'
+        }).reset_index()
+        
+        therapy_aggregated = therapy_aggregated.sort_values("Clinical Trials", ascending=False)
+        therapy_aggregated["Therapy_Ranked"] = [
+            f"{i+1}. {therapy}" for i, therapy in enumerate(therapy_aggregated["Natural Therapy"])
+        ]
+        
+        # Determine if therapies are filtered
+        all_therapies = all_therapy_data['Natural Therapy'].unique().tolist()
+        is_filtered = len(selected_therapies) < len(all_therapies) and len(selected_therapies) > 0
+        
+        # Create bar chart - color by therapy if filtered, by evidence if showing all
+        if is_filtered and len(selected_therapies) <= 12:
+            therapy_colors = px.colors.qualitative.Set3 + px.colors.qualitative.Pastel + px.colors.qualitative.Dark2
+            color_map = {therapy: therapy_colors[i % len(therapy_colors)] for i, therapy in enumerate(selected_therapies)}
+            
+            fig = px.bar(
+                therapy_aggregated,
+                x="Clinical Trials",
+                y="Therapy_Ranked",
+                color="Natural Therapy",
+                orientation='h',
+                title=f"Clinical Evidence for Selected Therapies (n={len(selected_therapies)})",
+                color_discrete_map=color_map,
+                height=450,
+                category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
+            )
+        else:
+            # Default: color by evidence
+            fig = px.bar(
+                therapy_aggregated,
+                x="Clinical Trials",
+                y="Therapy_Ranked",
+                color="Evidence",
+                orientation='h',
+                title="Top 10 Therapies by Clinical Trial Count (All Conditions)",
+                color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
+                height=450,
+                category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
+            )
 
+    # Adjust legend based on whether showing multiple conditions
+    if multiple_conditions:
+        # Vertical legend on the right for multiple conditions
+        legend_config = dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.02,
+            title_text="",
+            font=dict(size=13),
+            bgcolor='rgba(0,0,0,0)',
+            bordercolor='rgba(0,0,0,0)',
+            tracegroupgap=10
+        )
+        margin_config = dict(b=60, r=150)  # Right margin for vertical legend
+    else:
+        # Horizontal legend at bottom for evidence types
+        legend_config = dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.30,
+            xanchor="center",
+            x=0.5,
+            title_text="",
+            font=dict(size=13),
+            bgcolor='rgba(0,0,0,0)',
+            bordercolor='rgba(0,0,0,0)'
+        )
+        margin_config = dict(b=140)  # Bottom margin for horizontal legend
+    
     fig.update_layout(
         plot_bgcolor='rgba(255,255,255,0.9)',
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", size=14),
         showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.30,  # Position below chart with more spacing
-            xanchor="center",
-            x=0.5,  # Center the legend
-            title_text="",
-            font=dict(size=13),
-            bgcolor='rgba(0,0,0,0)',
-            bordercolor='rgba(0,0,0,0)'
-        ),
-        margin=dict(b=140),  # Add more bottom margin for legend space
+        legend=legend_config,
+        margin=margin_config,
         xaxis=dict(title="Number of Clinical Trials"),
         yaxis=dict(title="", categoryorder='total ascending'),  # Show largest at top
         title_font_size=18,
