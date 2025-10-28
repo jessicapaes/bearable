@@ -1382,7 +1382,7 @@ st.markdown("""
     }
     
     /* CSS for header that matches inline styles - MAXIMUM PRIORITY */
-    div[style*="position: fixed"][style*="top: 0"][style*="z-index: 999"] {
+    div[style*="position: fixed"][style*="top: 0"][style*="z-index"] {
         z-index: 9999 !important;
     }
     
@@ -1392,7 +1392,17 @@ st.markdown("""
     div[role="option"],
     .stSelectbox > div[data-baseweb="select"],
     .stMultiSelect > div[data-baseweb="select"] {
-        z-index: 100 !important;
+        z-index: 900 !important;
+    }
+    
+    /* Ensure all BaseWeb dropdown content stays below header */
+    div[data-baseweb="popover"] [role="listbox"],
+    div[data-baseweb="popover"] ul,
+    div[data-baseweb="popover"] li,
+    div[data-baseweb="popover"] [role="option"],
+    [data-baseweb="select"] [role="listbox"],
+    [data-baseweb="select"] ul {
+        z-index: 900 !important;
     }
     
     /* Multiselect input field */
@@ -2846,7 +2856,7 @@ with st.sidebar:
 # Modern Sticky Header Bar - Create unified header
 if st.session_state.demo_mode:
     st.markdown("""
-    <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 display: flex; align-items: center; justify-content: flex-start;">
@@ -2865,7 +2875,7 @@ if st.session_state.demo_mode:
     
 else:
     st.markdown("""
-    <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 0.75rem 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 display: flex; align-items: center; justify-content: flex-start;">
