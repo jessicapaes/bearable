@@ -177,6 +177,97 @@ def get_live_evidence_data(condition: str, therapy: str) -> dict:
     }
 
 # ============================================================================
+# EVIDENCE DATA LOADER
+# ============================================================================
+
+def _locate_evidence_csv() -> Path | None:
+    """Find evidence_counts.csv in common locations, prefer the newest one"""
+    candidates = [
+        Path("data/evidence_counts.csv"),
+        Path("data/raw/evidence_counts.csv"),
+        Path("evidence_counts.csv"),
+    ]
+    
+    # Find all existing CSVs with their modification times
+    existing_files = []
+    for p in candidates:
+        if p.exists():
+            try:
+                mtime = p.stat().st_mtime
+                existing_files.append((mtime, p))
+            except Exception:
+                continue
+    
+    # Return the most recent file, if any
+    if existing_files:
+        # Sort by modification time (most recent first)
+        existing_files.sort(reverse=True)
+        return existing_files[0][1]  # Return the path of the newest file
+    
+    return None
+
+@st.cache_data(ttl=3600)  # Cache for 1 hour
+def load_evidence_data() -> pd.DataFrame:
+    """Load evidence data from CSV file"""
+    csv_path = _locate_evidence_csv()
+    
+    if csv_path is None:
+        # If no CSV found, return empty DataFrame
+        return pd.DataFrame()
+    
+    try:
+        df = pd.read_csv(csv_path)
+        
+        # Standardize key columns if they exist
+        if "condition" in df.columns:
+            df["condition"] = df["condition"].astype(str).str.title()
+        if "therapy" in df.columns:
+            df["therapy"] = df["therapy"].astype(str).str.title()
+        if "evidence_direction" in df.columns:
+            df["evidence_direction"] = df["evidence_direction"].astype(str).str.strip().str.capitalize()
+        
+        return df
+    except Exception as e:
+        st.error(f"Error loading evidence data: {e}")
+        return pd.DataFrame()
+
+def fetch_live_evidence_for_therapies(therapies_list, conditions_list):
+    """Fetch live evidence data for specific therapies and conditions"""
+    rows = []
+    total_combinations = len(therapies_list) * len(conditions_list)
+    
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    current = 0
+    for therapy in therapies_list:
+        for condition in conditions_list:
+            current += 1
+            progress = current / total_combinations
+            progress_bar.progress(progress)
+            status_text.text(f"Fetching data... {current}/{total_combinations} (Condition: {condition}, Therapy: {therapy})")
+            
+            # Fetch live data
+            live_data = get_live_evidence_data(condition, therapy)
+            rows.append({
+                'therapy': therapy,
+                'condition': condition,
+                'clinicaltrials_n': live_data['clinicaltrials_n'],
+                'pubmed_n': live_data['pubmed_n'],
+                'evidence_direction': 'Unclear',  # Default, could be enhanced
+                'data_source': live_data['data_source'],
+                'last_updated': live_data['last_updated']
+            })
+            
+            # Small delay to avoid overwhelming the APIs
+            time.sleep(0.5)
+    
+    progress_bar.empty()
+    status_text.empty()
+    
+    return pd.DataFrame(rows)
+
+# ============================================================================
 # ENHANCED CUSTOM CSS WITH MORE VISIBLE CHANGES
 # ============================================================================
 st.markdown("""
@@ -923,12 +1014,27 @@ st.markdown("""
         background: white !important;
     }
 
+    .stTextInput > div > div > input:hover,
+    .stSelectbox > div > div > select:hover,
+    .stNumberInput > div > div > input:hover {
+        border-color: #d1d5db !important;
+        background: #f9fafb !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+    }
+    
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus,
     .stNumberInput > div > div > input:focus {
         border-color: #667eea !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(102, 126, 234, 0.15) !important;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 20px rgba(102, 126, 234, 0.1) !important;
         outline: none !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    /* Input placeholders */
+    .stTextInput > div > div > input::placeholder {
+        color: #9ca3af !important;
+        font-weight: 400 !important;
     }
 
     /* Form Labels */
@@ -2029,17 +2135,22 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
     with col1:
         with st.form("auth_signin_form", clear_on_submit=False):
             st.markdown("""
-                <h3 style="margin: 0 0 10px 0; color: #1a202c;">🔐 Sign In</h3>
-                <p style="font-weight: 600; margin-bottom: 25px; color: #64748b;">Access your personal health dashboard</p>
+                <div style="margin-bottom: 32px;">
+                    <h2 style="margin: 0 0 8px 0; color: #111827; font-size: 28px; font-weight: 700;">Welcome Back</h2>
+                    <p style="font-weight: 500; margin-bottom: 0; color: #6b7280; font-size: 15px;">Sign in to continue to your health dashboard</p>
+                </div>
             """, unsafe_allow_html=True)
 
-            username = st.text_input("Email", placeholder="your.email@example.com", label_visibility="visible", key="auth_login_email")
-            password = st.text_input("Password", type="password", placeholder="Enter your password", label_visibility="visible", key="auth_login_pass")
+            username = st.text_input("", placeholder="Email address", label_visibility="collapsed", key="auth_login_email")
+            st.markdown('<div style="margin-top: 16px;"></div>', unsafe_allow_html=True)
+            password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed", key="auth_login_pass")
 
-            col_login, col_forgot = st.columns([3, 1])
+            st.markdown('<div style="margin-top: 28px; margin-bottom: 20px;"></div>', unsafe_allow_html=True)
+            
+            col_login, col_forgot = st.columns([2.5, 1])
             with col_login:
                 st.markdown('<div class="blue-button-wrapper">', unsafe_allow_html=True)
-                login_clicked = st.form_submit_button("SIGN IN", use_container_width=True, type="primary")
+                login_clicked = st.form_submit_button("Sign In", use_container_width=True, type="primary")
                 st.markdown('</div>', unsafe_allow_html=True)
             with col_forgot:
                 st.markdown('<div class="white-button-wrapper">', unsafe_allow_html=True)
@@ -2085,21 +2196,28 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
                 st.session_state.show_password_reset = True
                 st.rerun()
 
-    # CREATE ACCOUNT FORM
+    # CREATE ACCOUNT FORM - Modern Design
     with col2:
         with st.form("auth_signup_form", clear_on_submit=False):
             st.markdown("""
-                <h3 style="margin: 0 0 10px 0; color: #1a202c;">📝 Create Account</h3>
-                <p style="font-weight: 600; margin-bottom: 25px; color: #64748b;">Start tracking your health journey</p>
+                <div style="margin-bottom: 32px;">
+                    <h2 style="margin: 0 0 8px 0; color: #111827; font-size: 28px; font-weight: 700;">Create Account</h2>
+                    <p style="font-weight: 500; margin-bottom: 0; color: #6b7280; font-size: 15px;">Start tracking your health journey today</p>
+                </div>
             """, unsafe_allow_html=True)
 
-            new_name = st.text_input("Name", placeholder="Enter your full name", label_visibility="visible", key="auth_signup_name")
-            new_email = st.text_input("Email", placeholder="your.email@example.com", label_visibility="visible", key="auth_signup_email")
-            new_password = st.text_input("Password", type="password", placeholder="Create a strong password", label_visibility="visible", key="auth_signup_password")
-            confirm_password = st.text_input("Confirm Password", type="password", placeholder="Re-enter your password", label_visibility="visible", key="auth_signup_confirm")
+            new_name = st.text_input("", placeholder="Full name", label_visibility="collapsed", key="auth_signup_name")
+            st.markdown('<div style="margin-top: 12px;"></div>', unsafe_allow_html=True)
+            new_email = st.text_input("", placeholder="Email address", label_visibility="collapsed", key="auth_signup_email")
+            st.markdown('<div style="margin-top: 12px;"></div>', unsafe_allow_html=True)
+            new_password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed", key="auth_signup_password")
+            st.markdown('<div style="margin-top: 12px;"></div>', unsafe_allow_html=True)
+            confirm_password = st.text_input("", type="password", placeholder="Confirm password", label_visibility="collapsed", key="auth_signup_confirm")
 
+            st.markdown('<div style="margin-top: 28px; margin-bottom: 20px;"></div>', unsafe_allow_html=True)
+            
             st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
-            signup_clicked = st.form_submit_button("CREATE ACCOUNT", use_container_width=True, type="primary")
+            signup_clicked = st.form_submit_button("Create Account", use_container_width=True, type="primary")
             st.markdown('</div>', unsafe_allow_html=True)
 
             # Add spacing below button to make the form taller
@@ -3970,47 +4088,76 @@ with tab3:
     </div>
     """, unsafe_allow_html=True)
 
-    # Sample therapy data with definitions - Expanded dataset
-    all_therapy_data = pd.DataFrame({
-            "Natural Therapy": ["Acupuncture", "Yoga", "Meditation", "Massage", "Tai Chi", "Chiropractic", "Herbal Medicine", "Aromatherapy",
-                    "Physical Therapy", "Cognitive Behavioral Therapy", "Hydrotherapy", "Music Therapy", "Art Therapy", 
-                    "Nutritional Therapy", "Biofeedback", "Hypnotherapy", "Reflexology", "Cupping Therapy", "Reiki",
-                    "Pilates", "Qigong", "Alexander Technique", "Feldenkrais Method", "Craniosacral Therapy"],
-        "Clinical Trials": [1234, 892, 756, 645, 423, 567, 389, 234, 987, 734, 456, 345, 298, 512, 423, 312, 267, 189, 156, 445, 378, 234, 198, 167],
-        "PubMed Articles": [5678, 4321, 3890, 2876, 1987, 2543, 1876, 987, 4532, 3421, 2134, 1765, 1432, 2345, 1876, 1543, 1234, 876, 654, 2123, 1654, 1098, 876, 743],
-        "Evidence": ["Positive", "Positive", "Positive", "Mixed", "Positive", "Positive", "Mixed", "Positive",
-                     "Positive", "Positive", "Positive", "Mixed", "Positive", "Positive", "Positive", "Mixed", "Positive", "Mixed", "Mixed",
-                     "Positive", "Positive", "Positive", "Positive", "Mixed"],
-        "Definition": [
-            "Traditional Chinese medicine practice using thin needles at specific body points",
-            "Mind-body practice combining physical postures, breathing, and meditation",
-            "Mental training practice to focus awareness and achieve calm and clarity",
-            "Manual manipulation of soft tissue to reduce tension and promote healing",
-            "Gentle Chinese martial art combining slow movements and deep breathing",
-            "Manual adjustment of the spine and joints to improve alignment and function",
-            "Use of plant-based remedies to support health and treat various conditions",
-            "Use of essential oils and aromatic compounds for therapeutic benefits",
-            "Structured exercise program to restore movement and reduce pain",
-            "Talk therapy to change negative thought patterns and behaviors",
-            "Therapeutic use of water for pain relief and healing",
-            "Use of music to improve physical and emotional well-being",
-            "Creative expression through art for therapeutic benefits",
-            "Dietary changes and supplements to support overall health",
-            "Learning to control bodily processes through real-time feedback",
-            "Guided relaxation and suggestion to promote healing",
-            "Pressure point massage on feet and hands for whole-body wellness",
-            "Ancient therapy using suction cups to improve blood flow",
-            "Energy healing practice using gentle hand movements",
-            "Low-impact exercise focusing on core strength and flexibility",
-            "Gentle movement and breathing exercises from Chinese tradition",
-            "Technique to improve posture and movement efficiency",
-            "Awareness-based movement therapy for better function",
-            "Gentle manipulation of skull and spine for nervous system balance"
-        ],
-        "Condition": ["Lower Back Pain", "Lower Back Pain", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis", "Lower Back Pain", "General Wellness", "Anxiety",
-                      "Lower Back Pain", "Anxiety", "Rheumatoid Arthritis", "Depression", "Depression", "General Wellness", "Chronic Pain", "Anxiety", 
-                      "Chronic Pain", "Lower Back Pain", "Chronic Pain", "Lower Back Pain", "Rheumatoid Arthritis", "Chronic Pain", "Chronic Pain", "Migraine"]
-    })
+    # Load evidence data from CSV
+    evidence_df = load_evidence_data()
+    
+    if evidence_df.empty:
+        st.warning("⚠️ Evidence data not loaded. Using sample data for demonstration.")
+        # Fallback to hardcoded sample data
+        all_therapy_data = pd.DataFrame({
+            "Natural Therapy": ["Acupuncture", "Yoga", "Meditation", "Massage", "Tai Chi", "Cognitive Behavioural Therapy", 
+                               "Herbal", "Aromatherapy", "Exercise Therapy", "Qi Gong"],
+            "Clinical Trials": [1234, 892, 756, 645, 423, 734, 389, 234, 987, 378],
+            "PubMed Articles": [5678, 4321, 3890, 2876, 1987, 3421, 1876, 987, 4532, 1654],
+            "Evidence": ["Positive", "Positive", "Positive", "Mixed", "Positive", "Positive", "Mixed", "Positive", "Positive", "Positive"],
+            "Definition": [
+                "Traditional Chinese medicine practice using thin needles at specific body points",
+                "Mind-body practice combining physical postures, breathing, and meditation",
+                "Mental training practice to focus awareness and achieve calm and clarity",
+                "Manual manipulation of soft tissue to reduce tension and promote healing",
+                "Gentle Chinese martial art combining slow movements and deep breathing",
+                "Talk therapy to change negative thought patterns and behaviors",
+                "Use of plant-based remedies to support health and treat various conditions",
+                "Use of essential oils and aromatic compounds for therapeutic benefits",
+                "Structured exercise program to restore movement and reduce pain",
+                "Gentle movement and breathing exercises from Chinese tradition"
+            ],
+            "Condition": ["Lower Back Pain", "Lower Back Pain", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis", 
+                         "Anxiety", "General Wellness", "Anxiety", "Lower Back Pain", "Rheumatoid Arthritis"]
+        })
+    else:
+        # Transform CSV data into the expected format
+        # Get unique therapies and aggregate data
+        therapy_summary = evidence_df.groupby('therapy').agg({
+            'clinicaltrials_n': 'sum',
+            'pubmed_n': 'sum',
+            'evidence_direction': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear'
+        }).reset_index()
+        
+        # Add therapy definitions (simplified)
+        therapy_definitions = {
+            "Acupuncture": "Traditional Chinese medicine practice using thin needles at specific body points",
+            "Yoga": "Mind-body practice combining physical postures, breathing, and meditation",
+            "Meditation": "Mental training practice to focus awareness and achieve calm and clarity",
+            "Massage": "Manual manipulation of soft tissue to reduce tension and promote healing",
+            "Tai Chi": "Gentle Chinese martial art combining slow movements and deep breathing",
+            "Cognitive Behavioural Therapy": "Talk therapy to change negative thought patterns and behaviors",
+            "Herbal": "Use of plant-based remedies to support health and treat various conditions",
+            "Aromatherapy": "Use of essential oils and aromatic compounds for therapeutic benefits",
+            "Exercise Therapy": "Structured exercise program to restore movement and reduce pain",
+            "Qi Gong": "Gentle movement and breathing exercises from Chinese tradition"
+        }
+        
+        # Get most common condition for each therapy
+        therapy_conditions = evidence_df.groupby('therapy')['condition'].apply(lambda x: x.mode()[0] if len(x) > 0 else "Multiple").reset_index()
+        therapy_conditions.columns = ['therapy', 'Condition']
+        
+        # Merge everything
+        all_therapy_data = therapy_summary.merge(therapy_conditions, on='therapy', how='left')
+        all_therapy_data['Definition'] = all_therapy_data['therapy'].map(therapy_definitions).fillna('Natural therapy approach')
+        
+        # Rename columns to match expected format
+        all_therapy_data = all_therapy_data.rename(columns={
+            'therapy': 'Natural Therapy',
+            'clinicaltrials_n': 'Clinical Trials',
+            'pubmed_n': 'PubMed Articles',
+            'evidence_direction': 'Evidence'
+        })
+        
+        # Sort by Clinical Trials count
+        all_therapy_data = all_therapy_data.sort_values('Clinical Trials', ascending=False).reset_index(drop=True)
+        
+        st.success(f"✅ Loaded live evidence data for {len(all_therapy_data)} natural therapies")
 
     # FILTERS SECTION
     st.markdown("""
