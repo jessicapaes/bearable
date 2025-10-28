@@ -833,6 +833,7 @@ st.markdown("""
     .white-button-wrapper button[kind="primary"]:hover,
     .white-button-wrapper button[kind="secondary"]:hover {
         background: rgba(102, 126, 234, 0.08) !important;
+        color: #5568d3 !important;
         border-color: transparent !important;
         box-shadow: none !important;
         text-decoration: underline !important;
@@ -1082,7 +1083,7 @@ st.markdown("""
         background: #f9fafb !important;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
     }
-    
+
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus,
     .stNumberInput > div > div > input:focus {
@@ -2090,7 +2091,7 @@ def generate_demo_data_with_therapy(therapy_start_day=7):
         # Check if this is Oct 27, 2025 or after therapy start
         oct_27_2025 = datetime(2025, 10, 27).date()
         has_yoga = (day >= therapy_start_day) or (current_date == oct_27_2025)
-        
+
         demo_data.append({
             "date": current_date,
             "pain_score": round(pain_score, 1),
@@ -2313,7 +2314,7 @@ if st.session_state.show_auth_page and not st.session_state.authenticated and no
             confirm_password = st.text_input("", type="password", placeholder="Confirm password", label_visibility="collapsed", key="auth_signup_confirm")
 
             st.markdown('<div style="margin-top: 28px; margin-bottom: 20px;"></div>', unsafe_allow_html=True)
-            
+
             st.markdown('<div class="pink-button-wrapper">', unsafe_allow_html=True)
             signup_clicked = st.form_submit_button("Create Account", use_container_width=True, type="primary")
             st.markdown('</div>', unsafe_allow_html=True)
@@ -3263,13 +3264,16 @@ with tab1:
             paper_bgcolor='rgba(0,0,0,0)',
             font=dict(family="Inter", size=14, color="#1a202c"),
             hovermode=False,
+            margin=dict(b=160),  # Add more bottom margin for legend space
             legend=dict(
                 orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1.0,
-                font=dict(size=16, weight=700)
+                yanchor="top",
+                y=-0.22,
+                xanchor="center",
+                x=0.5,
+                font=dict(size=16, weight=700),
+                bgcolor='rgba(0,0,0,0)',
+                bordercolor='rgba(0,0,0,0)'
             ),
             xaxis=dict(
                 gridcolor='rgba(0,0,0,0.05)',
@@ -3541,7 +3545,7 @@ with tab1:
 condition_options = [
     "None", "Addiction", "Anxiety", "Burnout", "Cancer Pain", "Chronic Fatigue Syndrome",
     "Chronic Pain", "Depression", "Eating Disorders", "Endometriosis", "Fibromyalgia", "Headache",
-    "Infertility", "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Lower Back Pain", "Menopause",
+    "Infertility", "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause",
     "Migraine", "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
     "Osteoarthritis", "Perimenopause", "Polycystic Ovary Syndrome", "Post-Traumatic Stress Disorder",
     "Postoperative Pain", "Rheumatoid Arthritis", "Schizophrenia", "Shoulder Pain", "Stress"
@@ -4195,13 +4199,12 @@ with tab3:
                          "Cognitive Behavioural Therapy", "Herbal", "Aromatherapy", 
                          "Exercise Therapy", "Qi Gong"]
         conditions_list = [
-            "Addiction", "Anxiety", "Cancer Pain", "Chronic Fatigue Syndrome", "Chronic Pain",
-            "Depression", "Endometriosis", "Fibromyalgia", "Headache", "Infertility", 
-            "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause", 
-            "Migraine", "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
+            "Addiction", "Anxiety", "Burnout", "Cancer Pain", "Chronic Fatigue Syndrome", "Chronic Pain",
+            "Depression", "Eating Disorders", "Endometriosis", "Fibromyalgia", "Headache", "Infertility", 
+            "Insomnia", "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause", "Migraine",
+            "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
             "Osteoarthritis", "Perimenopause", "Polycystic Ovary Syndrome", "Postoperative Pain",
-            "Post-Traumatic Stress Disorder", "Rheumatoid Arthritis", "Schizophrenia",
-            "Shoulder Pain", "Stress"
+            "Post-Traumatic Stress Disorder", "Rheumatoid Arthritis", "Schizophrenia", "Shoulder Pain", "Stress"
         ]
         
         st.info("⏳ **Fetching live data from PubMed & ClinicalTrials.gov...** This may take 5-10 minutes.")
@@ -4246,15 +4249,10 @@ with tab3:
         
         st.stop()
     else:
-        # Transform CSV data into the expected format
-        # Get unique therapies and aggregate data
-        therapy_summary = evidence_df.groupby('therapy').agg({
-            'clinicaltrials_n': 'sum',
-            'pubmed_n': 'sum',
-            'evidence_direction': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear'
-        }).reset_index()
+        # Keep all condition-therapy combinations (don't aggregate)
+        # Each row represents one therapy for one condition with its specific evidence
         
-        # Add therapy definitions (simplified)
+        # Add therapy definitions
         therapy_definitions = {
             "Acupuncture": "Traditional Chinese medicine practice using thin needles at specific body points",
             "Yoga": "Mind-body practice combining physical postures, breathing, and meditation",
@@ -4265,29 +4263,21 @@ with tab3:
             "Herbal": "Use of plant-based remedies to support health and treat various conditions",
             "Aromatherapy": "Use of essential oils and aromatic compounds for therapeutic benefits",
             "Exercise Therapy": "Structured exercise program to restore movement and reduce pain",
-            "Qi Gong": "Gentle movement and breathing exercises from Chinese tradition"
+            "Qi Gong": "Gentle movement and breathing exercises from Chinese tradition",
+            "Ayurveda": "Traditional Indian system of medicine using herbs, diet, and lifestyle"
         }
         
-        # Get ALL conditions associated with each therapy (for filtering)
-        therapy_all_conditions = evidence_df.groupby('therapy')['condition'].apply(lambda x: list(x.unique())).reset_index()
-        therapy_all_conditions.columns = ['therapy', 'All_Conditions']
-        
-        # Get most common condition for display only
-        therapy_conditions_display = evidence_df.groupby('therapy')['condition'].apply(lambda x: x.mode()[0] if len(x) > 0 else "Multiple Conditions").reset_index()
-        therapy_conditions_display.columns = ['therapy', 'Condition']
-        
-        # Merge everything
-        all_therapy_data = therapy_summary.merge(therapy_all_conditions, on='therapy', how='left')
-        all_therapy_data = all_therapy_data.merge(therapy_conditions_display, on='therapy', how='left')
+        # Prepare the data for display
+        all_therapy_data = evidence_df.copy()
         all_therapy_data['Definition'] = all_therapy_data['therapy'].map(therapy_definitions).fillna('Natural therapy approach')
         
-        # Keep All_Conditions for filtering but don't display it
         # Rename columns to match expected format
         all_therapy_data = all_therapy_data.rename(columns={
             'therapy': 'Natural Therapy',
             'clinicaltrials_n': 'Clinical Trials',
             'pubmed_n': 'PubMed Articles',
-            'evidence_direction': 'Evidence'
+            'evidence_direction': 'Evidence',
+            'condition': 'Condition'
         })
         
         # Sort by Clinical Trials count
@@ -4297,9 +4287,13 @@ with tab3:
         csv_path = _locate_evidence_csv()
         if csv_path:
             last_modified = datetime.fromtimestamp(csv_path.stat().st_mtime).strftime("%Y-%m-%d")
-            st.success(f"✅ Loaded evidence data for {len(all_therapy_data)} natural therapies (Last updated: {last_modified})")
+            unique_therapies = len(all_therapy_data['Natural Therapy'].unique())
+            total_combinations = len(all_therapy_data)
+            st.success(f"✅ Loaded {total_combinations} condition-therapy combinations for {unique_therapies} natural therapies (Last updated: {last_modified})")
         else:
-            st.success(f"✅ Loaded evidence data for {len(all_therapy_data)} natural therapies")
+            unique_therapies = len(all_therapy_data['Natural Therapy'].unique())
+            total_combinations = len(all_therapy_data)
+            st.success(f"✅ Loaded {total_combinations} condition-therapy combinations for {unique_therapies} natural therapies")
         
         # Add refresh button in sidebar or at top
         st.markdown("---")
@@ -4332,13 +4326,13 @@ with tab3:
             "Addiction", "Anxiety", "Arthritis", "Burnout", "Cancer Pain", 
             "Chronic Fatigue Syndrome", "Chronic Pain", "Depression", "Eating Disorders", 
             "Endometriosis", "Fibromyalgia", "Headache", "Infertility", "Insomnia", 
-            "Irritable Bowel Syndrome", "Knee Pain", "Lower Back Pain", "Menopause", "Migraine", 
+            "Irritable Bowel Syndrome", "Knee Pain", "Low Back Pain", "Menopause", "Migraine", 
             "Myofascial Pain", "Neck Pain", "Neuropathic Pain", "Obsessive-Compulsive Disorder",
             "PCOS", "Postoperative Pain", "Rheumatoid Arthritis", "Schizophrenia", 
             "Shoulder Pain", "Stress", "General Wellness"
         ]
-        # Default to "Lower Back Pain" in demo mode, empty when signed in
-        default_conditions = ["Lower Back Pain"] if st.session_state.demo_mode else []
+        # Default to "Low Back Pain" in demo mode, empty when signed in
+        default_conditions = ["Low Back Pain"] if st.session_state.demo_mode else []
         # Add spacing to align with therapies column
         st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
         
@@ -4385,12 +4379,9 @@ with tab3:
     # Apply filters
     therapy_data = all_therapy_data.copy()
 
-    # Filter by condition(s) - show therapies that have data for ANY selected condition
+    # Filter by condition(s) - show all therapy-condition combinations that match
     if selected_conditions:  # If any conditions selected
-        # Check if therapy has data for any of the selected conditions
-        therapy_data = therapy_data[therapy_data["All_Conditions"].apply(
-            lambda x: any(cond in x for cond in selected_conditions)
-        )]
+        therapy_data = therapy_data[therapy_data["Condition"].isin(selected_conditions)]
 
     # Filter by selected therapies
     therapy_data = therapy_data[therapy_data["Natural Therapy"].isin(selected_therapies)]
@@ -4414,39 +4405,76 @@ with tab3:
         st.warning("⚠️ No therapies found matching your filters. Try adjusting your selection.")
         st.stop()
 
-    # Sort by Clinical Trials in descending order (highest first)
-    therapy_data_sorted = therapy_data.sort_values("Clinical Trials", ascending=False)
-    
-    # Drop the All_Conditions column before display (it's only used for filtering)
-    if 'All_Conditions' in therapy_data_sorted.columns:
-        therapy_data_sorted_display = therapy_data_sorted.drop(columns=['All_Conditions'])
-    else:
-        therapy_data_sorted_display = therapy_data_sorted.copy()
-    
-    # Add ranking numbers to therapy names
-    therapy_data_sorted_display["Therapy_Ranked"] = [
-        f"{i+1}. {therapy}"
-        for i, therapy in enumerate(therapy_data_sorted_display["Natural Therapy"])
-    ]
+    # Group by therapy and aggregate counts for display (but keep individual condition-therapy pairs in data)
+    # This allows us to show one row per therapy in the chart/table
+    therapy_aggregated = therapy_data.groupby('Natural Therapy').agg({
+        'Clinical Trials': 'sum',
+        'PubMed Articles': 'sum',
+        'Evidence': lambda x: x.mode()[0] if len(x) > 0 else 'Unclear',
+        'Definition': 'first'
+    }).reset_index()
 
-    # Create bar chart
-    fig = px.bar(
-        therapy_data_sorted_display,
-        x="Clinical Trials",
-        y="Therapy_Ranked",
-        color="Evidence",
-        orientation='h',
-        title="Clinical Evidence by Therapy Type",
-        color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
-        height=400,
-        category_orders={"Therapy_Ranked": therapy_data_sorted_display["Therapy_Ranked"].tolist()}
-    )
+    # Sort by Clinical Trials in descending order (highest first)
+    therapy_aggregated = therapy_aggregated.sort_values("Clinical Trials", ascending=False)
+
+    # Add ranking numbers to therapy names
+    therapy_aggregated["Therapy_Ranked"] = [
+        f"{i+1}. {therapy}"
+        for i, therapy in enumerate(therapy_aggregated["Natural Therapy"])
+    ]
+    
+    # Determine if therapies are filtered (all therapies selected vs. specific subset)
+    all_therapies = all_therapy_data['Natural Therapy'].unique().tolist()
+    is_filtered = len(selected_therapies) < len(all_therapies) and len(selected_therapies) > 0
+    
+    # Create bar chart - color by therapy if filtered, by evidence if showing all
+    if is_filtered and len(selected_therapies) <= 12:  # Color by therapy if 12 or fewer selected
+        # Generate distinct colors for selected therapies
+        therapy_colors = px.colors.qualitative.Set3 + px.colors.qualitative.Pastel + px.colors.qualitative.Dark2
+        color_map = {therapy: therapy_colors[i % len(therapy_colors)] for i, therapy in enumerate(selected_therapies)}
+        
+        fig = px.bar(
+            therapy_aggregated,
+            x="Clinical Trials",
+            y="Therapy_Ranked",
+            color="Natural Therapy",
+            orientation='h',
+            title=f"Clinical Evidence for Selected Therapies (n={len(selected_therapies)})",
+            color_discrete_map=color_map,
+            height=400,
+            category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
+        )
+    else:
+        # Default: color by evidence
+        fig = px.bar(
+            therapy_aggregated,
+            x="Clinical Trials",
+            y="Therapy_Ranked",
+            color="Evidence",
+            orientation='h',
+            title="Top 10 Therapies by Clinical Trial Count (All Conditions)",
+            color_discrete_map={"Positive": "#22c55e", "Mixed": "#fb923c", "Negative": "#ef4444"},
+            height=400,
+            category_orders={"Therapy_Ranked": therapy_aggregated["Therapy_Ranked"].tolist()}
+        )
 
     fig.update_layout(
         plot_bgcolor='rgba(255,255,255,0.9)',
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", size=14),
         showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.20,  # Position below chart with more spacing
+            xanchor="center",
+            x=0.5,  # Center the legend
+            title_text="",
+            font=dict(size=13),
+            bgcolor='rgba(0,0,0,0)',
+            bordercolor='rgba(0,0,0,0)'
+        ),
+        margin=dict(b=120),  # Add more bottom margin for legend space
         xaxis=dict(title="Number of Clinical Trials"),
         yaxis=dict(title="", categoryorder='total ascending'),  # Show largest at top
         title_font_size=18,
