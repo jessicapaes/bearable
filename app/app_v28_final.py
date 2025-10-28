@@ -1389,34 +1389,37 @@ st.markdown("""
         border: 2px solid #667eea !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2) !important;
-        z-index: 100 !important;
+        z-index: 1 !important;
     }
     
-    /* Fix z-index for all popovers and dropdowns to stay below sticky header */
+    /* Fix z-index for all popovers and dropdowns to stay below sticky header - LOWER THAN BEFORE */
     [data-baseweb="popover"],
     [data-baseweb="select"],
     div[role="tooltip"],
     .stSelectbox [data-baseweb="popover"],
     .stMultiSelect [data-baseweb="popover"],
-    div[data-baseweb="popover"] {
-        z-index: 100 !important;
+    div[data-baseweb="popover"],
+    .stMultiSelect [data-baseweb="base-popover"],
+    [data-baseweb="base-popover"] {
+        z-index: 1 !important;
     }
     
-    /* Ensure sticky header stays on top */
+    /* Ensure sticky header stays on top - MUCH HIGHER */
     header[data-testid="stHeader"] {
-        z-index: 999 !important;
+        z-index: 10000 !important;
     }
     
     /* Specific fix for condition selector dropdown */
     div[role="listbox"],
     ul[role="listbox"],
     [role="option"] {
-        z-index: 100 !important;
+        z-index: 1 !important;
     }
     
     /* CSS for header that matches inline styles - MAXIMUM PRIORITY */
-    div[style*="position: fixed"][style*="top: 0"][style*="z-index"] {
-        z-index: 9999 !important;
+    div[style*="position: fixed"][style*="top: 0"][style*="z-index"],
+    div[style*="position: fixed"][style*="top: 0"] {
+        z-index: 10000 !important;
     }
     
     /* Add even more baseweb selectors */
@@ -1425,7 +1428,7 @@ st.markdown("""
     div[role="option"],
     .stSelectbox > div[data-baseweb="select"],
     .stMultiSelect > div[data-baseweb="select"] {
-        z-index: 900 !important;
+        z-index: 1 !important;
     }
     
     /* Ensure all BaseWeb dropdown content stays below header */
@@ -1435,7 +1438,7 @@ st.markdown("""
     div[data-baseweb="popover"] [role="option"],
     [data-baseweb="select"] [role="listbox"],
     [data-baseweb="select"] ul {
-        z-index: 900 !important;
+        z-index: 1 !important;
     }
     
     /* Multiselect input field */
@@ -4104,7 +4107,18 @@ with tab2:
             sleep_val = row.get('sleep_hours', 'N/A')
             mood_val = row.get('mood_score', 'N/A')
             stress_val = row.get('stress_score', 'N/A')
-            therapy_val = row.get('therapy_used', 'None') if row.get('therapy_used') else 'None'
+            
+            # Check for therapy data in multiple possible column names
+            therapy_val = 'None'
+            if 'therapies_continuing' in row and row.get('therapies_continuing'):
+                # Handle list column
+                therapies_list = row['therapies_continuing'] if isinstance(row['therapies_continuing'], list) else [row['therapies_continuing']]
+                therapy_val = ', '.join(therapies_list) if therapies_list and therapies_list != [''] else 'None'
+            elif 'therapy_used' in row and row.get('therapy_used'):
+                therapies_list = row['therapy_used'] if isinstance(row['therapy_used'], list) else [row['therapy_used']]
+                therapy_val = ', '.join(therapies_list) if therapies_list and therapies_list != [''] else 'None'
+            elif 'therapy' in row and row.get('therapy'):
+                therapy_val = row['therapy']
 
             # Build the card with Streamlit columns instead of HTML grid
             with st.container():
