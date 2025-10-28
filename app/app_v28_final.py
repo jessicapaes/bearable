@@ -3108,20 +3108,20 @@ with tab1:
                         {'range': [0, 10], 'color': '#f1f5f9'}
                     ]
                 }
-            ))
-            pain_gauge.update_layout(
-                height=220,
-                margin=dict(l=10, r=10, t=70, b=10),
-                paper_bgcolor='rgba(0,0,0,0)',
-                font={'family': 'Inter'}
-            )
-            st.plotly_chart(pain_gauge, use_container_width=True, config={'displayModeBar': False})
+                ))
+                pain_gauge.update_layout(
+                    height=220,
+                    margin=dict(l=10, r=10, t=70, b=10),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font={'family': 'Inter'}
+                )
+                st.plotly_chart(pain_gauge, use_container_width=True, config={'displayModeBar': False})
 
-        with col2:
-            # Sleep gauge (0-8h, higher is better - use blue color)
-            sleep_gauge = go.Figure(go.Indicator(
-                mode="gauge+number+delta",
-                value=round(sleep_current, 1),
+            with col2:
+                # Sleep gauge (0-8h, higher is better - use blue color)
+                sleep_gauge = go.Figure(go.Indicator(
+                    mode="gauge+number+delta",
+                    value=round(sleep_current, 1),
                 domain={'x': [0, 1], 'y': [0, 1]},
                 title={'text': "😴 Sleep Hours", 'font': {'size': 18, 'family': 'Inter'}},
                 number={'valueformat': '.1f', 'suffix': "h", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
@@ -3516,10 +3516,10 @@ with tab1:
         if not insights:
             st.info("📊 Keep logging for at least 7 days to see personalised insights!")
 
-    # Add bottom spacing to ensure content is visible above footer
-    st.markdown("<div style='height: 150px;'></div>", unsafe_allow_html=True)
+            # Add bottom spacing to ensure content is visible above footer
+            st.markdown("<div style='height: 150px;'></div>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================================
 # TAB 2: DAILY LOG - Comprehensive version from v3
