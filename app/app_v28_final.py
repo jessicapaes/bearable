@@ -3074,9 +3074,9 @@ with tab1:
             latest = display_df.iloc[-1]
             previous_avg = display_df.iloc[:-7].mean(numeric_only=True) if len(display_df) > 7 else display_df.iloc[:1].mean(numeric_only=True)
         
-        pain_current = latest.get("pain_score", 5)
-        pain_prev = previous_avg.get("pain_score", 7)
-        pain_delta = pain_current - pain_prev
+            pain_current = latest.get("pain_score", 5)
+            pain_prev = previous_avg.get("pain_score", 7)
+            pain_delta = pain_current - pain_prev
         
         sleep_current = latest.get("sleep_hours", 7)
         sleep_prev = previous_avg.get("sleep_hours", 5)
