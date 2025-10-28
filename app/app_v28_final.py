@@ -3147,29 +3147,29 @@ with tab1:
             with col3:
                 # Mood gauge (0-10, higher is better - use green color)
                 mood_gauge = go.Figure(go.Indicator(
-                mode="gauge+number+delta",
-                value=round(mood_current, 1),
-                domain={'x': [0, 1], 'y': [0, 1]},
-                title={'text': "🙂 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
-                number={'valueformat': '.1f', 'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
-                delta={'reference': round(mood_prev, 1), 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
-                gauge={
-                    'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
-                    'bar': {'color': "#8b5cf6", 'thickness': 0.7},
-                    'bgcolor': "#f7fafc",
-                    'borderwidth': 0,
-                    'steps': [
-                        {'range': [0, 10], 'color': '#f1f5f9'}
-                    ]
-                }
-            ))
-            mood_gauge.update_layout(
-                height=220,
-                margin=dict(l=10, r=10, t=70, b=10),
-                paper_bgcolor='rgba(0,0,0,0)',
-                font={'family': 'Inter'}
-            )
-            st.plotly_chart(mood_gauge, use_container_width=True, config={'displayModeBar': False})
+                    mode="gauge+number+delta",
+                    value=round(mood_current, 1),
+                    domain={'x': [0, 1], 'y': [0, 1]},
+                    title={'text': "🙂 Mood Score", 'font': {'size': 18, 'family': 'Inter'}},
+                    number={'valueformat': '.1f', 'suffix': "/10", 'font': {'size': 32, 'family': 'Inter', 'color': '#1a202c'}},
+                    delta={'reference': round(mood_prev, 1), 'increasing': {'color': "#10b981"}, 'decreasing': {'color': "#ef4444"}},
+                    gauge={
+                        'axis': {'range': [0, 10], 'tickwidth': 1, 'tickcolor': "#e2e8f0"},
+                        'bar': {'color': "#8b5cf6", 'thickness': 0.7},
+                        'bgcolor': "#f7fafc",
+                        'borderwidth': 0,
+                        'steps': [
+                            {'range': [0, 10], 'color': '#f1f5f9'}
+                        ]
+                    }
+                ))
+                mood_gauge.update_layout(
+                    height=220,
+                    margin=dict(l=10, r=10, t=70, b=10),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font={'family': 'Inter'}
+                )
+                st.plotly_chart(mood_gauge, use_container_width=True, config={'displayModeBar': False})
 
         st.markdown("---")
         
