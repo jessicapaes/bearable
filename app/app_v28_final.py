@@ -304,6 +304,43 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    
+    /* SIDEBAR - Purple Background */
+    section[data-testid="stSidebar"],
+    .css-1d391kg,
+    div[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%) !important;
+        background-color: #667eea !important;
+    }
+    
+    /* Sidebar text styling */
+    section[data-testid="stSidebar"] * {
+        color: white !important;
+    }
+    
+    /* Sidebar input backgrounds */
+    section[data-testid="stSidebar"] .stTextInput > div > div > input,
+    section[data-testid="stSidebar"] .stSelectbox > div > div > select {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+    }
+    
+    section[data-testid="stSidebar"] .stTextInput > div > div > input::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    
+    /* Sidebar buttons - translucent white */
+    section[data-testid="stSidebar"] .stButton > button {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        color: white !important;
+    }
+    
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border-color: white !important;
+    }
 
     /* FIXED V14: Remove bottom white space */
     .main .block-container {
