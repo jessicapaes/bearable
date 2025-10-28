@@ -3272,11 +3272,11 @@ with tab1:
             paper_bgcolor='rgba(0,0,0,0)',
             font=dict(family="Inter", size=14, color="#1a202c"),
             hovermode=False,
-            margin=dict(b=160),  # Add more bottom margin for legend space
+            margin=dict(b=180),  # Add more bottom margin for legend space
             legend=dict(
                 orientation="h",
                 yanchor="top",
-                y=-0.22,
+                y=-0.28,
                 xanchor="center",
                 x=0.5,
                 font=dict(size=16, weight=700),
@@ -4474,7 +4474,7 @@ with tab3:
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.20,  # Position below chart with more spacing
+            y=-0.30,  # Position below chart with more spacing
             xanchor="center",
             x=0.5,  # Center the legend
             title_text="",
@@ -4482,7 +4482,7 @@ with tab3:
             bgcolor='rgba(0,0,0,0)',
             bordercolor='rgba(0,0,0,0)'
         ),
-        margin=dict(b=120),  # Add more bottom margin for legend space
+        margin=dict(b=140),  # Add more bottom margin for legend space
         xaxis=dict(title="Number of Clinical Trials"),
         yaxis=dict(title="", categoryorder='total ascending'),  # Show largest at top
         title_font_size=18,
